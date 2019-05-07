@@ -17,11 +17,12 @@ namespace EnhancedAI.Patches
         public static void Postfix(BehaviorTree __instance)
         {
             var id = Traverse.Create(__instance).Field("behaviorTreeIDEnum").GetValue<BehaviorTreeIDEnum>();
+            var idString = Enum.GetName(typeof(BehaviorTreeIDEnum), id);
 
             if (hasPrinted.Contains(id))
                 return;
 
-            __instance.DumpTree(Path.Combine(Main.Directory, $"{Enum.GetName(typeof(BehaviorTreeIDEnum), id)}_dump.txt"));
+            __instance.DumpTree(Path.Combine(Main.Directory, $"{idString}_dump.txt"));
             hasPrinted.Add(id);
         }
     }
