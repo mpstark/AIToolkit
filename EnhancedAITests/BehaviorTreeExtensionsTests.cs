@@ -108,7 +108,7 @@ namespace EnhancedAITests
             root.AddNode(removedChild, parentName, "lanceDetectsEnemies0000", true);
             Assert.AreEqual(removedChild, root.FindChildByName(childName, out var addedParent));
             Assert.AreEqual(parentName, addedParent.GetName());
-            Assert.AreEqual(0, (addedParent as CompositeBehaviorNode).Children.FindIndex(child => child.Equals(removedChild)));
+            Assert.AreEqual(0, (addedParent as CompositeBehaviorNode)?.Children.FindIndex(child => child.Equals(removedChild)));
         }
     }
 }
