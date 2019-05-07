@@ -22,7 +22,7 @@ namespace EnhancedAI.Patches
             if (hasPrinted.Contains(id))
                 return;
 
-            __instance.DumpTree(Path.Combine(Main.Directory, $"{idString}_dump.txt"));
+            __instance.RootNode.DumpTree(Path.Combine(Main.Directory, $"{idString}_dump.txt"));
             hasPrinted.Add(id);
         }
     }
