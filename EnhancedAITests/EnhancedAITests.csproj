@@ -65,7 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LeafFactoryTests.cs" />
+    <Compile Include="BehaviorNodeFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BehaviorTreeExtensionsTests.cs" />
   </ItemGroup>

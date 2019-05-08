@@ -1,5 +1,4 @@
-﻿using BattleTech;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EnhancedAI.Util;
 using Harmony;
 
@@ -121,7 +120,7 @@ namespace EnhancedAITests
             var name = "braceNodeTest";
             var typeName = "BraceNode";
 
-            var leaf = LeafFactory.CreateInternalLeaf(typeName, name, null, null);
+            var leaf = BehaviorNodeFactory.CreateBehaviorNode(typeName, name, null, null);
 
             Assert.IsNull(root.FindChildByName(name, out _));
 
