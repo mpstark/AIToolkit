@@ -1,5 +1,4 @@
-﻿using BattleTech;
-using EnhancedAI.Util;
+﻿using EnhancedAI.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EnhancedAITests
@@ -10,12 +9,12 @@ namespace EnhancedAITests
         [TestMethod]
         public void BraceNodeTest()
         {
+            var typeName = "BraceNode";
             var name = "braceNode0000";
-            var types = new[] { typeof(string), typeof(BehaviorTree), typeof(AbstractActor)};
-            var braceNode = LeafFactory.CreateInternalLeaf("BraceNode", types, name, null, null);
+            var braceNode = LeafFactory.CreateInternalLeaf("BraceNode", name, null, null);
 
             Assert.IsNotNull(braceNode);
-            Assert.AreEqual("BraceNode", braceNode.GetType().ToString());
+            Assert.AreEqual(typeName, braceNode.GetType().ToString());
             Assert.AreEqual(name, braceNode.GetName());
         }
     }
