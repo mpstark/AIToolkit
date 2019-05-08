@@ -118,10 +118,10 @@ namespace EnhancedAITests
         public void SimpleAddNodeTest()
         {
             var root = CoreAI_BT.InitRootNode(null, null, null);
-            var types = new[] { typeof(string), typeof(BehaviorTree), typeof(AbstractActor) };
             var name = "braceNodeTest";
+            var typeName = "BraceNode";
 
-            var leaf = LeafFactory.CreateInternalLeaf("BraceNode", types, name, null, null);
+            var leaf = LeafFactory.CreateInternalLeaf(typeName, name, null, null);
 
             Assert.IsNull(root.FindChildByName(name, out _));
 
@@ -129,7 +129,7 @@ namespace EnhancedAITests
             var foundNode = root.FindChildByName(name, out var foundParent);
             Assert.AreEqual(leaf, foundNode);
             Assert.AreEqual(root, foundParent);
-            Assert.IsInstanceOfType(foundNode, AccessTools.TypeByName("BraceNode"));
+            Assert.IsInstanceOfType(foundNode, AccessTools.TypeByName(typeName));
             Assert.AreEqual(1, (foundParent as CompositeBehaviorNode)?.Children.IndexOf(foundNode));
         }
     }

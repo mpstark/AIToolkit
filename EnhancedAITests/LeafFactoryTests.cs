@@ -11,7 +11,7 @@ namespace EnhancedAITests
         {
             var typeName = "BraceNode";
             var name = "braceNode0000";
-            var braceNode = LeafFactory.CreateInternalLeaf("BraceNode", name, null, null);
+            var braceNode = LeafFactory.CreateInternalLeaf(typeName, name, null, null);
 
             Assert.IsNotNull(braceNode);
             Assert.AreEqual(typeName, braceNode.GetType().ToString());

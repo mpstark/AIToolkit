@@ -9,9 +9,8 @@ namespace EnhancedAI.Util
     {
         public static LeafBehaviorNode CreateInternalLeaf(string typeName, string name, BehaviorTree tree, AbstractActor actor)
         {
-            return CreateInternalLeaf(typeName,
-                new[] { typeof(string), typeof(BehaviorTree), typeof(AbstractActor) },
-                name, tree, actor);
+            var parameterTypes = new[] {typeof(string), typeof(BehaviorTree), typeof(AbstractActor)};
+            return CreateInternalLeaf(typeName, parameterTypes, name, tree, actor);
         }
 
         public static LeafBehaviorNode CreateInternalLeaf(string typeName, params object[] parameters)
