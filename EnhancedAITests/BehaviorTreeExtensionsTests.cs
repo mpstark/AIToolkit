@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BattleTech;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using EnhancedAI.Util;
+using Harmony;
 
 namespace EnhancedAITests
 {
@@ -105,10 +107,30 @@ namespace EnhancedAITests
             Assert.IsNull(root.FindChildByName(childName, out _));
 
             var parentName = "free_engage";
-            root.AddNode(removedChild, parentName, "lanceDetectsEnemies0000", true);
+            var hasAdded = root.AddNode(removedChild, parentName, "lanceDetectsEnemies0000", true);
+            Assert.IsTrue(hasAdded);
             Assert.AreEqual(removedChild, root.FindChildByName(childName, out var addedParent));
             Assert.AreEqual(parentName, addedParent.GetName());
             Assert.AreEqual(0, (addedParent as CompositeBehaviorNode)?.Children.FindIndex(child => child.Equals(removedChild)));
+        }
+
+        [TestMethod]
+        public void SimpleAddNodeTest()
+        {
+            var root = CoreAI_BT.InitRootNode(null, null, null);
+            var types = new[] { typeof(string), typeof(BehaviorTree), typeof(AbstractActor) };
+            var name = "braceNodeTest";
+
+            var leaf = LeafFactory.CreateInternalLeaf("BraceNode", types, name, null, null);
+
+            Assert.IsNull(root.FindChildByName(name, out _));
+
+            root.AddNode(leaf, "core_AI_root", "startup_cleanup");
+            var foundNode = root.FindChildByName(name, out var foundParent);
+            Assert.AreEqual(leaf, foundNode);
+            Assert.AreEqual(root, foundParent);
+            Assert.IsInstanceOfType(foundNode, AccessTools.TypeByName("BraceNode"));
+            Assert.AreEqual(1, (foundParent as CompositeBehaviorNode)?.Children.IndexOf(foundNode));
         }
     }
 }
