@@ -68,6 +68,33 @@ namespace EnhancedAI.Util
             }
         }
 
+        public static int CountNodes(this BehaviorNode root)
+        {
+            int CountNodesRecursive(BehaviorNode node)
+            {
+                var count = 1;
+                switch (node)
+                {
+                    case CompositeBehaviorNode composite:
+                    {
+                        foreach (var child in composite.Children)
+                            count += CountNodesRecursive(child);
+                        break;
+                    }
+
+                    case DecoratorBehaviorNode decorator:
+                    {
+                        count += CountNodesRecursive(decorator.ChildNode);
+                        break;
+                    }
+                }
+
+                return count;
+            }
+
+            return CountNodesRecursive(root);
+        }
+
         public static BehaviorNode FindChildByName(this BehaviorNode root, string lookingFor, out BehaviorNode parent)
         {
             BehaviorNode FindNodeRecursive(BehaviorNode node, BehaviorNode thisParent, out BehaviorNode outParent)

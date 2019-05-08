@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using BattleTech;
@@ -12,6 +11,17 @@ namespace EnhancedAI
 {
     public class BehaviorNodeJSONRepresentation
     {
+        private static readonly Dictionary<string, string[]> ExtraParameterMapping = new Dictionary<string, string[]>
+        {
+            { "DebugLogNode", new []{ "string" } },
+            { "DebugLogToContextNode", new []{ "string", "AIDebugContext" } },
+            { "ExpectedDamageToMeLessThanNode", new []{ "BehaviorVariableName" } },
+            { "IsBVTrueNode", new []{ "BehaviorVariableName" } },
+            { "MoveTowardsHighestPriorityMoveCandidateNode", new []{ "bool" } },
+            { "RandomPercentageLessThanBVNode", new []{ "BehaviorVariableName" } },
+            { "SetMoodNode", new []{ "AIMood" } }
+        };
+
         [JsonRequired]
         public string Name { get; set; }
 
@@ -20,24 +30,26 @@ namespace EnhancedAI
 
         public List<BehaviorNodeJSONRepresentation> Children { get; set; }
 
-        [DefaultValue(BehaviorVariableName.INVALID_UNSET)]
+        // Parameters
+        public bool? Bool { get; set; }
+        public string String { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter))]
-        public BehaviorVariableName BVName { get; set; } = BehaviorVariableName.INVALID_UNSET;
+        public BehaviorVariableName? BehaviorVariableName { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AIDebugContext? AIDebugContext { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AIMood? AIMood { get; set; }
+
 
         public BehaviorNode ToNode(BehaviorTree tree, AbstractActor unit)
         {
-            BehaviorNode node;
+            var node = BehaviorNodeFactory.CreateBehaviorNode(TypeName, GetNodeConstructorParameters(tree, unit));
 
-            if (BVName != BehaviorVariableName.INVALID_UNSET)
-            {
-                node = BehaviorNodeFactory.CreateBehaviorNode(TypeName,
-                    new[] {typeof(string), typeof(BehaviorTree), typeof(AbstractActor), typeof(BehaviorVariableName)},
-                    Name, tree, unit, BVName);
-            }
-            else
-            {
-                node = BehaviorNodeFactory.CreateBehaviorNode(TypeName, Name, tree, unit);
-            }
+            if (node == null)
+                Main.HBSLog?.LogWarning($"BehaviorNode name: {Name} type: {TypeName} did not convert properly!");
 
             switch (node)
             {
@@ -52,6 +64,44 @@ namespace EnhancedAI
             }
 
             return node;
+        }
+
+        private object[] GetNodeConstructorParameters(BehaviorTree tree, AbstractActor unit)
+        {
+            var parameters = new List<object> { Name, tree, unit };
+
+            if (!ExtraParameterMapping.ContainsKey(TypeName))
+                return parameters.ToArray();
+
+            var extraParameterTypes = ExtraParameterMapping[TypeName];
+
+            foreach (var extraParameterType in extraParameterTypes)
+            {
+                switch (extraParameterType)
+                {
+                    case "bool":
+                        parameters.Add(Bool);
+                        break;
+
+                    case "string":
+                        parameters.Add(String);
+                        break;
+
+                    case "AIDebugContext":
+                        parameters.Add(AIDebugContext);
+                        break;
+
+                    case "AIMood":
+                        parameters.Add(AIMood);
+                        break;
+
+                    case "BehaviorVariableName":
+                        parameters.Add(BehaviorVariableName);
+                        break;
+                }
+            }
+
+            return parameters.ToArray();
         }
 
         public void ToJSONFile(string path)
@@ -73,7 +123,6 @@ namespace EnhancedAI
             var rep = new BehaviorNodeJSONRepresentation();
             rep.Name = node.GetName();
             rep.TypeName = node.GetType().ToString();
-            rep.BVName = Traverse.Create(node).Field("bvName").GetValue<BehaviorVariableName>();
 
             switch (node)
             {
@@ -92,7 +141,45 @@ namespace EnhancedAI
                     break;
             }
 
+            if (!ExtraParameterMapping.ContainsKey(rep.TypeName))
+                return rep;
+
+            var extraParameterTypes = ExtraParameterMapping[rep.TypeName];
+            foreach (var extraParameterType in extraParameterTypes)
+            {
+                switch (extraParameterType)
+                {
+                    case "bool":
+                        rep.Bool = GetParameterValueByType<bool>(node, rep.TypeName);
+                        break;
+
+                    case "string":
+                        rep.String = GetParameterValueByType<string>(node, rep.TypeName);
+                        break;
+
+                    case "AIDebugContext":
+                        rep.AIDebugContext = GetParameterValueByType<AIDebugContext>(node, rep.TypeName);
+                        break;
+
+                    case "AIMood":
+                        rep.AIMood = GetParameterValueByType<AIMood>(node, rep.TypeName);
+                        break;
+
+                    case "BehaviorVariableName":
+                        rep.BehaviorVariableName = GetParameterValueByType<BehaviorVariableName>(node, rep.TypeName);
+                        break;
+                }
+            }
+
             return rep;
+        }
+
+        private static T GetParameterValueByType<T>(BehaviorNode node, string typeName)
+        {
+            var type = AccessTools.TypeByName(typeName);
+            var fields = AccessTools.GetDeclaredFields(type).Except(AccessTools.GetDeclaredFields(typeof(BehaviorNode)));
+
+            return (T) fields.FirstOrDefault(field => field.FieldType == typeof(T))?.GetValue(node);
         }
 
         public static BehaviorNodeJSONRepresentation FromJSON(string json)
