@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BattleTech;
 using EnhancedAI.Util;
-using Harmony;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -11,17 +11,6 @@ namespace EnhancedAI
 {
     public class BehaviorNodeJSONRepresentation
     {
-        private static readonly Dictionary<string, string[]> ExtraParameterMapping = new Dictionary<string, string[]>
-        {
-            { "DebugLogNode", new []{ "string" } },
-            { "DebugLogToContextNode", new []{ "string", "AIDebugContext" } },
-            { "ExpectedDamageToMeLessThanNode", new []{ "BehaviorVariableName" } },
-            { "IsBVTrueNode", new []{ "BehaviorVariableName" } },
-            { "MoveTowardsHighestPriorityMoveCandidateNode", new []{ "bool" } },
-            { "RandomPercentageLessThanBVNode", new []{ "BehaviorVariableName" } },
-            { "SetMoodNode", new []{ "AIMood" } }
-        };
-
         [JsonRequired]
         public string Name { get; set; }
 
@@ -29,24 +18,13 @@ namespace EnhancedAI
         public string TypeName { get; set; }
 
         public List<BehaviorNodeJSONRepresentation> Children { get; set; }
-
-        // Parameters
-        public bool? Bool { get; set; }
-        public string String { get; set; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public BehaviorVariableName? BehaviorVariableName { get; set; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public AIDebugContext? AIDebugContext { get; set; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
-        public AIMood? AIMood { get; set; }
+        public Dictionary<string, object> ExtraParameters { get; set; }
 
 
         public BehaviorNode ToNode(BehaviorTree tree, AbstractActor unit)
         {
-            var node = BehaviorNodeFactory.CreateBehaviorNode(TypeName, GetNodeConstructorParameters(tree, unit));
+            var parameters = GetNodeConstructorParameters(tree, unit, out var parameterTypes);
+            var node = BehaviorNodeFactory.CreateBehaviorNode(TypeName, parameterTypes, parameters);
 
             if (node == null)
                 Main.HBSLog?.LogWarning($"BehaviorNode name: {Name} type: {TypeName} did not convert properly!");
@@ -66,55 +44,55 @@ namespace EnhancedAI
             return node;
         }
 
-        private object[] GetNodeConstructorParameters(BehaviorTree tree, AbstractActor unit)
+        private object[] GetNodeConstructorParameters(BehaviorTree tree, AbstractActor unit, out Type[] parameterTypes)
         {
             var parameters = new List<object> { Name, tree, unit };
+            var parameterTypeList = new List<Type> { typeof(string), typeof(BehaviorTree), typeof(AbstractActor) };
 
-            if (!ExtraParameterMapping.ContainsKey(TypeName))
-                return parameters.ToArray();
-
-            var extraParameterTypes = ExtraParameterMapping[TypeName];
-
-            foreach (var extraParameterType in extraParameterTypes)
+            if (ExtraParameters == null || ExtraParameters.Count == 0)
             {
-                switch (extraParameterType)
-                {
-                    case "bool":
-                        parameters.Add(Bool);
-                        break;
-
-                    case "string":
-                        parameters.Add(String);
-                        break;
-
-                    case "AIDebugContext":
-                        parameters.Add(AIDebugContext);
-                        break;
-
-                    case "AIMood":
-                        parameters.Add(AIMood);
-                        break;
-
-                    case "BehaviorVariableName":
-                        parameters.Add(BehaviorVariableName);
-                        break;
-                }
+                parameterTypes = parameterTypeList.ToArray();
+                return parameters.ToArray();
             }
 
+            var extraParameterInfo = NodeUtil.GetConstructorExtraParameterInfo(TypeName);
+            parameterTypeList.AddRange(extraParameterInfo.Select(parameterInfo => parameterInfo.ParameterType));
+            parameters.AddRange(extraParameterInfo.Select(parameterInfo => ExtraParameters[parameterInfo.Name]));
+
+            parameterTypes = parameterTypeList.ToArray();
             return parameters.ToArray();
+        }
+
+        private void ToJSON(TextWriter textWriter, Formatting formatting)
+        {
+            using (var writer = new JsonTextWriter(textWriter))
+            {
+                var serializer = new JsonSerializer
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    Formatting = formatting
+                };
+                serializer.Converters.Add(new StringEnumConverter());
+
+                serializer.Serialize(writer, this);
+            }
         }
 
         public void ToJSONFile(string path)
         {
-            using (var sw = File.CreateText(path))
-            using (var writer = new JsonTextWriter(sw))
+            using (var textWriter = File.CreateText(path))
             {
-                var serializer = new JsonSerializer();
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.Formatting = Formatting.Indented;
-                serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
+                ToJSON(textWriter, Formatting.Indented);
+            }
+        }
 
-                serializer.Serialize(writer, this);
+        public string ToJSONString()
+        {
+            using (var textWriter = new StringWriter())
+            {
+                ToJSON(textWriter, Formatting.Indented);
+                return textWriter.ToString();
             }
         }
 
@@ -141,45 +119,18 @@ namespace EnhancedAI
                     break;
             }
 
-            if (!ExtraParameterMapping.ContainsKey(rep.TypeName))
+            var extraParameterInfo = NodeUtil.GetConstructorExtraParameterInfo(node.GetType());
+            if (extraParameterInfo == null || extraParameterInfo.Length == 0)
                 return rep;
 
-            var extraParameterTypes = ExtraParameterMapping[rep.TypeName];
-            foreach (var extraParameterType in extraParameterTypes)
+            rep.ExtraParameters = new Dictionary<string, object>();
+            foreach (var parameterInfo in extraParameterInfo)
             {
-                switch (extraParameterType)
-                {
-                    case "bool":
-                        rep.Bool = GetParameterValueByType<bool>(node, rep.TypeName);
-                        break;
-
-                    case "string":
-                        rep.String = GetParameterValueByType<string>(node, rep.TypeName);
-                        break;
-
-                    case "AIDebugContext":
-                        rep.AIDebugContext = GetParameterValueByType<AIDebugContext>(node, rep.TypeName);
-                        break;
-
-                    case "AIMood":
-                        rep.AIMood = GetParameterValueByType<AIMood>(node, rep.TypeName);
-                        break;
-
-                    case "BehaviorVariableName":
-                        rep.BehaviorVariableName = GetParameterValueByType<BehaviorVariableName>(node, rep.TypeName);
-                        break;
-                }
+                var value = NodeUtil.GetParameterValueByType(node, parameterInfo.ParameterType);
+                rep.ExtraParameters.Add(parameterInfo.Name, value);
             }
 
             return rep;
-        }
-
-        private static T GetParameterValueByType<T>(BehaviorNode node, string typeName)
-        {
-            var type = AccessTools.TypeByName(typeName);
-            var fields = AccessTools.GetDeclaredFields(type).Except(AccessTools.GetDeclaredFields(typeof(BehaviorNode)));
-
-            return (T) fields.FirstOrDefault(field => field.FieldType == typeof(T))?.GetValue(node);
         }
 
         public static BehaviorNodeJSONRepresentation FromJSON(string json)
