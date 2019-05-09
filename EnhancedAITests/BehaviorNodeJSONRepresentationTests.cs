@@ -1,5 +1,4 @@
 ﻿using EnhancedAI;
-using EnhancedAI.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EnhancedAITests
