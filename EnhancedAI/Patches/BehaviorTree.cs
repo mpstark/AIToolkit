@@ -1,4 +1,5 @@
-﻿using Harmony;
+﻿using EnhancedAI.Features;
+using Harmony;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming

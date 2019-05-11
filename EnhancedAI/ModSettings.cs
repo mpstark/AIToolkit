@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using EnhancedAI.Features;
 using Newtonsoft.Json.Converters;
 
 namespace EnhancedAI

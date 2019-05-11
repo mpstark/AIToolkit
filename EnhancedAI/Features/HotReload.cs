@@ -1,7 +1,7 @@
 ﻿using BattleTech;
 using Harmony;
 
-namespace EnhancedAI
+namespace EnhancedAI.Features
 {
     public static class HotReload
     {

@@ -4,7 +4,7 @@ using System.IO;
 using EnhancedAI.Util;
 using Harmony;
 
-namespace EnhancedAI
+namespace EnhancedAI.Features
 {
     public static class TreeDump
     {
