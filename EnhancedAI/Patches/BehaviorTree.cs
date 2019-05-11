@@ -46,7 +46,7 @@ namespace EnhancedAI.Patches
             if (value == null)
                 return true;
 
-            Main.HBSLog?.Log($"Using overriden value for behavior variable: {name} for {__instance.unit.UnitName}");
+            Main.HBSLog?.Log($"Using overridden value (from team: {teamName}) for behavior variable: {name} for {__instance.unit.UnitName}");
             __result = value;
             return false;
         }
