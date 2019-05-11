@@ -8,7 +8,7 @@ namespace EnhancedAI.Features
 {
     public static class TreeDump
     {
-        public static readonly List<BehaviorTreeIDEnum> DumpedTrees = new List<BehaviorTreeIDEnum>();
+        internal static readonly List<BehaviorTreeIDEnum> DumpedTrees = new List<BehaviorTreeIDEnum>();
 
         public enum DumpType
         {
@@ -23,8 +23,8 @@ namespace EnhancedAI.Features
             if (type == DumpType.None)
                 return;
 
-            var id = Traverse.Create(tree).Field("behaviorTreeIDEnum").GetValue<BehaviorTreeIDEnum>();
-            var idString = Enum.GetName(typeof(BehaviorTreeIDEnum), id);
+            var id = tree.GetID();
+            var idString = tree.GetIDString();
 
             if (DumpedTrees.Contains(id))
                 return;
@@ -41,7 +41,7 @@ namespace EnhancedAI.Features
             // dump to text
             if (type == DumpType.Text || type == DumpType.Both)
             {
-                tree.RootNode.DumpTree(Path.Combine(Main.Directory, $"{idString}_dump.txt"));
+                tree.RootNode.DumpTree(Path.Combine(Main.Directory, $"{idString}.txt"));
             }
         }
     }

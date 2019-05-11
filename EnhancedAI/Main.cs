@@ -16,6 +16,8 @@ namespace EnhancedAI
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             HBSLog = Logger.GetLogger("EnhancedAI");
+            Logger.SetLoggerLevel("EnhancedAI", LogLevel.Log);
+
             Settings = ModSettings.Parse(settings);
             Directory = modDir;
         }

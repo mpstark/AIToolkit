@@ -36,6 +36,18 @@ namespace EnhancedAI
             parameterTypeList.AddRange(extraParameterInfo.Select(parameterInfo => parameterInfo.ParameterType));
             parameters.AddRange(extraParameterInfo.Select(parameterInfo => ExtraParameters[parameterInfo.Name]));
 
+            // for some reason unity/newtonsoft json doesn't seem to like converting
+            // string -> enum while the tests seem to work just fine
+            // this causes hang on mission load without any sort of exception or anything
+            for (var i = 0; i < parameterTypeList.Count; i++)
+            {
+                var parameterType = parameterTypeList[i];
+                if (parameterType.IsEnum && parameters[i] is string parameter)
+                {
+                    parameters[i] = Enum.Parse(parameterTypeList[i], parameter);
+                }
+            }
+
             parameterTypes = parameterTypeList.ToArray();
             return parameters.ToArray();
         }
@@ -46,7 +58,7 @@ namespace EnhancedAI
             var node = BehaviorNodeFactory.CreateBehaviorNode(TypeName, parameterTypes, parameters);
 
             if (node == null)
-                Main.HBSLog?.LogWarning($"BehaviorNode name: {Name} type: {TypeName} did not convert properly!");
+                Main.HBSLog?.LogError($"BehaviorNode name: {Name} type: {TypeName} did not convert properly!");
 
             switch (node)
             {
@@ -137,7 +149,27 @@ namespace EnhancedAI
 
         public static BehaviorNodeJSONRepresentation FromJSON(string json)
         {
-            return JsonConvert.DeserializeObject<BehaviorNodeJSONRepresentation>(json);
+            try
+            {
+                return JsonConvert.DeserializeObject<BehaviorNodeJSONRepresentation>(json);
+            }
+            catch (Exception e)
+            {
+                Main.HBSLog?.LogError("BehaviorNodeJSONRepresentation.FromJSON tossed exception");
+                Main.HBSLog?.LogException(e);
+                return null;
+            }
+        }
+
+        public static BehaviorNodeJSONRepresentation FromPath(string path)
+        {
+            if (!File.Exists(path))
+            {
+                Main.HBSLog?.LogWarning($"Could not find file at: {path}");
+                return null;
+            }
+
+            return FromJSON(File.ReadAllText(path));
         }
     }
 }

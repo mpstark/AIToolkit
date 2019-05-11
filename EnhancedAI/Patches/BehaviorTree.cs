@@ -1,4 +1,6 @@
-﻿using EnhancedAI.Features;
+﻿using System.IO;
+using EnhancedAI.Features;
+using EnhancedAI.Util;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global
@@ -7,13 +9,21 @@ using Harmony;
 namespace EnhancedAI.Patches
 {
     /// <summary>
-    /// Hook BehaviorTree InitRootNode to potentially dump the tree
+    /// Hook BehaviorTree InitRootNode to:
+    /// * Dump the tree to JSON/Text
+    /// * Replace the root node of the tree from a provided JSON file
     /// </summary>
     [HarmonyPatch(typeof(BehaviorTree), "InitRootNode")]
     public static class BehaviorTree_InitRootNode_Patch
     {
         public static void Postfix(BehaviorTree __instance)
         {
+            if (TreeReplace.ShouldReplaceTree(__instance))
+            {
+                var path = Path.Combine(Main.Directory, Main.Settings.ReplaceTreeAlways[__instance.GetIDString()]);
+                TreeReplace.ReplaceTreeFromPath(__instance, path);
+            }
+
             if (Main.Settings.ShouldDump)
                 TreeDump.DumpTree(__instance, Main.Settings.DumpType);
         }

@@ -41,6 +41,7 @@
     <Compile Include="Features\TreeDump.cs" />
     <Compile Include="BehaviorNodeJSONRepresentation.cs" />
     <Compile Include="Features\HotReload.cs" />
+    <Compile Include="Features\TreeReplace.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="ModSettings.cs" />
     <Compile Include="Patches\BehaviorTree.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\BehaviorNodeExtensions.cs" />
     <Compile Include="Util\BehaviorNodeFactory.cs" />
+    <Compile Include="Util\BehaviorTreeExtensions.cs" />
     <Compile Include="Util\NodeUtil.cs" />
   </ItemGroup>
   <ItemGroup>

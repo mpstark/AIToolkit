@@ -1,4 +1,6 @@
-﻿using BattleTech;
+﻿using System.IO;
+using BattleTech;
+using EnhancedAI.Util;
 using Harmony;
 
 namespace EnhancedAI.Features
@@ -13,7 +15,15 @@ namespace EnhancedAI.Features
             Traverse.Create(game).Property("BehaviorVariableScopeManager")
                 .SetValue(new BehaviorVariableScopeManager(game));
 
-            // TODO: reload behavior trees onto their units
+            // TODO: find a more elegant solution lol
+            var actorsWithReplaceAll = game.Combat.AllActors.FindAll(actor =>
+                Main.Settings.ReplaceTreeAlways.ContainsKey(actor.BehaviorTree.GetIDString()));
+
+            foreach (var actor in actorsWithReplaceAll)
+            {
+                var path = Path.Combine(Main.Directory, Main.Settings.ReplaceTreeAlways[actor.BehaviorTree.GetIDString()]);
+                TreeReplace.ReplaceTreeFromPath(actor.BehaviorTree, path);
+            }
         }
     }
 }
