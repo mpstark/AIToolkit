@@ -38,8 +38,9 @@
     <Reference Include="UnityEngine.UI" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TreeDump.cs" />
     <Compile Include="BehaviorNodeJSONRepresentation.cs" />
-    <Compile Include="AIHotReload.cs" />
+    <Compile Include="HotReload.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="ModSettings.cs" />
     <Compile Include="Patches\BehaviorTree.cs" />

@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace EnhancedAI.Patches
 {
+    /// <summary>
+    /// Check for key-presses to invoke hot reload
+    /// </summary>
     [HarmonyPatch(typeof(UnityGameInstance), "Update")]
     public static class UnityGameInstance_Update_Patch
     {
@@ -15,7 +18,7 @@ namespace EnhancedAI.Patches
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift) &&
                 Input.GetKeyDown(KeyCode.A) && __instance.Game.Combat != null)
             {
-                AIHotReload.DoHotReload(__instance.Game);
+                HotReload.DoHotReload(__instance.Game);
             }
         }
     }

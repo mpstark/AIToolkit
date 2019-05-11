@@ -1,10 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
+using Newtonsoft.Json.Converters;
 
 namespace EnhancedAI
 {
     internal class ModSettings
     {
+        [JsonConverter(typeof(StringEnumConverter))]
+        public TreeDump.DumpType DumpType = TreeDump.DumpType.None;
+
         public static ModSettings Parse(string json)
         {
             ModSettings settings;
