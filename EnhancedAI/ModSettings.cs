@@ -14,6 +14,7 @@ namespace EnhancedAI
         public TreeDump.DumpType DumpType = TreeDump.DumpType.None;
 
         public Dictionary<string, string> ReplaceTreeAlways = new Dictionary<string, string>();
+        public Dictionary<string, string> TeamBehaviorVariableDirectories = new Dictionary<string, string>();
 
         public static ModSettings Parse(string json)
         {

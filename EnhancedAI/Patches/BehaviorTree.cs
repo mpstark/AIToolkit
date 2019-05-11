@@ -28,4 +28,27 @@ namespace EnhancedAI.Patches
                 TreeDump.DumpTree(__instance, Main.Settings.DumpType);
         }
     }
+
+    /// <summary>
+    /// Hook GetBehaviorVariableValue to replace the value if we're overriding
+    /// the team's behaviorVariables
+    /// </summary>
+    [HarmonyPatch(typeof(BehaviorTree), "GetBehaviorVariableValue")]
+    public static class BehaviorTree_GetBehaviorVariableValue_Patch
+    {
+        public static bool Prefix(BehaviorTree __instance, BehaviorVariableName name, ref BehaviorVariableValue __result)
+        {
+            var teamName = __instance.unit.team.Name;
+            if (!TeamBasedBehaviorVariables.ShouldOverrideBehaviorVariables(teamName))
+                return true;
+
+            var value = TeamBasedBehaviorVariables.GetOverridenValue(__instance, name);
+            if (value == null)
+                return true;
+
+            Main.HBSLog?.Log($"Using overriden value for behavior variable: {name} for {__instance.unit.UnitName}");
+            __result = value;
+            return false;
+        }
+    }
 }

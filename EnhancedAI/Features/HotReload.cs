@@ -15,6 +15,11 @@ namespace EnhancedAI.Features
             Traverse.Create(game).Property("BehaviorVariableScopeManager")
                 .SetValue(new BehaviorVariableScopeManager(game));
 
+            // reload behavior variables in TeamBasedBehaviorVariables
+            foreach (var wrapper in TeamBasedBehaviorVariables.TeamToScope.Values)
+                wrapper.Load(game);
+
+            // reload behavior trees from ReplaceTreeAlways
             // TODO: find a more elegant solution lol
             var actorsWithReplaceAll = game.Combat.AllActors.FindAll(actor =>
                 Main.Settings.ReplaceTreeAlways.ContainsKey(actor.BehaviorTree.GetIDString()));
