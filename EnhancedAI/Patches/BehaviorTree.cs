@@ -13,7 +13,8 @@ namespace EnhancedAI.Patches
     {
         public static void Postfix(BehaviorTree __instance)
         {
-            TreeDump.DumpTree(__instance, Main.Settings.DumpType);
+            if (Main.Settings.ShouldDump)
+                TreeDump.DumpTree(__instance, Main.Settings.DumpType);
         }
     }
 }

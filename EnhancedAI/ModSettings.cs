@@ -6,6 +6,8 @@ namespace EnhancedAI
 {
     internal class ModSettings
     {
+        public bool ShouldDump = false;
+
         [JsonConverter(typeof(StringEnumConverter))]
         public TreeDump.DumpType DumpType = TreeDump.DumpType.None;
 
