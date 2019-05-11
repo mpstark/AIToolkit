@@ -21,6 +21,25 @@ namespace EnhancedAI
         public Dictionary<string, object> ExtraParameters { get; set; }
 
 
+        private object[] GetNodeConstructorParameters(BehaviorTree tree, AbstractActor unit, out Type[] parameterTypes)
+        {
+            var parameters = new List<object> { Name, tree, unit };
+            var parameterTypeList = new List<Type> { typeof(string), typeof(BehaviorTree), typeof(AbstractActor) };
+
+            if (ExtraParameters == null || ExtraParameters.Count == 0)
+            {
+                parameterTypes = parameterTypeList.ToArray();
+                return parameters.ToArray();
+            }
+
+            var extraParameterInfo = NodeUtil.GetConstructorExtraParameterInfo(TypeName);
+            parameterTypeList.AddRange(extraParameterInfo.Select(parameterInfo => parameterInfo.ParameterType));
+            parameters.AddRange(extraParameterInfo.Select(parameterInfo => ExtraParameters[parameterInfo.Name]));
+
+            parameterTypes = parameterTypeList.ToArray();
+            return parameters.ToArray();
+        }
+
         public BehaviorNode ToNode(BehaviorTree tree, AbstractActor unit)
         {
             var parameters = GetNodeConstructorParameters(tree, unit, out var parameterTypes);
@@ -44,24 +63,6 @@ namespace EnhancedAI
             return node;
         }
 
-        private object[] GetNodeConstructorParameters(BehaviorTree tree, AbstractActor unit, out Type[] parameterTypes)
-        {
-            var parameters = new List<object> { Name, tree, unit };
-            var parameterTypeList = new List<Type> { typeof(string), typeof(BehaviorTree), typeof(AbstractActor) };
-
-            if (ExtraParameters == null || ExtraParameters.Count == 0)
-            {
-                parameterTypes = parameterTypeList.ToArray();
-                return parameters.ToArray();
-            }
-
-            var extraParameterInfo = NodeUtil.GetConstructorExtraParameterInfo(TypeName);
-            parameterTypeList.AddRange(extraParameterInfo.Select(parameterInfo => parameterInfo.ParameterType));
-            parameters.AddRange(extraParameterInfo.Select(parameterInfo => ExtraParameters[parameterInfo.Name]));
-
-            parameterTypes = parameterTypeList.ToArray();
-            return parameters.ToArray();
-        }
 
         private void ToJSON(TextWriter textWriter, Formatting formatting)
         {
@@ -95,6 +96,7 @@ namespace EnhancedAI
                 return textWriter.ToString();
             }
         }
+
 
         public static BehaviorNodeJSONRepresentation FromNode(BehaviorNode node)
         {

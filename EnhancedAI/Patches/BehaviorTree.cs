@@ -22,8 +22,8 @@ namespace EnhancedAI.Patches
             if (hasPrinted.Contains(id))
                 return;
 
-            __instance.RootNode.DumpTree(Path.Combine(Main.Directory, $"{idString}_dump.txt"));
-            BehaviorNodeJSONRepresentation.FromNode(__instance.RootNode).ToJSONFile(Path.Combine(Main.Directory, $"{idString}.json"));
+            //__instance.RootNode.DumpTree(Path.Combine(Main.Directory, $"{idString}_dump.txt"));
+            //BehaviorNodeJSONRepresentation.FromNode(__instance.RootNode).ToJSONFile(Path.Combine(Main.Directory, $"{idString}.json"));
             hasPrinted.Add(id);
         }
     }

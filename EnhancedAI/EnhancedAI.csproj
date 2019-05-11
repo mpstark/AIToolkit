@@ -39,9 +39,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BehaviorNodeJSONRepresentation.cs" />
+    <Compile Include="AIHotReload.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="ModSettings.cs" />
     <Compile Include="Patches\BehaviorTree.cs" />
+    <Compile Include="Patches\UnityGameInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\BehaviorNodeExtensions.cs" />
     <Compile Include="Util\BehaviorNodeFactory.cs" />
