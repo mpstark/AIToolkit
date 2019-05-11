@@ -3,9 +3,11 @@
 ## Current Features
 
 * Simple behavior tree replacement by JSON
+* Assign directory of BehaviorVariables to teams
 * AI Hot Reload
   * Behavior Variables load from their location on disk (in versionManifest/modtek)
   * Behavior Trees load from their replacement JSON
+  * Team-based Behavior Variables overrides load from their directory
 * Behavior Tree Dump
   * Behavior Trees can be dumped as JSON or text
 
