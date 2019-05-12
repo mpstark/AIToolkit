@@ -19,9 +19,14 @@ namespace EnhancedAI.Features
                 .SetValue(new BehaviorVariableScopeManager(game));
 
             // try to replace the root from all AI active actors
+            // have to re-init the original root node because the RootReplacement could
+            // have been removed
             var aiActors = game.Combat.AllActors.Where(unit => unit.team is AITeam);
             foreach (var unit in aiActors)
+            {
+                Traverse.Create(unit.BehaviorTree).Method("InitRootNode").GetValue();
                 TreeReplace.TryReplaceTreeFromAIOverrides(unit.BehaviorTree);
+            }
         }
     }
 }
