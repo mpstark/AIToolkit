@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using EnhancedAI.Features;
 using Newtonsoft.Json.Converters;
 
@@ -12,9 +11,6 @@ namespace EnhancedAI
 
         [JsonConverter(typeof(StringEnumConverter))]
         public TreeDump.DumpType DumpType = TreeDump.DumpType.None;
-
-        public Dictionary<string, string> ReplaceTreeAlways = new Dictionary<string, string>();
-        public Dictionary<string, string> TeamBehaviorVariableDirectories = new Dictionary<string, string>();
 
         public static ModSettings Parse(string json)
         {

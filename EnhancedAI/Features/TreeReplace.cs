@@ -1,20 +1,19 @@
-﻿using EnhancedAI.Util;
+﻿using EnhancedAI.Resources;
+using EnhancedAI.Util;
 
 namespace EnhancedAI.Features
 {
     public static class TreeReplace
     {
-        public static bool ShouldReplaceTree(BehaviorTree tree)
+        public static void TryReplaceTreeFromAIOverrides(BehaviorTree tree)
         {
-            return Main.Settings.ReplaceTreeAlways.ContainsKey(tree.GetIDString());
-        }
+            var aiOverride = AIOverrideDef.SelectFrom(Main.AIOverrideDefs, tree.unit);
 
-        public static void ReplaceTreeFromPath(BehaviorTree tree, string path)
-        {
-            var newRoot = BehaviorNodeJSONRepresentation.FromPath(path)?.ToNode(tree, tree.unit);
+            if (aiOverride.RootReplacement == null)
+                return;
 
-            if (newRoot != null)
-                tree.ReplaceRoot(newRoot);
+            Main.HBSLog?.Log($"TreeReplace from AIOverrideDef {aiOverride.Name}");
+            tree.ReplaceRoot(aiOverride.RootReplacement.ToNode(tree, tree.unit));
         }
     }
 }

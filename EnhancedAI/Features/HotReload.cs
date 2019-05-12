@@ -1,6 +1,5 @@
-﻿using System.IO;
+﻿using System.Linq;
 using BattleTech;
-using EnhancedAI.Util;
 using Harmony;
 
 namespace EnhancedAI.Features
@@ -11,23 +10,22 @@ namespace EnhancedAI.Features
         {
             Main.HBSLog?.Log("HotReload!");
 
+            // reload all overrides from their path, this has side effect of
+            // clearing all ScopeManagerWrappers as well
+            Main.ReloadAIOverrides();
+
             // reload behavior variables by forcing a new scope manager
             Traverse.Create(game).Property("BehaviorVariableScopeManager")
                 .SetValue(new BehaviorVariableScopeManager(game));
 
-            // reload behavior variables in TeamBasedBehaviorVariables
-            foreach (var wrapper in TeamBasedBehaviorVariables.TeamToScope.Values)
-                wrapper.Load(game);
-
-            // reload behavior trees from ReplaceTreeAlways
-            // TODO: find a more elegant solution lol
-            var actorsWithReplaceAll = game.Combat.AllActors.FindAll(actor =>
-                Main.Settings.ReplaceTreeAlways.ContainsKey(actor.BehaviorTree.GetIDString()));
-
-            foreach (var actor in actorsWithReplaceAll)
+            // try to replace the root from all AI active actors
+            // have to re-init the original root node because the RootReplacement could
+            // have been removed
+            var aiActors = game.Combat.AllActors.Where(unit => unit.team is AITeam);
+            foreach (var unit in aiActors)
             {
-                var path = Path.Combine(Main.Directory, Main.Settings.ReplaceTreeAlways[actor.BehaviorTree.GetIDString()]);
-                TreeReplace.ReplaceTreeFromPath(actor.BehaviorTree, path);
+                Traverse.Create(unit.BehaviorTree).Method("InitRootNode").GetValue();
+                TreeReplace.TryReplaceTreeFromAIOverrides(unit.BehaviorTree);
             }
         }
     }

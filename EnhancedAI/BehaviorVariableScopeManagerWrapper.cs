@@ -33,7 +33,7 @@ namespace EnhancedAI
 
         public BehaviorVariableScopeManagerWrapper(GameInstance game, string path)
         {
-            _dirPath = Path.Combine(Main.Directory, path);
+            _dirPath = Path.Combine(Path.Combine(Main.Directory, ".."), path);
             Load(game);
         }
 

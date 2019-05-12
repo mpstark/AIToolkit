@@ -1,46 +1,43 @@
-﻿using System.Collections.Generic;
-using BattleTech;
+﻿using BattleTech;
+using EnhancedAI.Resources;
 using Harmony;
 
 namespace EnhancedAI.Features
 {
-    public static class TeamBasedBehaviorVariables
+    public static class BehaviorVariableOverride
     {
-        public static readonly Dictionary<string, BehaviorVariableScopeManagerWrapper> TeamToScope
-            = new Dictionary<string, BehaviorVariableScopeManagerWrapper>();
-
-        public static bool ShouldOverrideBehaviorVariables(string teamName)
+        public static BehaviorVariableValue TryGetValueFromAIOverrides(BehaviorTree tree, BehaviorVariableName name, out string overrideName)
         {
-            return Main.Settings.TeamBehaviorVariableDirectories.ContainsKey(teamName);
-        }
+            overrideName = null;
+            var aiOverride = AIOverrideDef.SelectFrom(Main.AIOverrideDefs, tree.unit);
 
-        private static BehaviorVariableScopeManager GetBehaviorVariableScopeOverride(GameInstance game, string teamName)
-        {
-            if (!ShouldOverrideBehaviorVariables(teamName))
+            if (aiOverride == null)
                 return null;
 
-            if (TeamToScope.ContainsKey(teamName))
-                return TeamToScope[teamName].ScopeManager;
+            overrideName = aiOverride.Name;
 
-            var path = Main.Settings.TeamBehaviorVariableDirectories[teamName];
-            var wrapper = new BehaviorVariableScopeManagerWrapper(game, path);
-            TeamToScope.Add(teamName, wrapper);
+            // custom scope has value, and takes priority over everything else
+            if (aiOverride.CustomScope != null && aiOverride.CustomScope.ContainsKey(name))
+                return aiOverride.CustomScope[name];
 
-            return wrapper.ScopeManager;
-        }
+            if (string.IsNullOrEmpty(aiOverride.BehaviorScopeDirectory))
+                return null;
 
-        public static BehaviorVariableValue GetOverridenValue(BehaviorTree tree, BehaviorVariableName name)
-        {
+            // if we don't have a custom scope and do have a scopeDirectory,
+            // check the scopeManager in the same fashion that the vanilla game does
+            // but for non scopeManger values, we'll return null to force the value
+            // to come from the global scopeManager, so the logs don't say that
+            // we overrode them
+
+            if (aiOverride.ScopeWrapper == null)
+                aiOverride.ScopeWrapper = new BehaviorVariableScopeManagerWrapper(tree.battleTechGame, aiOverride.BehaviorScopeDirectory);
+
+            var scopeManager = aiOverride.ScopeWrapper.ScopeManager;
+
             // CODE IS LARGELY REWRITTEN FROM HBS CODE
             // LICENSE DOES NOT APPLY TO THIS FUNCTION
-
-            var teamName = tree.unit.team.Name;
-            var scopeManager = GetBehaviorVariableScopeOverride(tree.battleTechGame, teamName);
-            var mood = tree.unit.BehaviorTree.mood;
             BehaviorVariableScope scope;
-
-            // for non scopeManager values, we'll return null to force the value
-            // from the actual Scope, so we have logs that make sense
+            var mood = tree.unit.BehaviorTree.mood;
 
             // internal variable storage
             var value = tree.unitBehaviorVariables.GetVariable(name);
