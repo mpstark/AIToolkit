@@ -12,6 +12,9 @@ namespace EnhancedAI
         [JsonConverter(typeof(StringEnumConverter))]
         public TreeDump.DumpType DumpType = TreeDump.DumpType.None;
 
+        public bool ShouldPauseAI = false;
+        public bool FocusOnPause = false;
+
         public static ModSettings Parse(string json)
         {
             ModSettings settings;
