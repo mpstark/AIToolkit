@@ -55,20 +55,20 @@ namespace EnhancedAI.Resources
             return FromJSON(File.ReadAllText(path));
         }
 
-        public static AIOverrideDef SelectFrom(List<AIOverrideDef> overrides, AbstractActor unit)
+        public static AIOverrideDef SelectFrom(IEnumerable<AIOverrideDef> overrides, AbstractActor unit)
         {
-            var matching = overrides.FindAll(o => Selectors[o.SelectorType].Select(o.Selector, unit));
+            var matching = overrides.Where(o => Selectors[o.SelectorType].Select(o.Selector, unit)).ToArray();
 
-            if (matching.Count == 0)
+            if (matching.Length == 0)
                 return null;
 
-            if (matching.Count == 1)
+            if (matching.Length == 1)
                 return matching[0];
 
             // find the one with the highest priority, and then just choose the first
             // one with that priority
             var maxPriority = matching.Max(o => o.Priority);
-            return matching.Find(o => o.Priority == maxPriority);
+            return matching.First(o => o.Priority == maxPriority);
         }
     }
 }
