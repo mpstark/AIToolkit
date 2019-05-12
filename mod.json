@@ -1,0 +1,16 @@
+{
+    "Name": "EnhancedAI",
+    "DLL": "EnhancedAI.dll",
+    "Enabled": true,
+
+    "CustomResourceTypes": [ "AIOverrideDef" ],
+
+    "Settings": {
+        "ShouldDump": false,
+        "DumpType": "Both"
+    },
+
+    "Manifest": [
+        { "Path": "AIOverrideDefs", "Type": "AIOverrideDef" }
+    ]
+}

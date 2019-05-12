@@ -6,6 +6,8 @@ using EnhancedAI.Resources;
 using Harmony;
 using HBS.Logging;
 
+// ReSharper disable UnusedMember.Global
+
 namespace EnhancedAI
 {
     public static class Main

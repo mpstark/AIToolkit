@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnhancedAITests", "Enhanced
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{6EDC3C5D-F109-4A26-8FEB-4DBC10A93632}"
 	ProjectSection(SolutionItems) = preProject
+		mod.json = mod.json
 		README.md = README.md
 	EndProjectSection
 EndProject
