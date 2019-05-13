@@ -51,7 +51,7 @@ namespace EnhancedAI.Patches
             // the ai has decided to do something, if we're pausing the AI,
             // we want to skip this invocation and inject it on the next think
             // after we hit the key shortcut
-            var skipThisInvocation = AIDebugPause.OnAIInvocation(__result);
+            var skipThisInvocation = AIDebugPause.OnAIInvocation(__instance, __result);
             if (skipThisInvocation)
                 __result = null;
         }
