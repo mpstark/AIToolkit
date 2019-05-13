@@ -15,7 +15,7 @@ namespace EnhancedAI.Patches
     {
         public static bool Prefix(AITeam __instance)
         {
-            return !AIDebugPause.ShouldSkipAIThink(__instance);
+            return !AIDebugPause.OnAIThink(__instance);
         }
     }
 
@@ -29,6 +29,10 @@ namespace EnhancedAI.Patches
 
         public static bool Prefix(AITeam __instance, ref InvocationMessage __result)
         {
+            // if shouldPauseAI is on at all, we should never fail to get invocation because of time
+            if (Main.Settings.ShouldPauseAI)
+                Traverse.Create(__instance).Field("planningStartTime").SetValue(__instance.Combat.BattleTechGame.Time);
+
             var injectInvocation = AIDebugPause.TryGetInjectInvocationMessage();
             if (injectInvocation == null)
                 return true;

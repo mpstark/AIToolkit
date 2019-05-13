@@ -15,6 +15,7 @@ namespace EnhancedAI.Features
     {
         public static bool IsPaused { get; private set; }
 
+        private static AITeam _currentAITeam;
         private static InvocationMessage _interceptedInvocationMessage;
 
         private static GameObject _mechMovementVisualization;
@@ -25,7 +26,24 @@ namespace EnhancedAI.Features
         private static Vector3 _movementLineGroundOffset = new Vector3(0f, 1f, 0f);
 
 
-        public static bool ShouldSkipAIThink(AITeam team)
+        public static void Reset()
+        {
+            if (!IsPaused)
+                return;
+
+            if (_currentAITeam != null)
+            {
+                var currentUnit = Traverse.Create(_currentAITeam).Field("currentUnit").GetValue<AbstractActor>();
+                currentUnit.BehaviorTree.Reset();
+                currentUnit.BehaviorTree.influenceMapEvaluator.ResetWorkspace();
+                currentUnit.BehaviorTree.influenceMapEvaluator.Reset();
+            }
+
+            _interceptedInvocationMessage = null;
+            OnUnpause();
+        }
+
+        public static bool OnAIThink(AITeam team)
         {
             if (!Main.Settings.ShouldPauseAI)
                 return false;
@@ -52,7 +70,7 @@ namespace EnhancedAI.Features
             }
 
             if (!IsPaused)
-                OnPause();
+                OnPause(team);
 
             return true;
         }
@@ -66,7 +84,6 @@ namespace EnhancedAI.Features
             _interceptedInvocationMessage = invocation;
 
             ParseInvocationMessage(aiTeam.Combat, invocation);
-
             return true;
         }
 
@@ -84,17 +101,18 @@ namespace EnhancedAI.Features
         }
 
 
-        private static void OnPause()
+        private static void OnPause(AITeam team)
         {
-            IsPaused = true;
+            Main.HBSLog?.Log("AIDebugPause -- Paused");
 
-            //if (Main.Settings.FocusOnPause)
-            //    MaybeFocusUnit(currentUnit);
+            IsPaused = true;
+            _currentAITeam = team;
         }
 
         private static void OnUnpause()
         {
             IsPaused = false;
+            _currentAITeam = null;
 
             if (_movementLine != null)
                 _movementLine.gameObject.SetActive(false);
