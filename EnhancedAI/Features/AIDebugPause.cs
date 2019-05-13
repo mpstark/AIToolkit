@@ -98,15 +98,20 @@ namespace EnhancedAI.Features
         {
             Main.HBSLog?.Log("AIDebugPause -- Paused");
 
+            InfluenceMapVisualization.Show();
+
             IsPaused = true;
             _currentAITeam = team;
         }
 
         private static void OnUnpause()
         {
+            Main.HBSLog?.Log("AIDebugPause -- Unpaused");
+
             IsPaused = false;
             _currentAITeam = null;
 
+           InfluenceMapVisualization.Hide();
            InvocationVisualization.Hide();
         }
     }
