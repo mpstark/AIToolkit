@@ -33,13 +33,13 @@ namespace EnhancedAI.Patches
             if (Main.Settings.ShouldPauseAI)
                 Traverse.Create(__instance).Field("planningStartTime").SetValue(__instance.Combat.BattleTechGame.Time);
 
-            var injectInvocation = AIDebugPause.TryGetInjectInvocationMessage();
-            if (injectInvocation == null)
+            var inject = AIDebugPause.TryGetMessageInject();
+            if (inject == null)
                 return true;
 
             // abort the call and force the return to be the previously skipped
             // invocation message that we got in the postfix
-            __result = injectInvocation;
+            __result = inject;
             _injectedThisCall = true;
             return false;
         }

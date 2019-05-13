@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="BehaviorVariableScopeManagerWrapper.cs" />
     <Compile Include="Features\BehaviorVariableOverride.cs" />
+    <Compile Include="Features\InvocationVisualization.cs" />
     <Compile Include="Features\TreeDump.cs" />
     <Compile Include="BehaviorNodeJSONRepresentation.cs" />
     <Compile Include="Features\HotReload.cs" />
