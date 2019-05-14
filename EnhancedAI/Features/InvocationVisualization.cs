@@ -57,9 +57,7 @@ namespace EnhancedAI.Features
                 {
                     var unit = combat.FindActorByGUID(dfa.SourceGUID);
                     var target = combat.FindActorByGUID(dfa.TargetGUID);
-
-                    var minArcHeight = Mathf.Max(Mathf.Abs(dfa.JumpLocation.y - unit.CurrentPosition.y) + 16f, 32f);
-                    var linePoints = WeaponRangeIndicators.GetPointsForArc(18, minArcHeight, unit.CurrentPosition + _movementLineGroundOffset, dfa.JumpLocation + _movementLineGroundOffset);
+                    var linePoints = GetPointsForJump(unit.CurrentPosition, dfa.JumpLocation);
 
                     VisualizeMovement(unit, dfa.JumpLocation, dfa.JumpRotation, linePoints);
                     VisualizeAttack(unit.CurrentPosition, target, true, false);
@@ -70,8 +68,7 @@ namespace EnhancedAI.Features
                 {
                     var unit = combat.FindActorByGUID(jump.MechGUID);
                     var finalPosition = jump.FinalDestination;
-                    var minArcHeight = Mathf.Max(Mathf.Abs(finalPosition.y - unit.CurrentPosition.y) + 16f, 32f);
-                    var linePoints = WeaponRangeIndicators.GetPointsForArc(18, minArcHeight, unit.CurrentPosition + _movementLineGroundOffset, finalPosition + _movementLineGroundOffset);
+                    var linePoints = GetPointsForJump(unit.CurrentPosition, finalPosition);
 
                     VisualizeMovement(unit, finalPosition, jump.FinalRotation, linePoints);
                     break;
@@ -114,6 +111,13 @@ namespace EnhancedAI.Features
                 return null;
 
             return waypoints.Select(p => p.Position + _movementLineGroundOffset).ToArray();
+        }
+
+        private static Vector3[] GetPointsForJump(Vector3 from, Vector3 to)
+        {
+            var minArcHeight = Mathf.Max(Mathf.Abs(to.y - from.y) + 16f, 32f);
+            return WeaponRangeIndicators.GetPointsForArc(18, minArcHeight,
+                from + _movementLineGroundOffset, to + _movementLineGroundOffset);
         }
 
         private static GameObject GetMovementVisualization(AbstractActor unit)
