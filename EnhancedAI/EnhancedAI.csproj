@@ -40,13 +40,14 @@
   <ItemGroup>
     <Compile Include="BehaviorVariableScopeManagerWrapper.cs" />
     <Compile Include="Features\BehaviorVariableOverride.cs" />
+    <Compile Include="Features\InfluenceFactorOverride.cs" />
     <Compile Include="Features\InvocationVisualization.cs" />
-    <Compile Include="Features\TreeDump.cs" />
+    <Compile Include="Features\BehaviorTreeDump.cs" />
     <Compile Include="BehaviorNodeJSONRepresentation.cs" />
     <Compile Include="Features\HotReload.cs" />
     <Compile Include="Features\AIDebugPause.cs" />
     <Compile Include="Features\InfluenceMapVisualization.cs" />
-    <Compile Include="Features\TreeReplace.cs" />
+    <Compile Include="Features\BehaviorTreeReplace.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="ModSettings.cs" />
     <Compile Include="Patches\BehaviorTree.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Util\BehaviorNodeFactory.cs" />
     <Compile Include="Util\BehaviorTreeExtensions.cs" />
     <Compile Include="Util\NodeUtil.cs" />
+    <Compile Include="Util\TypeUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -4,7 +4,7 @@ using EnhancedAI.Util;
 
 namespace EnhancedAI.Features
 {
-    public static class TreeDump
+    public static class BehaviorTreeDump
     {
         internal static readonly List<BehaviorTreeIDEnum> DumpedTrees = new List<BehaviorTreeIDEnum>();
 
@@ -15,6 +15,8 @@ namespace EnhancedAI.Features
             Text,
             Both
         }
+
+        // TODO: add dump all method, called on main startup
 
         public static void DumpTree(BehaviorTree tree, DumpType type)
         {

@@ -24,7 +24,7 @@ namespace EnhancedAI.Util
 
         public static BehaviorNode CreateBehaviorNode(string typeName, Type[] parameterTypes, params object[] parameters)
         {
-            var type = NodeUtil.GetBehaviorNodeTypeByName(typeName);
+            var type = TypeUtil.GetTypeByName(typeName, typeof(BehaviorNode));
 
             if (type == null)
                 return null;

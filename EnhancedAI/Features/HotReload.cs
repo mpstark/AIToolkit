@@ -22,14 +22,12 @@ namespace EnhancedAI.Features
                 Traverse.Create(game).Property("BehaviorVariableScopeManager")
                 .SetValue(new BehaviorVariableScopeManager(game));
 
-            // try to replace the root from all AI active actors
-            // have to re-init the original root node because the NewBehaviorTreeRoot could
-            // have been removed
+            // try to override the ai after resetting it
             var aiActors = game.Combat.AllActors.Where(unit => unit.team is AITeam);
             foreach (var unit in aiActors)
             {
-                Traverse.Create(unit.BehaviorTree).Method("InitRootNode").GetValue();
-                TreeReplace.TryReplaceTreeFromAIOverrides(unit.BehaviorTree);
+                Main.ResetAI(unit);
+                Main.TryOverrideAI(unit);
             }
 
             if (AIDebugPause.IsPaused)

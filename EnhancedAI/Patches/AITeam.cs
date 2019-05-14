@@ -15,8 +15,19 @@ namespace EnhancedAI.Patches
     {
         public static bool Prefix(AITeam __instance)
         {
-            // TODO: calculate overrideDefs for current unit here instead?
             return !AIDebugPause.OnAIThink(__instance);
+        }
+    }
+
+    /// <summary>
+    /// Hook to potentially override units ai each time it comes up
+    /// </summary>
+    [HarmonyPatch(typeof(AITeam), "selectCurrentUnit")]
+    public static class AITeam_selectCurrentUnit_patch
+    {
+        public static void Postfix(AITeam __instance, ref AbstractActor __result)
+        {
+            Main.TryOverrideAI(__result);
         }
     }
 

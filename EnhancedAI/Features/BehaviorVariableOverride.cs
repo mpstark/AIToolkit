@@ -1,5 +1,4 @@
 ﻿using BattleTech;
-using EnhancedAI.Resources;
 using Harmony;
 
 namespace EnhancedAI.Features
@@ -9,11 +8,10 @@ namespace EnhancedAI.Features
         public static BehaviorVariableValue TryGetValueFromAIOverrides(BehaviorTree tree, BehaviorVariableName name, out string overrideName)
         {
             overrideName = null;
-            var aiOverride = AIOverrideDef.MatchToUnitFrom(Main.AIOverrideDefs, tree.unit);
-
-            if (aiOverride == null)
+            if (!Main.UnitToAIOverride.ContainsKey(tree.unit))
                 return null;
 
+            var aiOverride = Main.UnitToAIOverride[tree.unit];
             overrideName = aiOverride.Name;
 
             // custom scope has value, and takes priority over everything else

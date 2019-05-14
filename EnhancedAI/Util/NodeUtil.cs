@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Harmony;
@@ -8,39 +7,9 @@ namespace EnhancedAI.Util
 {
     public static class NodeUtil
     {
-        private static bool _hasRunCacheFill;
-        private static readonly Dictionary<string, Type> BehaviorNodeTypeCache = new Dictionary<string, Type>();
-
-        private static void BehaviorNodeTypeCacheFill()
-        {
-            var types = typeof(BehaviorNode).Assembly.GetTypes();
-            foreach (var type in types)
-            {
-                if (type.IsSubclassOf(typeof(BehaviorNode)) && !BehaviorNodeTypeCache.ContainsKey(type.Name))
-                    BehaviorNodeTypeCache.Add(type.Name, type);
-            }
-        }
-
-        public static Type GetBehaviorNodeTypeByName(string typeName)
-        {
-            if (!_hasRunCacheFill)
-            {
-                BehaviorNodeTypeCacheFill();
-                _hasRunCacheFill = true;
-            }
-
-            if (BehaviorNodeTypeCache.ContainsKey(typeName))
-                return BehaviorNodeTypeCache[typeName];
-
-            var type = AccessTools.TypeByName(typeName);
-            BehaviorNodeTypeCache.Add(typeName, type);
-
-            return BehaviorNodeTypeCache[typeName];
-        }
-
         public static ParameterInfo[] GetConstructorExtraParameterInfo(string typeName)
         {
-            var type = GetBehaviorNodeTypeByName(typeName);
+            var type = TypeUtil.GetTypeByName(typeName, typeof(BehaviorNode));
             if (type == null)
                 return null;
 

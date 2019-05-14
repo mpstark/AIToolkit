@@ -3,12 +3,10 @@ using EnhancedAI.Util;
 
 namespace EnhancedAI.Features
 {
-    public static class TreeReplace
+    public static class BehaviorTreeReplace
     {
-        public static void TryReplaceTreeFromAIOverrides(BehaviorTree tree)
+        public static void TryReplaceTree(BehaviorTree tree, AIOverrideDef aiOverride)
         {
-            var aiOverride = AIOverrideDef.MatchToUnitFrom(Main.AIOverrideDefs, tree.unit);
-
             if (aiOverride.NewBehaviorTreeRoot == null)
                 return;
 

@@ -10,7 +10,7 @@ namespace EnhancedAI
         public bool ShouldDump = false;
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public TreeDump.DumpType DumpType = TreeDump.DumpType.None;
+        public BehaviorTreeDump.DumpType DumpType = BehaviorTreeDump.DumpType.None;
 
         public bool ShouldPauseAI = false;
         public bool FocusOnPause = false;
