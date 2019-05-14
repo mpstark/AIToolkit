@@ -9,10 +9,10 @@ namespace EnhancedAI.Features
 {
     public static class AIDebugPause
     {
-        public static bool IsPaused { get; private set; }
-
         private static AITeam _currentAITeam;
         private static InvocationMessage _interceptedInvocationMessage;
+
+        public static bool IsPaused { get; private set; }
 
 
         public static void Reset()
@@ -43,7 +43,8 @@ namespace EnhancedAI.Features
                 return false;
 
             // don't pause if pending invocations (we want to only pause before new invocation)
-            var pendingInvocations = Traverse.Create(team).Field("pendingInvocations").GetValue<List<InvocationMessage>>();
+            var pendingInvocations =
+                Traverse.Create(team).Field("pendingInvocations").GetValue<List<InvocationMessage>>();
             if (pendingInvocations != null && pendingInvocations.Count > 0)
                 return false;
 
@@ -79,7 +80,8 @@ namespace EnhancedAI.Features
             if (invocation is InspireActorInvocation)
                 return false;
 
-            Main.HBSLog?.Log($"AIDebugPause: Intercepted an AI invocation: {invocation.InvocationID} ({invocation.MessageType})");
+            Main.HBSLog?.Log(
+                $"AIDebugPause: Intercepted an AI invocation: {invocation.InvocationID} ({invocation.MessageType})");
             _interceptedInvocationMessage = invocation;
 
             InvocationVisualization.ShowFor(aiTeam.Combat, invocation);
@@ -91,7 +93,8 @@ namespace EnhancedAI.Features
             if (_interceptedInvocationMessage == null)
                 return null;
 
-            Main.HBSLog?.Log($"AIDebugPause: Injecting an AI invocation: {_interceptedInvocationMessage.InvocationID} ({_interceptedInvocationMessage.MessageType})");
+            Main.HBSLog?.Log(
+                $"AIDebugPause: Injecting an AI invocation: {_interceptedInvocationMessage.InvocationID} ({_interceptedInvocationMessage.MessageType})");
 
             var message = _interceptedInvocationMessage;
             _interceptedInvocationMessage = null;

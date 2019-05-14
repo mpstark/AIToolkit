@@ -11,8 +11,8 @@ namespace EnhancedAI.Features
     public static class InfluenceMapVisualization
     {
         private static GameObject _parent = new GameObject("InfluenceMapVisualizationParent");
-        private static List<GameObject> _unusedPool = new List<GameObject>();
-        private static List<GameObject> _usedPool = new List<GameObject>();
+        private static List<GameObject> _unusedDotPool = new List<GameObject>();
+        private static List<GameObject> _usedDotPool = new List<GameObject>();
         private static Mesh _circleMesh = GenerateCircleMesh(4, 20);
         private static Vector3 _groundOffset = 2 * Vector3.up;
 
@@ -59,34 +59,34 @@ namespace EnhancedAI.Features
 
                 //color = Color.Lerp(Color.black, Color.white, (value - lowest) / (highest - lowest));
 
-                ShowAt(pos, color);
+                ShowDotAt(pos, color);
             }
         }
 
         public static void Hide()
         {
-            foreach (var dot in _usedPool)
+            foreach (var dot in _usedDotPool)
                 dot.SetActive(false);
 
-            _unusedPool.AddRange(_usedPool);
-            _usedPool.Clear();
+            _unusedDotPool.AddRange(_usedDotPool);
+            _usedDotPool.Clear();
             _parent.SetActive(false);
         }
 
 
-        private static void ShowAt(Vector3 location, Color color)
+        private static void ShowDotAt(Vector3 location, Color color)
         {
             GameObject dot;
-            if (_unusedPool.Count > 0)
+            if (_unusedDotPool.Count > 0)
             {
-                dot = _unusedPool[0];
-                _unusedPool.RemoveAt(0);
+                dot = _unusedDotPool[0];
+                _unusedDotPool.RemoveAt(0);
             }
             else
             {
                 var movementDot = CombatMovementReticle.Instance.movementDotTemplate;
 
-                dot = new GameObject($"dot_{_unusedPool.Count + _usedPool.Count}");
+                dot = new GameObject($"dot_{_unusedDotPool.Count + _usedDotPool.Count}");
                 dot.transform.SetParent(_parent.transform);
 
                 var meshFilter = dot.AddComponent<MeshFilter>();
@@ -101,7 +101,7 @@ namespace EnhancedAI.Features
                 dot.AddComponent<UISweep>();
             }
 
-            _usedPool.Add(dot);
+            _usedDotPool.Add(dot);
             dot.transform.position = location + _groundOffset;
             dot.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 

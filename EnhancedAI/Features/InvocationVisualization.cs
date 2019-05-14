@@ -46,7 +46,9 @@ namespace EnhancedAI.Features
                     foreach (var subAttack in attack.subAttackInvocations)
                     {
                         var target = combat.FindActorByGUID(subAttack.targetGUID);
-                        VisualizeAttack(unit.CurrentPosition + _attackLineOffset, target, false, !unit.HasLOFToTargetUnit(target, float.MaxValue, false));
+                        var isIndirect = !unit.HasLOFToTargetUnit(target, float.MaxValue, false);
+
+                        VisualizeAttack(unit.CurrentPosition + _attackLineOffset, target, false, isIndirect);
                     }
                     break;
                 }
@@ -93,9 +95,7 @@ namespace EnhancedAI.Features
         public static void Hide()
         {
             foreach (var line in _attackLines)
-            {
                 line.gameObject.SetActive(false);
-            }
 
             if (_movementLine != null)
                 _movementLine.gameObject.SetActive(false);
@@ -142,8 +142,8 @@ namespace EnhancedAI.Features
 
         private static LineRenderer InitLineObject(string name, float width, Color color)
         {
-            var gameObject = new GameObject(name);
-            var line = gameObject.AddComponent<LineRenderer>();
+            var lineGameObject = new GameObject(name);
+            var line = lineGameObject.AddComponent<LineRenderer>();
 
             var existingLineRenderer = CombatMovementReticle.Instance.pathManager.badPathTutorialLine.line;
             line.sharedMaterial = existingLineRenderer.sharedMaterial;
@@ -156,7 +156,7 @@ namespace EnhancedAI.Features
             line.startColor = color;
             line.endColor = color;
 
-            gameObject.AddComponent<UISweep>();
+            lineGameObject.AddComponent<UISweep>();
 
             return line;
         }
