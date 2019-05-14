@@ -58,6 +58,7 @@
     <Compile Include="Resources\AIOverrideDef.cs" />
     <Compile Include="Selectors\CustomSelector.cs" />
     <Compile Include="Selectors\ISelector.cs" />
+    <Compile Include="Selectors\SelectorValue.cs" />
     <Compile Include="Selectors\TreeSelector.cs" />
     <Compile Include="Selectors\RoleSelector.cs" />
     <Compile Include="Selectors\TeamNameSelector.cs" />
