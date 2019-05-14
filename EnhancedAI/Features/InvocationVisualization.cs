@@ -15,9 +15,10 @@ namespace EnhancedAI.Features
         private static GameObject _mechMovementVisualization;
         private static GameObject _veeMovementVisualization;
 
-        private static LineRenderer _attackLine;
+        private static List<LineRenderer> _attackLines = new List<LineRenderer>();
         private static LineRenderer _movementLine;
-        private static Vector3 _movementLineGroundOffset = new Vector3(0f, 1f, 0f);
+        private static Vector3 _movementLineGroundOffset = Vector3.up;
+        private static Vector3 _attackLineOffset = 7.5f * Vector3.up;
 
 
         public static void ShowFor(CombatGameState combat, InvocationMessage message)
@@ -38,6 +39,31 @@ namespace EnhancedAI.Features
                     break;
                 }
 
+                case AttackInvocation attack:
+                {
+                    var unit = combat.FindActorByGUID(attack.SourceGUID);
+
+                    foreach (var subAttack in attack.subAttackInvocations)
+                    {
+                        var target = combat.FindActorByGUID(subAttack.targetGUID);
+                        VisualizeAttack(unit.CurrentPosition + _attackLineOffset, target, false, !unit.HasLOFToTargetUnit(target, float.MaxValue, false));
+                    }
+                    break;
+                }
+
+                case MechDFAInvocation dfa:
+                {
+                    var unit = combat.FindActorByGUID(dfa.SourceGUID);
+                    var target = combat.FindActorByGUID(dfa.TargetGUID);
+
+                    var minArcHeight = Mathf.Max(Mathf.Abs(dfa.JumpLocation.y - unit.CurrentPosition.y) + 16f, 32f);
+                    var linePoints = WeaponRangeIndicators.GetPointsForArc(18, minArcHeight, unit.CurrentPosition + _movementLineGroundOffset, dfa.JumpLocation + _movementLineGroundOffset);
+
+                    VisualizeMovement(unit, dfa.JumpLocation, dfa.JumpRotation, linePoints);
+                    VisualizeAttack(unit.CurrentPosition, target, true, false);
+                    break;
+                }
+
                 case MechJumpInvocation jump:
                 {
                     var unit = combat.FindActorByGUID(jump.MechGUID);
@@ -49,27 +75,30 @@ namespace EnhancedAI.Features
                     break;
                 }
 
-                case AttackInvocation attack:
+                case MechMeleeInvocation melee:
                 {
-                    var unit = combat.FindActorByGUID(attack.SourceGUID);
-                    var subAttack = attack.subAttackInvocations[0];
-                    var target = combat.FindActorByGUID(subAttack.targetGUID);
+                    var unit = combat.FindActorByGUID(melee.MechGUID);
+                    var target = combat.FindActorByGUID(melee.TargetGUID);
+                    var rotation = Quaternion.FromToRotation(melee.desiredMeleePosition, target.CurrentPosition);
 
-                    VisualizeAttack(unit, target, false, !unit.HasLOFToTargetUnit(target, float.MaxValue, false));
+                    VisualizeMovement(unit, melee.desiredMeleePosition, rotation, new []{unit.CurrentPosition, melee.desiredMeleePosition});
+                    VisualizeAttack(unit.CurrentPosition, target, true, false);
                     break;
                 }
 
-                // TODO: finish visualization for all of the other invocation types
+                // TODO: finish visualization for Reserve/SensorLock/Stand/Startup/"MoraleDefend"
             }
         }
 
         public static void Hide()
         {
+            foreach (var line in _attackLines)
+            {
+                line.gameObject.SetActive(false);
+            }
+
             if (_movementLine != null)
                 _movementLine.gameObject.SetActive(false);
-
-            if (_attackLine != null)
-                _attackLine.gameObject.SetActive(false);
 
             if (_mechMovementVisualization != null)
                 _mechMovementVisualization.SetActive(false);
@@ -147,21 +176,25 @@ namespace EnhancedAI.Features
 
         private static void DrawAttackLine(Vector3 from, Vector3 to, bool isIndirect)
         {
-            if (_attackLine == null)
-                _attackLine = InitLineObject("AIDebugAttackLine", 0.5f, Color.red);
+            var line = _attackLines.FirstOrDefault(l => !l.gameObject.activeSelf);
+            if (line == null)
+            {
+                line = InitLineObject($"AIDebugAttackLine_{_attackLines.Count}", 0.5f, Color.red);
+                _attackLines.Add(line);
+            }
 
-            _attackLine.gameObject.SetActive(true);
+            line.gameObject.SetActive(true);
 
             if (isIndirect)
             {
                 var pointsForArc = WeaponRangeIndicators.GetPointsForArc(18, 30f, from, to);
-                _attackLine.positionCount = 18;
-                _attackLine.SetPositions(pointsForArc);
+                line.positionCount = 18;
+                line.SetPositions(pointsForArc);
                 return;
             }
 
-            _attackLine.positionCount = 2;
-            _attackLine.SetPositions(new[] { from, to });
+            line.positionCount = 2;
+            line.SetPositions(new[] { from, to });
         }
 
 
@@ -179,13 +212,13 @@ namespace EnhancedAI.Features
                 CameraControl.Instance.ForceMovingToGroundPos(finalPosition);
         }
 
-        private static void VisualizeAttack(AbstractActor unit, AbstractActor target, bool isMeleeAttack, bool isIndirect)
+        private static void VisualizeAttack(Vector3 sourcePosition, AbstractActor target, bool isMeleeAttack, bool isIndirect)
         {
             var targetPosition = target.CurrentPosition;
             if (!isMeleeAttack)
-                targetPosition = target.TargetPosition;
+                targetPosition = target.CurrentPosition + _attackLineOffset;
 
-            DrawAttackLine(unit.CurrentPosition + unit.HighestLOSPosition, targetPosition, isIndirect);
+            DrawAttackLine(sourcePosition, targetPosition, isIndirect);
 
             if (Main.Settings.FocusOnPause)
                 CameraControl.Instance.ForceMovingToGroundPos(target.CurrentPosition);

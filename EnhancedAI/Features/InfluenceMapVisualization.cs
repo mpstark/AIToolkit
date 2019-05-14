@@ -13,7 +13,8 @@ namespace EnhancedAI.Features
         private static GameObject _parent = new GameObject("InfluenceMapVisualizationParent");
         private static List<GameObject> _unusedPool = new List<GameObject>();
         private static List<GameObject> _usedPool = new List<GameObject>();
-        private static Mesh _circleMesh = GenerateCircleMesh(4, 10);
+        private static Mesh _circleMesh = GenerateCircleMesh(4, 20);
+        private static Vector3 _groundOffset = 2 * Vector3.up;
 
 
         public static void Show()
@@ -50,10 +51,11 @@ namespace EnhancedAI.Features
                 var pos = kvp.Key;
                 var value = kvp.Value;
 
+                var darkGrey = new Color(.15f, .15f, .15f);
                 Color color;
                 color = value <= average
-                    ? Color.Lerp(Color.red, Color.clear, (value - lowest) / (average - lowest))
-                    : Color.Lerp(Color.clear, Color.cyan, (value - average) / (highest - average));
+                    ? Color.Lerp(Color.red, darkGrey, (value - lowest) / (average - lowest))
+                    : Color.Lerp(darkGrey, Color.cyan, (value - average) / (highest - average));
 
                 //color = Color.Lerp(Color.black, Color.white, (value - lowest) / (highest - lowest));
 
@@ -100,7 +102,7 @@ namespace EnhancedAI.Features
             }
 
             _usedPool.Add(dot);
-            dot.transform.position = location + Vector3.up;
+            dot.transform.position = location + _groundOffset;
             dot.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
 
             var renderer = dot.GetComponent<MeshRenderer>();

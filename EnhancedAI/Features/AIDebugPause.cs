@@ -73,6 +73,12 @@ namespace EnhancedAI.Features
             if (invocation is ReserveActorInvocation)
                 return false;
 
+            if (invocation is EjectInvocation)
+                return false;
+
+            if (invocation is InspireActorInvocation)
+                return false;
+
             Main.HBSLog?.Log($"AIDebugPause: Intercepted an AI invocation: {invocation.InvocationID} ({invocation.MessageType})");
             _interceptedInvocationMessage = invocation;
 
@@ -111,8 +117,8 @@ namespace EnhancedAI.Features
             IsPaused = false;
             _currentAITeam = null;
 
-           InfluenceMapVisualization.Hide();
-           InvocationVisualization.Hide();
+            InfluenceMapVisualization.Hide();
+            InvocationVisualization.Hide();
         }
     }
 }
