@@ -10,24 +10,25 @@ namespace EnhancedAI.Resources
 {
     public class AIOverrideDef
     {
-        private static readonly Dictionary<string, ISelector> Selectors = new Dictionary<string, ISelector>
-        {
-            { "Custom", new CustomSelector() },
-            { "TeamName", new TeamNameSelector() },
-            { "Role", new RoleSelector() },
-            { "Tree", new TreeSelector() }
-        };
-
         public string Name;
-        public string SelectorType;
-        public string Selector;
+        public List<SelectorValue> Selectors;
         public int Priority = 0;
+
         public BehaviorNodeJSONRepresentation NewBehaviorTreeRoot;
         public string BehaviorScopesDirectory;
         public Dictionary<BehaviorVariableName, BehaviorVariableValue> BehaviorVariableOverrides;
 
         [JsonIgnore]
         public BehaviorVariableScopeManagerWrapper ScopeWrapper;
+
+
+        public bool MatchesUnit(AbstractActor unit)
+        {
+            if (Selectors == null || Selectors.Count == 0)
+                return false;
+
+            return Selectors.All(selector => selector.MatchesUnit(unit));
+        }
 
 
         public static AIOverrideDef FromJSON(string json)
@@ -55,9 +56,9 @@ namespace EnhancedAI.Resources
             return FromJSON(File.ReadAllText(path));
         }
 
-        public static AIOverrideDef SelectFrom(IEnumerable<AIOverrideDef> overrides, AbstractActor unit)
+        public static AIOverrideDef MatchToUnitFrom(IEnumerable<AIOverrideDef> overrides, AbstractActor unit)
         {
-            var matching = overrides.Where(o => Selectors[o.SelectorType].Select(o.Selector, unit)).ToArray();
+            var matching = overrides.Where(o => o.MatchesUnit(unit)).ToArray();
 
             if (matching.Length == 0)
                 return null;

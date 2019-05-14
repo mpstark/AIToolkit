@@ -4,11 +4,11 @@
 
 Loads `AIOverrideDef` JSONs (a ModTek CustomResourceType) that override behavior trees/variables, these can be provided by dropping them into the `EnhancedAI/AIOverrideDefs/` folder or providing them in another mod (with EnhancedAI as a dependancy). As a custom resource type, mods can also merge onto already provided defs.
 
-When `AIOverrideDef` are loaded, they are matched one-to-one to unit's AI by their `Selector` and `SelectorType` (multiple selectors will be added in the future). If multiple `AIOverrideDef`s match a single unit, the one with the highest priority is chosen, if there is a tie on priority, then the first loaded wins. 
-* e.g. `SelectorType`: "TeamName" `Selector`: "Player 2" will override all AI units controlled by the team named "Player 2"
+When `AIOverrideDef` are loaded, they are matched one-to-one to unit's AI by their `Selectors` (with `TypeName` and `SelectString`). If multiple `AIOverrideDef`s match a single unit, the one with the highest priority is chosen, if there is a tie on priority, then the first loaded wins. 
+* e.g. `TypeName`: "TeamName" `SelectString`: "Player 2" will override all AI units controlled by the team named "Player 2"
 * Current selector types are `TreeSelector`, `TeamNameSelector`, `RoleSelector`, and `CustomSelector`
   * `Custom` selector allows to call custom function with signature `public static bool MySelectorName(AbstractActor unit)`
-    * e.g. `Selector`: "MyNamespace.MySelectorName"
+    * e.g. `SelectString`: "MyNamespace.MySelectorName"
 
 Each `AIOverrideDef` can change the AI by:
 * Replacing the behavior tree itself
@@ -44,7 +44,6 @@ The mod also provides the following functionality:
 ## Planned Features
 
 * Add/remove influence map calculations
-* Multiple selectors on `AIOverrideDef`
 * Additional `SelectorTypes` based on feedback
 * Additional BehaviorNode types to provide some base mod functionality
 * Base AIOverrideDefs to merge onto for at least CoreBT_AI tree

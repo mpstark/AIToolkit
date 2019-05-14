@@ -7,7 +7,7 @@ namespace EnhancedAI.Features
     {
         public static void TryReplaceTreeFromAIOverrides(BehaviorTree tree)
         {
-            var aiOverride = AIOverrideDef.SelectFrom(Main.AIOverrideDefs, tree.unit);
+            var aiOverride = AIOverrideDef.MatchToUnitFrom(Main.AIOverrideDefs, tree.unit);
 
             if (aiOverride.NewBehaviorTreeRoot == null)
                 return;

@@ -9,7 +9,7 @@ namespace EnhancedAI.Features
         public static BehaviorVariableValue TryGetValueFromAIOverrides(BehaviorTree tree, BehaviorVariableName name, out string overrideName)
         {
             overrideName = null;
-            var aiOverride = AIOverrideDef.SelectFrom(Main.AIOverrideDefs, tree.unit);
+            var aiOverride = AIOverrideDef.MatchToUnitFrom(Main.AIOverrideDefs, tree.unit);
 
             if (aiOverride == null)
                 return null;
