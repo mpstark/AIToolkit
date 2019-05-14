@@ -9,7 +9,6 @@ namespace EnhancedAI.Features
 {
     public static class AIDebugPause
     {
-        private static AITeam _currentAITeam;
         private static InvocationMessage _interceptedInvocationMessage;
 
         public static bool IsPaused { get; private set; }
@@ -19,14 +18,6 @@ namespace EnhancedAI.Features
         {
             if (!IsPaused)
                 return;
-
-            if (_currentAITeam != null)
-            {
-                var currentUnit = Traverse.Create(_currentAITeam).Field("currentUnit").GetValue<AbstractActor>();
-                currentUnit.BehaviorTree.Reset();
-                currentUnit.BehaviorTree.influenceMapEvaluator.ResetWorkspace();
-                currentUnit.BehaviorTree.influenceMapEvaluator.Reset();
-            }
 
             _interceptedInvocationMessage = null;
             OnUnpause();
@@ -60,7 +51,7 @@ namespace EnhancedAI.Features
             }
 
             if (!IsPaused)
-                OnPause(team);
+                OnPause();
 
             return true;
         }
@@ -68,10 +59,6 @@ namespace EnhancedAI.Features
         public static bool OnAIInvocation(AITeam aiTeam, InvocationMessage invocation)
         {
             if (!Main.Settings.ShouldPauseAI)
-                return false;
-
-            // TODO: provide an option for what invocations to pause on
-            if (invocation is ReserveActorInvocation)
                 return false;
 
             if (invocation is EjectInvocation)
@@ -103,14 +90,13 @@ namespace EnhancedAI.Features
         }
 
 
-        private static void OnPause(AITeam team)
+        private static void OnPause()
         {
             Main.HBSLog?.Log("AIDebugPause -- Paused");
 
             InfluenceMapVisualization.Show();
 
             IsPaused = true;
-            _currentAITeam = team;
         }
 
         private static void OnUnpause()
@@ -118,7 +104,6 @@ namespace EnhancedAI.Features
             Main.HBSLog?.Log("AIDebugPause -- Unpaused");
 
             IsPaused = false;
-            _currentAITeam = null;
 
             InfluenceMapVisualization.Hide();
             InvocationVisualization.Hide();
