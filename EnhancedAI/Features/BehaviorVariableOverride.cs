@@ -17,10 +17,10 @@ namespace EnhancedAI.Features
             overrideName = aiOverride.Name;
 
             // custom scope has value, and takes priority over everything else
-            if (aiOverride.CustomScope != null && aiOverride.CustomScope.ContainsKey(name))
-                return aiOverride.CustomScope[name];
+            if (aiOverride.BehaviorVariableOverrides != null && aiOverride.BehaviorVariableOverrides.ContainsKey(name))
+                return aiOverride.BehaviorVariableOverrides[name];
 
-            if (string.IsNullOrEmpty(aiOverride.BehaviorScopeDirectory))
+            if (string.IsNullOrEmpty(aiOverride.BehaviorScopesDirectory))
                 return null;
 
             // if we don't have a custom scope and do have a scopeDirectory,
@@ -30,7 +30,7 @@ namespace EnhancedAI.Features
             // we overrode them
 
             if (aiOverride.ScopeWrapper == null)
-                aiOverride.ScopeWrapper = new BehaviorVariableScopeManagerWrapper(tree.battleTechGame, aiOverride.BehaviorScopeDirectory);
+                aiOverride.ScopeWrapper = new BehaviorVariableScopeManagerWrapper(tree.battleTechGame, aiOverride.BehaviorScopesDirectory);
 
             var scopeManager = aiOverride.ScopeWrapper.ScopeManager;
 

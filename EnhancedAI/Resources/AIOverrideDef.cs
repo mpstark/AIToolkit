@@ -22,9 +22,9 @@ namespace EnhancedAI.Resources
         public string SelectorType;
         public string Selector;
         public int Priority = 0;
-        public BehaviorNodeJSONRepresentation RootReplacement;
-        public string BehaviorScopeDirectory;
-        public Dictionary<BehaviorVariableName, BehaviorVariableValue> CustomScope;
+        public BehaviorNodeJSONRepresentation NewBehaviorTreeRoot;
+        public string BehaviorScopesDirectory;
+        public Dictionary<BehaviorVariableName, BehaviorVariableValue> BehaviorVariableOverrides;
 
         [JsonIgnore]
         public BehaviorVariableScopeManagerWrapper ScopeWrapper;

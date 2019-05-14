@@ -9,11 +9,11 @@ namespace EnhancedAI.Features
         {
             var aiOverride = AIOverrideDef.SelectFrom(Main.AIOverrideDefs, tree.unit);
 
-            if (aiOverride.RootReplacement == null)
+            if (aiOverride.NewBehaviorTreeRoot == null)
                 return;
 
             Main.HBSLog?.Log($"TreeReplace from AIOverrideDef {aiOverride.Name}");
-            tree.ReplaceRoot(aiOverride.RootReplacement.ToNode(tree, tree.unit));
+            tree.ReplaceRoot(aiOverride.NewBehaviorTreeRoot.ToNode(tree, tree.unit));
         }
     }
 }
