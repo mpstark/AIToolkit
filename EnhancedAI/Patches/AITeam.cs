@@ -15,6 +15,7 @@ namespace EnhancedAI.Patches
     {
         public static bool Prefix(AITeam __instance)
         {
+            // TODO: calculate overrideDefs for current unit here instead?
             return !AIDebugPause.OnAIThink(__instance);
         }
     }

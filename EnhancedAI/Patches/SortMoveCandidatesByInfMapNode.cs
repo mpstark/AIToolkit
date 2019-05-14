@@ -11,7 +11,7 @@ namespace EnhancedAI.Patches
     [HarmonyPatch]
     public static class SortMoveCandidatesByInfMapNode_drawDebugLines_Patch
     {
-        static MethodBase TargetMethod()
+        public static MethodBase TargetMethod()
         {
             var type = AccessTools.TypeByName("SortMoveCandidatesByInfMapNode");
             return AccessTools.Method(type, "drawDebugLines");
@@ -26,7 +26,7 @@ namespace EnhancedAI.Patches
     [HarmonyPatch]
     public static class SortMoveCandidatesByInfMapNode_Tick_Patch
     {
-        static MethodBase TargetMethod()
+        public static MethodBase TargetMethod()
         {
             var type = AccessTools.TypeByName("SortMoveCandidatesByInfMapNode");
             return AccessTools.Method(type, "Tick");

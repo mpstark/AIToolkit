@@ -16,11 +16,14 @@ namespace EnhancedAI.Features
 
             // reload behavior variables by forcing a new scope manager
             // TODO: THIS CAUSES A GAME FREEZE IF HOT RELOAD DURING AI PAUSE
-            //Traverse.Create(game).Property("BehaviorVariableScopeManager")
-                //.SetValue(new BehaviorVariableScopeManager(game));
+            // this is because of scope manager taking a little bit to get info
+            // from dataManager, temp solution is to skip if paused
+            if (!AIDebugPause.IsPaused)
+                Traverse.Create(game).Property("BehaviorVariableScopeManager")
+                .SetValue(new BehaviorVariableScopeManager(game));
 
             // try to replace the root from all AI active actors
-            // have to re-init the original root node because the RootReplacement could
+            // have to re-init the original root node because the NewBehaviorTreeRoot could
             // have been removed
             var aiActors = game.Combat.AllActors.Where(unit => unit.team is AITeam);
             foreach (var unit in aiActors)

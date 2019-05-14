@@ -25,39 +25,41 @@ namespace EnhancedAI.Features
             switch (message)
             {
                 case AbstractActorMovementInvocation move:
-                    {
-                        var unit = combat.FindActorByGUID(move.ActorGUID);
-                        var finalPosition = unit.CurrentPosition;
-                        var rotation = Quaternion.LookRotation(move.FinalOrientation, Vector3.up);
+                {
+                    var unit = combat.FindActorByGUID(move.ActorGUID);
+                    var finalPosition = unit.CurrentPosition;
+                    var rotation = Quaternion.LookRotation(move.FinalOrientation, Vector3.up);
 
-                        if (move.Waypoints != null && move.Waypoints.Count > 0)
-                            finalPosition = move.Waypoints.Last().Position;
+                    if (move.Waypoints != null && move.Waypoints.Count > 0)
+                        finalPosition = move.Waypoints.Last().Position;
 
-                        var linePoints = GetPointsForWaypoints(move.Waypoints);
-                        VisualizeMovement(unit, finalPosition, rotation, linePoints);
-                        break;
-                    }
+                    var linePoints = GetPointsForWaypoints(move.Waypoints);
+                    VisualizeMovement(unit, finalPosition, rotation, linePoints);
+                    break;
+                }
 
                 case MechJumpInvocation jump:
-                    {
-                        var unit = combat.FindActorByGUID(jump.MechGUID);
-                        var finalPosition = jump.FinalDestination;
-                        var minArcHeight = Mathf.Max(Mathf.Abs(finalPosition.y - unit.CurrentPosition.y) + 16f, 32f);
-                        var linePoints = WeaponRangeIndicators.GetPointsForArc(18, minArcHeight, unit.CurrentPosition + _movementLineGroundOffset, finalPosition + _movementLineGroundOffset);
+                {
+                    var unit = combat.FindActorByGUID(jump.MechGUID);
+                    var finalPosition = jump.FinalDestination;
+                    var minArcHeight = Mathf.Max(Mathf.Abs(finalPosition.y - unit.CurrentPosition.y) + 16f, 32f);
+                    var linePoints = WeaponRangeIndicators.GetPointsForArc(18, minArcHeight, unit.CurrentPosition + _movementLineGroundOffset, finalPosition + _movementLineGroundOffset);
 
-                        VisualizeMovement(unit, finalPosition, jump.FinalRotation, linePoints);
-                        break;
-                    }
+                    VisualizeMovement(unit, finalPosition, jump.FinalRotation, linePoints);
+                    break;
+                }
 
                 case AttackInvocation attack:
-                    {
-                        var unit = combat.FindActorByGUID(attack.SourceGUID);
-                        var subAttack = attack.subAttackInvocations[0];
-                        var target = combat.FindActorByGUID(subAttack.targetGUID);
+                {
+                    var unit = combat.FindActorByGUID(attack.SourceGUID);
+                    var subAttack = attack.subAttackInvocations[0];
+                    var target = combat.FindActorByGUID(subAttack.targetGUID);
 
-                        VisualizeAttack(unit, target, false, !unit.HasLOFToTargetUnit(target, float.MaxValue, false));
-                        break;
-                    }
+                    VisualizeAttack(unit, target, false, !unit.HasLOFToTargetUnit(target, float.MaxValue, false));
+                    break;
+                }
+
+                // TODO: finish visualization for all of the other invocation types
             }
         }
 
