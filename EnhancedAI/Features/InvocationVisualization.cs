@@ -60,7 +60,7 @@ namespace EnhancedAI.Features
                     var linePoints = GetPointsForJump(unit.CurrentPosition, dfa.JumpLocation);
 
                     VisualizeMovement(unit, dfa.JumpLocation, dfa.JumpRotation, linePoints);
-                    VisualizeAttack(unit.CurrentPosition, target, true, false);
+                    VisualizeAttack(dfa.JumpLocation, target, true, false);
                     break;
                 }
 
@@ -81,7 +81,7 @@ namespace EnhancedAI.Features
                     var rotation = Quaternion.FromToRotation(melee.desiredMeleePosition, target.CurrentPosition);
 
                     VisualizeMovement(unit, melee.desiredMeleePosition, rotation, new []{unit.CurrentPosition, melee.desiredMeleePosition});
-                    VisualizeAttack(unit.CurrentPosition, target, true, false);
+                    VisualizeAttack(melee.desiredMeleePosition, target, true, false);
                     break;
                 }
 
