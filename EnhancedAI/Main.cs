@@ -36,6 +36,9 @@ namespace EnhancedAI
 
             Settings = ModSettings.Parse(settings);
             Directory = modDir;
+
+            if (Settings.ShouldDump)
+                BehaviorTreeDump.DumpTrees(Settings.DumpType);
         }
 
         public static void FinishedLoading(Dictionary<string, Dictionary<string, VersionManifestEntry>> customResources)

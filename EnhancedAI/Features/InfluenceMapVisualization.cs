@@ -22,33 +22,38 @@ namespace EnhancedAI.Features
             _parent.SetActive(true);
         }
 
-        public static void OnInfluenceMapSort(InfluenceMapEvaluator map)
+        public static void OnInfluenceMapSort(AbstractActor unit)
         {
             Hide();
 
-            var posToMax = new Dictionary<Vector3, float>();
+            var map = unit.BehaviorTree.influenceMapEvaluator;
+            var hexToPos = new Dictionary<MapTerrainDataCell, Vector3>();
+            var hexToMax = new Dictionary<MapTerrainDataCell, float>();
             var highest = float.MinValue;
 
             for (var i = 0; i < map.firstFreeWorkspaceEvaluationEntryIndex; i++)
             {
                 var entry = map.WorkspaceEvaluationEntries[i];
                 var value = entry.GetHighestAccumulator();
+                var hex = unit.Combat.MapMetaData.GetCellAt(entry.Position);
+
+                hexToPos[hex] = entry.Position;
 
                 // find the highest at hex
-                if (posToMax.ContainsKey(entry.Position))
-                    posToMax[entry.Position] = Mathf.Max(posToMax[entry.Position], value);
+                if (hexToMax.ContainsKey(hex))
+                    hexToMax[hex] = Mathf.Max(hexToMax[hex], value);
                 else
-                    posToMax.Add(entry.Position, value);
+                    hexToMax.Add(hex, value);
 
                 highest = Mathf.Max(highest, value);
             }
 
-            var lowest = posToMax.Values.Min();
-            var average = posToMax.Values.Average();
+            var lowest = hexToMax.Values.Min();
+            var average = hexToMax.Values.Average();
 
-            foreach (var kvp in posToMax)
+            foreach (var kvp in hexToMax)
             {
-                var pos = kvp.Key;
+                var hex = kvp.Key;
                 var value = kvp.Value;
 
                 var darkGrey = new Color(.15f, .15f, .15f);
@@ -59,7 +64,7 @@ namespace EnhancedAI.Features
 
                 //color = Color.Lerp(Color.black, Color.white, (value - lowest) / (highest - lowest));
 
-                ShowDotAt(pos, color);
+                ShowDotAt(hexToPos[hex], color);
             }
         }
 

@@ -41,7 +41,7 @@ namespace EnhancedAI.Patches
                 return;
 
             var unit = Traverse.Create(__instance).Field("unit").GetValue<AbstractActor>();
-            InfluenceMapVisualization.OnInfluenceMapSort(unit.BehaviorTree.influenceMapEvaluator);
+            InfluenceMapVisualization.OnInfluenceMapSort(unit);
         }
     }
 }
