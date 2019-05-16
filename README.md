@@ -50,6 +50,9 @@ The mod also provides the following functionality:
 
 ## Potential Features
 
+* Fixing oddnesses/bugs with the current AI
+  * Min/Max in Evaluate Ally/Hostile factors is not correct
+* Adding a "blackboard" for each unit to store AI related state
 * Lance level AI
   * Particualrly reserving, unit order, and unit coordination
 * Wild idea: support rewinding AI turns without reloading

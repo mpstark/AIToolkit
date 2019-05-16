@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnhancedAI", "EnhancedAI\EnhancedAI.csproj", "{055294CA-61BD-4DE0-B2E2-6BC2A579719B}"
 EndProject
@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{6EDC3C5D-F109-4A26-8FEB-4DBC10A93632}"
 	ProjectSection(SolutionItems) = preProject
 		mod.json = mod.json
+		notes.md = notes.md
 		README.md = README.md
 	EndProjectSection
 EndProject
