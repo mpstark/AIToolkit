@@ -50,6 +50,7 @@
     <Compile Include="Features\BehaviorTreeReplace.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="ModSettings.cs" />
+    <Compile Include="Patches\InfluenceMapEvaluator.cs" />
     <Compile Include="Patches\BehaviorTree.cs" />
     <Compile Include="Patches\BehaviorVariableScopeManager.cs" />
     <Compile Include="Patches\AITeam.cs" />
