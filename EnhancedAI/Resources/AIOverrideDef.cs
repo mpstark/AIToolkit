@@ -6,6 +6,8 @@ using BattleTech;
 using EnhancedAI.Selectors;
 using Newtonsoft.Json;
 
+// ReSharper disable CollectionNeverUpdated.Global
+
 namespace EnhancedAI.Resources
 {
     public class AIOverrideDef
