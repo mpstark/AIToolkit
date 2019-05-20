@@ -52,6 +52,7 @@
     <Compile Include="Features\AIDebugPause.cs" />
     <Compile Include="Features\InfluenceMapVisualization.cs" />
     <Compile Include="Features\BehaviorTreeReplace.cs" />
+    <Compile Include="InfluenceFactors\PreferHigherEvasionPositionFactor.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="ModSettings.cs" />
     <Compile Include="Patches\InfluenceMapEvaluator.cs" />
