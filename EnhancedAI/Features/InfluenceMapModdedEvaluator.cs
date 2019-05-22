@@ -104,10 +104,34 @@ namespace EnhancedAI.Features
             {
                 var regularMoveWeightName = factor.GetRegularMoveWeightBVName();
                 var sprintMoveWeightName = factor.GetSprintMoveWeightBVName();
-                var regularMoveWeight = treeTrav.Method("GetBehaviorVariableValue", regularMoveWeightName)
-                    .GetValue<BehaviorVariableValue>().FloatVal;
-                var sprintMoveWeight = treeTrav.Method("GetBehaviorVariableValue", sprintMoveWeightName)
-                    .GetValue<BehaviorVariableValue>().FloatVal;
+
+                // weights are gotten normally if not INVALID_UNSET
+                // and if they are,the weight is looked for in the units BehaviorVariableOverrides
+                var regularMoveWeight = 0f;
+                var sprintMoveWeight = 0f;
+                if (regularMoveWeightName != BehaviorVariableName.INVALID_UNSET)
+                {
+                    regularMoveWeight = treeTrav.Method("GetBehaviorVariableValue", regularMoveWeightName)
+                        .GetValue<BehaviorVariableValue>().FloatVal;
+                }
+                else if (Main.UnitToAIOverride.ContainsKey(unit))
+                {
+                    var weightName = factor.GetType().Name + "Weight";
+                    if (Main.UnitToAIOverride[unit].BehaviorVariableOverrides.ContainsKey(weightName))
+                        regularMoveWeight = Main.UnitToAIOverride[unit].BehaviorVariableOverrides[weightName].FloatVal;
+                }
+
+                if (sprintMoveWeightName != BehaviorVariableName.INVALID_UNSET)
+                {
+                    sprintMoveWeight = treeTrav.Method("GetBehaviorVariableValue", sprintMoveWeightName)
+                        .GetValue<BehaviorVariableValue>().FloatVal;
+                }
+                else if (Main.UnitToAIOverride.ContainsKey(unit))
+                {
+                    var weightName = factor.GetType().Name + "SprintWeight";
+                    if (Main.UnitToAIOverride[unit].BehaviorVariableOverrides.ContainsKey(weightName))
+                        sprintMoveWeight = Main.UnitToAIOverride[unit].BehaviorVariableOverrides[weightName].FloatVal;
+                }
 
                 if (Math.Abs(regularMoveWeight) < 0.001 && Math.Abs(sprintMoveWeight) < 0.001)
                     continue;

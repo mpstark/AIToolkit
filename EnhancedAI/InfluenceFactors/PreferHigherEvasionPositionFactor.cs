@@ -5,16 +5,16 @@ namespace EnhancedAI.InfluenceFactors
 {
     public class PreferHigherEvasionPositionFactor : InfluenceMapPositionFactor
     {
-        public override string Name { get; } = "preferHigherEvasion";
+        public override string Name { get; } = "prefer Higher Evasion";
 
         public override BehaviorVariableName GetRegularMoveWeightBVName()
         {
-            return BehaviorVariableName.Float_CenterTorsoArmorMultiplier;
+            return BehaviorVariableName.INVALID_UNSET;
         }
 
         public override BehaviorVariableName GetSprintMoveWeightBVName()
         {
-            return BehaviorVariableName.Float_CenterTorsoArmorMultiplier;
+            return BehaviorVariableName.INVALID_UNSET;
         }
 
         public override float EvaluateInfluenceMapFactorAtPosition(AbstractActor unit, Vector3 position, float angle, MoveType moveType,

@@ -18,7 +18,7 @@ namespace EnhancedAI.Resources
 
         public BehaviorNodeJSONRepresentation NewBehaviorTreeRoot;
         public string BehaviorScopesDirectory;
-        public Dictionary<BehaviorVariableName, BehaviorVariableValue> BehaviorVariableOverrides;
+        public Dictionary<string, BehaviorVariableValue> BehaviorVariableOverrides;
         public List<string> RemoveInfluenceFactors = new List<string>();
         public List<string> NewAllyInfluenceFactors = new List<string>();
         public List<string> NewHostileInfluenceFactors = new List<string>();
