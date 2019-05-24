@@ -15,7 +15,7 @@ namespace EnhancedAI.Patches
     {
         public static bool Prefix(AITeam __instance)
         {
-            return !AIDebugPause.OnAIThink(__instance);
+            return !AIPause.OnAIThink(__instance);
         }
     }
 
@@ -45,7 +45,7 @@ namespace EnhancedAI.Patches
             if (Main.Settings.ShouldPauseAI)
                 Traverse.Create(__instance).Field("planningStartTime").SetValue(__instance.Combat.BattleTechGame.Time);
 
-            var inject = AIDebugPause.TryGetMessageInject();
+            var inject = AIPause.TryGetMessageInject();
             if (inject == null)
                 return true;
 
@@ -67,7 +67,7 @@ namespace EnhancedAI.Patches
             // the ai has decided to do something, if we're pausing the AI,
             // we want to skip this invocation and inject it on the next think
             // after we hit the key shortcut
-            var skipThisInvocation = AIDebugPause.OnAIInvocation(__instance, __result);
+            var skipThisInvocation = AIPause.OnAIInvocation(__instance, __result);
             if (skipThisInvocation)
                 __result = null;
         }

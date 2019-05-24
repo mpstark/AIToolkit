@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace EnhancedAI.Features
 {
-    public static class AIDebugPause
+    public static class AIPause
     {
         private static InvocationMessage _interceptedInvocationMessage;
 
@@ -51,7 +51,7 @@ namespace EnhancedAI.Features
             }
 
             if (!IsPaused)
-                OnPause();
+                OnPause(team.Combat);
 
             return true;
         }
@@ -67,11 +67,9 @@ namespace EnhancedAI.Features
             if (invocation is InspireActorInvocation)
                 return false;
 
-            Main.HBSLog?.Log(
-                $"AIDebugPause: Intercepted an AI invocation: {invocation.InvocationID} ({invocation.MessageType})");
-            _interceptedInvocationMessage = invocation;
+            Main.HBSLog?.Log($"AIDebugPause: Intercepted an AI invocation: {invocation.InvocationID} ({invocation.MessageType})");
 
-            InvocationVisualization.ShowFor(aiTeam.Combat, invocation);
+            _interceptedInvocationMessage = invocation;
             return true;
         }
 
@@ -90,11 +88,13 @@ namespace EnhancedAI.Features
         }
 
 
-        private static void OnPause()
+        private static void OnPause(CombatGameState combat)
         {
             Main.HBSLog?.Log("AIDebugPause -- Paused");
 
+            InvocationVisualization.ShowFor(combat, _interceptedInvocationMessage);
             InfluenceMapVisualization.Show();
+            //AIPausePopup.SetText("TEST STRING\nTEST\nTEST STRING\nTEST STRING\nTEST\nTEST STRING");
 
             IsPaused = true;
         }
@@ -107,6 +107,7 @@ namespace EnhancedAI.Features
 
             InfluenceMapVisualization.Hide();
             InvocationVisualization.Hide();
+            AIPausePopup.Hide();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace EnhancedAI.Features
             // TODO: THIS CAUSES A GAME FREEZE IF HOT RELOAD DURING AI PAUSE
             // this is because of scope manager taking a little bit to get info
             // from dataManager, temp solution is to skip if paused
-            if (!AIDebugPause.IsPaused)
+            if (!AIPause.IsPaused)
                 Traverse.Create(game).Property("BehaviorVariableScopeManager")
                 .SetValue(new BehaviorVariableScopeManager(game));
 
@@ -30,8 +30,8 @@ namespace EnhancedAI.Features
                 Main.TryOverrideAI(unit);
             }
 
-            if (AIDebugPause.IsPaused)
-                AIDebugPause.Reset();
+            if (AIPause.IsPaused)
+                AIPause.Reset();
         }
     }
 }

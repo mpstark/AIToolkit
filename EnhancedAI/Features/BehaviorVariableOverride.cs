@@ -1,4 +1,5 @@
-﻿using BattleTech;
+﻿using System;
+using BattleTech;
 using Harmony;
 
 namespace EnhancedAI.Features
@@ -15,10 +16,11 @@ namespace EnhancedAI.Features
             overrideName = aiOverride.Name;
 
             // custom scope has value, and takes priority over everything else
-            if (aiOverride.BehaviorVariableOverrides != null
-                && aiOverride.BehaviorVariableOverrides.ContainsKey(name))
+            var variableName = Enum.GetName(typeof(BehaviorVariableName), name);
+            if (variableName != null && (aiOverride.BehaviorVariableOverrides != null
+                && aiOverride.BehaviorVariableOverrides.ContainsKey(variableName)))
             {
-                return aiOverride.BehaviorVariableOverrides[name];
+                return aiOverride.BehaviorVariableOverrides[variableName];
             }
 
             if (string.IsNullOrEmpty(aiOverride.BehaviorScopesDirectory))

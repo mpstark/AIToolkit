@@ -1,4 +1,5 @@
 ﻿using BattleTech;
+using EnhancedAI.Features;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global
@@ -15,6 +16,20 @@ namespace EnhancedAI.Patches
     {
         public static bool Prefix()
         {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Replace RunEvaluationForSeconds to use our own functions for evaluation
+    /// </summary>
+    [HarmonyPatch(typeof(InfluenceMapEvaluator), "RunEvaluationForSeconds")]
+    public static class InfluenceMapEvaluator_RunEvaluationForSeconds_Patch
+    {
+        // ReSharper disable once RedundantAssignment
+        public static bool Prefix(InfluenceMapEvaluator __instance, float seconds, ref bool __result)
+        {
+            __result = InfluenceMapModdedEvaluator.RunEvaluationForSeconds(__instance, seconds);
             return false;
         }
     }
