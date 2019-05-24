@@ -5,7 +5,7 @@ namespace EnhancedAI.InfluenceFactors
 {
     public class PreferHigherEvasionPositionFactor : InfluenceMapPositionFactor
     {
-        public override string Name { get; } = "prefer Higher Evasion";
+        public override string Name { get; } = "prefer higher evasion";
 
         public override BehaviorVariableName GetRegularMoveWeightBVName()
         {

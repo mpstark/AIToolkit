@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BehaviorVariableScopeManagerWrapper.cs" />
+    <Compile Include="Features\AIPausePopup.cs" />
     <Compile Include="Features\BehaviorVariableOverride.cs" />
     <Compile Include="Features\InfluenceFactorOverride.cs" />
     <Compile Include="Features\InfluenceMapModdedEvaluator.cs" />
@@ -50,7 +51,7 @@
     <Compile Include="Features\BehaviorTreeDump.cs" />
     <Compile Include="BehaviorNodeJSONRepresentation.cs" />
     <Compile Include="Features\HotReload.cs" />
-    <Compile Include="Features\AIDebugPause.cs" />
+    <Compile Include="Features\AIPause.cs" />
     <Compile Include="Features\InfluenceMapVisualization.cs" />
     <Compile Include="Features\BehaviorTreeReplace.cs" />
     <Compile Include="InfluenceFactors\PreferHigherEvasionPositionFactor.cs" />

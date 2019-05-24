@@ -32,7 +32,7 @@ namespace EnhancedAI.Resources
         public bool MatchesUnit(AbstractActor unit)
         {
             if (Selectors == null || Selectors.Count == 0)
-                return false;
+                return true;
 
             return Selectors.All(selector => selector.MatchesUnit(unit));
         }
