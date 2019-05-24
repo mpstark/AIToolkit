@@ -47,7 +47,6 @@ namespace EnhancedAI
                 return;
 
             AIOverridePaths.AddRange(customResources[nameof(AIOverrideDef)].Values.Select(entry => entry.FilePath));
-            ReloadAIOverrides();
         }
 
 

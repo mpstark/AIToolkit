@@ -34,6 +34,7 @@ The mod also provides the following functionality:
   * Left CTRL + Right Arrow executes current action, advances AI
   * If an influence map is used, a visualization of that map is shown
     * This visualization is a drastic simplification (facing/movement types)
+  * If a behaviorTree returns an `OrderInfo`, the debug trace string is shown
 
 ## Limitations of Current Implementation
 
@@ -45,8 +46,8 @@ The mod also provides the following functionality:
 ## Planned Features
 
 * Additional `SelectorTypes` based on feedback
-* Additional BehaviorNode types to provide some base mod functionality
-* Base AIOverrideDefs to merge onto for at least CoreBT_AI tree
+* Additional `WeightedFactor`/`BehaviorNode` based on feedback to provide base mod functionality
+* Base AIOverrideDefs to merge onto for at least CoreBT_AI tree?
 
 ## Potential Features
 
@@ -56,4 +57,4 @@ The mod also provides the following functionality:
 * Lance level AI
   * Particualrly reserving, unit order, and unit coordination
 * Wild idea: support rewinding AI turns without reloading
-* Wild idea: multiple trees/variables on a unit and visualize results
+* Wild idea: multiple trees/variables on a unit and visualize results of all

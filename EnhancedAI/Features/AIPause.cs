@@ -94,7 +94,6 @@ namespace EnhancedAI.Features
 
             InvocationVisualization.ShowFor(combat, _interceptedInvocationMessage);
             InfluenceMapVisualization.Show();
-            //AIPausePopup.SetText("TEST STRING\nTEST\nTEST STRING\nTEST STRING\nTEST\nTEST STRING");
 
             IsPaused = true;
         }

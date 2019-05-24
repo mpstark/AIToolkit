@@ -24,14 +24,4 @@ namespace EnhancedAI.Patches
             return false;
         }
     }
-
-    [HarmonyPatch(typeof(BehaviorTree), "Update")]
-    public static class BehaviorTree_Update_Patch
-    {
-        public static void Postfix(BehaviorTree __instance, ref BehaviorTreeResults __result)
-        {
-            if (__result.orderInfo != null)
-                AIPausePopup.SetText(__result.debugOrderString.Replace(" > ", "\n"));
-        }
-    }
 }

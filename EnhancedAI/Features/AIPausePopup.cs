@@ -13,17 +13,12 @@ namespace EnhancedAI.Features
         private static float _verticalPosition = -150f;
         private static float _margin = 20f;
         private static float _fontSize = 16f;
-        private static string _parentName = "EnhancedAIBehaviorTreeVisualizationParent";
+        private static string _parentName = "EnhancedAIPausePopup";
 
 
         public static void Setup()
         {
-            //_canvasParent = new GameObject(_parentName);
-            //var canvasRectTransform = _canvasParent.AddComponent<RectTransform>();
-            //var canvas = _canvasParent.AddComponent<Canvas>();
-            //canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
-            _container = new GameObject("EnhancedAITextContainer");
+            _container = new GameObject(_parentName);
             var containerRectTransform = _container.AddComponent<RectTransform>();
             containerRectTransform.SetParent(GameObject.Find("PopupRoot").transform);
             containerRectTransform.anchorMin = new Vector2(.5f, .5f);
@@ -61,6 +56,17 @@ namespace EnhancedAI.Features
             Show();
         }
 
+        public static void AppendText(string text)
+        {
+            if (GameObject.Find(_parentName) == null)
+                Setup();
+
+            if (string.IsNullOrEmpty(_text.text))
+                SetText(text);
+            else
+                SetText($"{_text.text}\n{text}");
+        }
+
         public static void Show()
         {
             _container.SetActive(true);
@@ -68,6 +74,7 @@ namespace EnhancedAI.Features
 
         public static void Hide()
         {
+            SetText("");
             _container.SetActive(false);
         }
     }

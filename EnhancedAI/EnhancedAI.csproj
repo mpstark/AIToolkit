@@ -57,6 +57,8 @@
     <Compile Include="InfluenceFactors\PreferHigherEvasionPositionFactor.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="ModSettings.cs" />
+    <Compile Include="Patches\BehaviorNode.cs" />
+    <Compile Include="Patches\CombatGameState.cs" />
     <Compile Include="Patches\InfluenceMapEvaluator.cs" />
     <Compile Include="Patches\BehaviorTree.cs" />
     <Compile Include="Patches\BehaviorVariableScopeManager.cs" />
