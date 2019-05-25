@@ -9,7 +9,7 @@ using HBS;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.UI
 {
     public static class InfluenceMapVisualization
     {

@@ -1,4 +1,4 @@
-﻿using EnhancedAI.Features;
+﻿using EnhancedAI.Features.UI;
 using EnhancedAI.Util;
 using Harmony;
 

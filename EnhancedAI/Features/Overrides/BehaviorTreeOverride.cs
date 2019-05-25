@@ -1,11 +1,11 @@
 ﻿using EnhancedAI.Resources;
 using EnhancedAI.Util;
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.Overrides
 {
-    public static class BehaviorTreeReplace
+    public static class BehaviorTreeOverride
     {
-        public static void TryReplaceTree(BehaviorTree tree, AIOverrideDef aiOverride)
+        public static void TryReplaceTree(BehaviorTree tree, UnitAIOverride aiOverride)
         {
             if (aiOverride.NewBehaviorTreeRoot == null)
                 return;

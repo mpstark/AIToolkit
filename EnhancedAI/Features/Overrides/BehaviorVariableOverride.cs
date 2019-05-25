@@ -2,7 +2,7 @@
 using BattleTech;
 using Harmony;
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.Overrides
 {
     public static class BehaviorVariableOverride
     {
@@ -31,7 +31,7 @@ namespace EnhancedAI.Features
             // but for non scopeManger values, we'll return null to force the value
             // to come from the global scopeManager, so the logs don't say that
             // we overrode them
-
+            // TODO: move this to a place that makes more sense?
             if (aiOverride.ScopeWrapper == null)
             {
                 aiOverride.ScopeWrapper = new BehaviorVariableScopeManagerWrapper(

@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 
 // ReSharper disable AccessToStaticMemberViaDerivedType
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.UI
 {
     public static class InvocationVisualization
     {

@@ -1,4 +1,4 @@
-﻿using EnhancedAI.Features;
+﻿using EnhancedAI.Features.Overrides;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global

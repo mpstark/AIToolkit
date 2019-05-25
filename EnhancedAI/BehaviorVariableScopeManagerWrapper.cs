@@ -7,6 +7,7 @@ using HBS.Util;
 
 namespace EnhancedAI
 {
+    // TODO: this seems really out of place now?
     public class BehaviorVariableScopeManagerWrapper
     {
         private static readonly HashSet<string> ValidIDs = new HashSet<string>

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using BattleTech;
 using EnhancedAI.Features;
+using EnhancedAI.Features.Overrides;
 using EnhancedAI.Resources;
 using Harmony;
 using HBS.Logging;
@@ -17,13 +18,13 @@ namespace EnhancedAI
         internal static ModSettings Settings;
         internal static string Directory;
 
-        internal static readonly List<AIOverrideDef> AIOverrideDefs
-            = new List<AIOverrideDef>();
+        private static readonly List<UnitAIOverride> UnitAIOverrides
+            = new List<UnitAIOverride>();
 
-        internal static readonly Dictionary<AbstractActor, AIOverrideDef> UnitToAIOverride
-            = new Dictionary<AbstractActor, AIOverrideDef>();
+        internal static readonly Dictionary<AbstractActor, UnitAIOverride> UnitToAIOverride
+            = new Dictionary<AbstractActor, UnitAIOverride>();
 
-        private static readonly List<string> AIOverridePaths = new List<string>();
+        private static readonly List<string> UnitAIOverridePaths = new List<string>();
 
 
         public static void Init(string modDir, string settings)
@@ -43,21 +44,22 @@ namespace EnhancedAI
 
         public static void FinishedLoading(Dictionary<string, Dictionary<string, VersionManifestEntry>> customResources)
         {
-            if (!customResources.ContainsKey(nameof(AIOverrideDef)))
+            if (!customResources.ContainsKey(UnitAIOverride.ModTekResourceName))
                 return;
 
-            AIOverridePaths.AddRange(customResources[nameof(AIOverrideDef)].Values.Select(entry => entry.FilePath));
+            UnitAIOverridePaths.AddRange(customResources[UnitAIOverride.ModTekResourceName]
+                .Values.Select(entry => entry.FilePath));
         }
 
 
         internal static void ReloadAIOverrides()
         {
             UnitToAIOverride.Clear();
-            AIOverrideDefs.Clear();
+            UnitAIOverrides.Clear();
 
-            foreach (var path in AIOverridePaths)
+            foreach (var path in UnitAIOverridePaths)
             {
-                var overrideDef = AIOverrideDef.FromPath(path);
+                var overrideDef = UnitAIOverride.FromPath(path);
                 if (overrideDef == null)
                 {
                     HBSLog?.LogError($"AIOverrideDef Resource did not parse at {path}");
@@ -65,13 +67,13 @@ namespace EnhancedAI
                 }
 
                 HBSLog?.Log($"Parsed {overrideDef.Name} at {path}");
-                AIOverrideDefs.Add(overrideDef);
+                UnitAIOverrides.Add(overrideDef);
             }
         }
 
         internal static void TryOverrideAI(AbstractActor unit)
         {
-            var aiOverride = AIOverrideDef.MatchToUnitFrom(AIOverrideDefs, unit);
+            var aiOverride = UnitAIOverride.MatchToUnitFrom(UnitAIOverrides, unit);
 
             // unit has already been overriden and has the same override then we just got
             if (UnitToAIOverride.ContainsKey(unit) && UnitToAIOverride[unit] == aiOverride)
@@ -87,7 +89,7 @@ namespace EnhancedAI
             HBSLog?.Log($"Overriding AI on {unit.UnitName} with {aiOverride.Name}");
 
             UnitToAIOverride[unit] = aiOverride;
-            BehaviorTreeReplace.TryReplaceTree(unit.BehaviorTree, aiOverride);
+            BehaviorTreeOverride.TryReplaceTree(unit.BehaviorTree, aiOverride);
             InfluenceFactorOverride.TryOverrideInfluenceFactors(unit.BehaviorTree, aiOverride);
         }
 

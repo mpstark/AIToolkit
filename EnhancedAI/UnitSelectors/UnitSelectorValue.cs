@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using BattleTech;
 
-namespace EnhancedAI.Selectors
+namespace EnhancedAI.UnitSelectors
 {
-    public class SelectorValue
+    public class UnitSelectorValue
     {
-        private static readonly Dictionary<string, ISelector> AvailableSelectors = new Dictionary<string, ISelector>
+        private static readonly Dictionary<string, IUnitSelector> AvailableSelectors = new Dictionary<string, IUnitSelector>
         {
-            { "Custom", new CustomSelector() },
-            { "TeamName", new TeamNameSelector() },
-            { "Role", new RoleSelector() },
-            { "Tree", new TreeSelector() }
+            { "Custom", new CustomUnitSelector() },
+            { "TeamName", new TeamNameUnitSelector() },
+            { "Role", new RoleUnitSelector() },
+            { "Tree", new TreeUnitSelector() }
         };
 
         public string TypeName;

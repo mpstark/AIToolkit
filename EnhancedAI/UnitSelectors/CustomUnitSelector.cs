@@ -3,27 +3,27 @@ using System.Reflection;
 using BattleTech;
 using Harmony;
 
-namespace EnhancedAI.Selectors
+namespace EnhancedAI.UnitSelectors
 {
-    public class CustomSelector : ISelector
+    public class CustomUnitSelector : IUnitSelector
     {
         private readonly Dictionary<string, MethodInfo> _methodCache = new Dictionary<string, MethodInfo>();
 
-        public bool Select(string selector, AbstractActor unit)
+        public bool Select(string selectString, AbstractActor unit)
         {
-            if (string.IsNullOrEmpty(selector))
+            if (string.IsNullOrEmpty(selectString))
                 return false;
 
             // find static method at the entry point in selector, cache it when found
             // method must return bool and takes (AbstractActor)
-            if (!_methodCache.ContainsKey(selector))
+            if (!_methodCache.ContainsKey(selectString))
             {
-                var pos = selector.LastIndexOf('.');
+                var pos = selectString.LastIndexOf('.');
                 if (pos == -1)
                     return false;
 
-                var typeName = selector.Substring(0, pos);
-                var methodName = selector.Substring(pos + 1);
+                var typeName = selectString.Substring(0, pos);
+                var methodName = selectString.Substring(pos + 1);
 
                 var type = AccessTools.TypeByName(typeName);
                 if (type == null)
@@ -39,10 +39,10 @@ namespace EnhancedAI.Selectors
                 if (method.ReturnType != typeof(bool))
                     return false;
 
-                _methodCache.Add(selector, method);
+                _methodCache.Add(selectString, method);
             }
 
-            var returnValue = _methodCache[selector].Invoke(null, new object[] {unit});
+            var returnValue = _methodCache[selectString].Invoke(null, new object[] {unit});
             if (returnValue == null)
                 return false;
 

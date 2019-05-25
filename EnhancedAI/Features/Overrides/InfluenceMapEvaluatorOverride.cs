@@ -5,9 +5,9 @@ using GraphCoroutines;
 using Harmony;
 using UnityEngine;
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.Overrides
 {
-    public static class InfluenceMapModdedEvaluator
+    public static class InfluenceMapEvaluatorOverride
     {
         public static bool RunEvaluationForSeconds(InfluenceMapEvaluator evaluator, float seconds)
         {

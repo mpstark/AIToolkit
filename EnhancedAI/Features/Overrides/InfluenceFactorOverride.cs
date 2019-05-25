@@ -5,11 +5,11 @@ using EnhancedAI.Resources;
 using EnhancedAI.Util;
 using Harmony;
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.Overrides
 {
     public static class InfluenceFactorOverride
     {
-        public static void TryOverrideInfluenceFactors(BehaviorTree tree, AIOverrideDef o)
+        public static void TryOverrideInfluenceFactors(BehaviorTree tree, UnitAIOverride o)
         {
             // why o? line length getting too long!
             if (o.NewAllyInfluenceFactors.Count + o.NewHostileInfluenceFactors.Count

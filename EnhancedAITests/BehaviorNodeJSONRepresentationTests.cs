@@ -1,4 +1,4 @@
-﻿using EnhancedAI;
+﻿using EnhancedAI.Resources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EnhancedAITests
@@ -11,10 +11,10 @@ namespace EnhancedAITests
         {
             var root = CoreAI_BT.InitRootNode(null, null, null);
 
-            var repFirst = BehaviorNodeJSONRepresentation.FromNode(root);
+            var repFirst = SerializableBehaviorNode.FromNode(root);
             var jsonFirst = repFirst.ToJSONString();
 
-            var repSecond = BehaviorNodeJSONRepresentation.FromJSON(jsonFirst);
+            var repSecond = SerializableBehaviorNode.FromJSON(jsonFirst);
             var jsonSecond = repSecond.ToJSONString();
 
             Assert.AreEqual(jsonFirst, jsonSecond);
@@ -25,12 +25,12 @@ namespace EnhancedAITests
         {
             var root = CoreAI_BT.InitRootNode(null, null, null);
 
-            var repFirst = BehaviorNodeJSONRepresentation.FromNode(root);
+            var repFirst = SerializableBehaviorNode.FromNode(root);
             var jsonFirst = repFirst.ToJSONString();
 
             var reconstructedRoot = repFirst.ToNode(null, null);
 
-            var repSecond = BehaviorNodeJSONRepresentation.FromNode(reconstructedRoot);
+            var repSecond = SerializableBehaviorNode.FromNode(reconstructedRoot);
             var jsonSecond = repSecond.ToJSONString();
 
             Assert.AreEqual(jsonFirst, jsonSecond);

@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BattleTech;
-using EnhancedAI.Selectors;
+using EnhancedAI.UnitSelectors;
 using Newtonsoft.Json;
 
 // ReSharper disable CollectionNeverUpdated.Global
 
 namespace EnhancedAI.Resources
 {
-    public class AIOverrideDef
+    public class UnitAIOverride
     {
+        public static string ModTekResourceName = "UnitAIOverrideDef";
+
         public string Name;
-        public List<SelectorValue> Selectors;
+        public List<UnitSelectorValue> Selectors;
         public int Priority = 0;
 
-        public BehaviorNodeJSONRepresentation NewBehaviorTreeRoot;
+        public SerializableBehaviorNode NewBehaviorTreeRoot;
         public string BehaviorScopesDirectory;
         public Dictionary<string, BehaviorVariableValue> BehaviorVariableOverrides;
         public List<string> RemoveInfluenceFactors = new List<string>();
@@ -38,11 +40,11 @@ namespace EnhancedAI.Resources
         }
 
 
-        public static AIOverrideDef FromJSON(string json)
+        public static UnitAIOverride FromJSON(string json)
         {
             try
             {
-                return JsonConvert.DeserializeObject<AIOverrideDef>(json);
+                return JsonConvert.DeserializeObject<UnitAIOverride>(json);
             }
             catch (Exception e)
             {
@@ -52,7 +54,7 @@ namespace EnhancedAI.Resources
             }
         }
 
-        public static AIOverrideDef FromPath(string path)
+        public static UnitAIOverride FromPath(string path)
         {
             if (!File.Exists(path))
             {
@@ -63,7 +65,7 @@ namespace EnhancedAI.Resources
             return FromJSON(File.ReadAllText(path));
         }
 
-        public static AIOverrideDef MatchToUnitFrom(IEnumerable<AIOverrideDef> overrides, AbstractActor unit)
+        public static UnitAIOverride MatchToUnitFrom(IEnumerable<UnitAIOverride> overrides, AbstractActor unit)
         {
             var matching = overrides.Where(o => o.MatchesUnit(unit)).ToArray();
 

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using EnhancedAI.Resources;
 using EnhancedAI.Util;
 
 namespace EnhancedAI.Features
@@ -17,7 +18,7 @@ namespace EnhancedAI.Features
             // dump to json
             if (type == DumpType.JSON || type == DumpType.Both)
             {
-                BehaviorNodeJSONRepresentation.FromNode(root)
+                SerializableBehaviorNode.FromNode(root)
                     .ToJSONFile(Path.Combine(directory, $"{name}.json"));
             }
 

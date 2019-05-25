@@ -1,5 +1,5 @@
 ﻿using BattleTech;
-using EnhancedAI.Features;
+using EnhancedAI.Features.Overrides;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global
@@ -29,7 +29,7 @@ namespace EnhancedAI.Patches
         // ReSharper disable once RedundantAssignment
         public static bool Prefix(InfluenceMapEvaluator __instance, float seconds, ref bool __result)
         {
-            __result = InfluenceMapModdedEvaluator.RunEvaluationForSeconds(__instance, seconds);
+            __result = InfluenceMapEvaluatorOverride.RunEvaluationForSeconds(__instance, seconds);
             return false;
         }
     }
