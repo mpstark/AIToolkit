@@ -12,8 +12,7 @@ namespace EnhancedAI.Features.Overrides
         public static void TryOverrideInfluenceFactors(BehaviorTree tree, UnitAIOverrideDef o)
         {
             // why o? line length getting too long!
-            if (o.NewAllyInfluenceFactors.Count + o.NewHostileInfluenceFactors.Count
-                + o.NewPositionInfluenceFactors.Count + o.RemoveInfluenceFactors.Count == 0)
+            if (o.AddInfluenceFactors.Count == 0)
                 return;
 
             Main.HBSLog?.Log($"Overriding Influence Factors for {tree.unit.UnitName}");
@@ -39,9 +38,9 @@ namespace EnhancedAI.Features.Overrides
                 .Where(f => !o.RemoveInfluenceFactors.Contains(f.GetType().Name)));
 
             // add new factors
-            newAllyFactors.AddRange(ConstructNewFactors<InfluenceMapAllyFactor>(o.NewAllyInfluenceFactors));
-            newHostileFactors.AddRange(ConstructNewFactors<InfluenceMapHostileFactor>(o.NewHostileInfluenceFactors));
-            newPositionalFactors.AddRange(ConstructNewFactors<InfluenceMapPositionFactor>(o.NewPositionInfluenceFactors));
+            newAllyFactors.AddRange(ConstructNewFactors<InfluenceMapAllyFactor>(o.AddInfluenceFactors));
+            newHostileFactors.AddRange(ConstructNewFactors<InfluenceMapHostileFactor>(o.AddInfluenceFactors));
+            newPositionalFactors.AddRange(ConstructNewFactors<InfluenceMapPositionFactor>(o.AddInfluenceFactors));
 
             // set the factors in the influence evaluator
             trav.Field("allyFactors").SetValue(newAllyFactors.ToArray());
