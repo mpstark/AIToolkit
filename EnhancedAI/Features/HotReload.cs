@@ -43,7 +43,21 @@ namespace EnhancedAI.Features
                 {
                     var teamAIOverride = Main.TeamToAIOverride[AIPause.CurrentAITeam];
                     if (teamAIOverride.TurnOrderFactorWeights.Count != 0)
-                        AIPause.CurrentAITeam.TurnActorProcessActivation();
+                    {
+                        // can't do simple thing and just reprocess the activation
+                        // because reasons? locks AI after they act after pause
+                        // AIPause.CurrentAITeam.TurnActorProcessActivation();
+
+                        var teamTraverse = Traverse.Create(AIPause.CurrentAITeam);
+                        var currentUnitTraverse = teamTraverse.Field("currentUnit");
+
+                        var newUnit = teamTraverse.Method("selectCurrentUnit").GetValue<AbstractActor>();
+                        currentUnitTraverse.SetValue(newUnit);
+
+                        // side effects of TurnActorProcessActivation
+                        teamTraverse.Method("UpdateAloneStatus", newUnit).GetValue();
+                        AIRoleAssignment.AssignRoleToUnit(newUnit, AIPause.CurrentAITeam.units);
+                    }
                 }
 
                 AIPause.Reset();
