@@ -68,7 +68,7 @@ namespace EnhancedAI.Resources
                     break;
 
                 case DecoratorBehaviorNode decorator:
-                    decorator.ChildNode = Children.FirstOrDefault()?.ToNode(tree, unit);
+                    decorator.ChildNode = Children.Count != 0 ? Children[0].ToNode(tree, unit) : null;
                     break;
             }
 
@@ -145,31 +145,6 @@ namespace EnhancedAI.Resources
             }
 
             return rep;
-        }
-
-        public static SerializableBehaviorNode FromJSON(string json)
-        {
-            try
-            {
-                return JsonConvert.DeserializeObject<SerializableBehaviorNode>(json);
-            }
-            catch (Exception e)
-            {
-                Main.HBSLog?.LogError("BehaviorNodeJSONRepresentation.FromJSON tossed exception");
-                Main.HBSLog?.LogException(e);
-                return null;
-            }
-        }
-
-        public static SerializableBehaviorNode FromPath(string path)
-        {
-            if (!File.Exists(path))
-            {
-                Main.HBSLog?.LogWarning($"Could not find file at: {path}");
-                return null;
-            }
-
-            return FromJSON(File.ReadAllText(path));
         }
     }
 }

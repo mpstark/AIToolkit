@@ -1,4 +1,5 @@
 ﻿using EnhancedAI.Resources;
+using EnhancedAI.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EnhancedAITests
@@ -14,7 +15,7 @@ namespace EnhancedAITests
             var repFirst = SerializableBehaviorNode.FromNode(root);
             var jsonFirst = repFirst.ToJSONString();
 
-            var repSecond = SerializableBehaviorNode.FromJSON(jsonFirst);
+            var repSecond = SerializeUtil.FromJSON<SerializableBehaviorNode>(jsonFirst);
             var jsonSecond = repSecond.ToJSONString();
 
             Assert.AreEqual(jsonFirst, jsonSecond);

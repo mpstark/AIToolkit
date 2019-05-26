@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EnhancedAI.TurnOrderFactors
 {
-    public class DistanceToVulnerableEnemy : ITurnOrderFactor
+    public class DistanceToClosestVulnerableEnemy : ITurnOrderFactor
     {
         public float EvaluateUnit(AbstractActor unit)
         {

@@ -22,7 +22,6 @@ namespace EnhancedAI.Features
                 Traverse.Create(game).Property("BehaviorVariableScopeManager")
                 .SetValue(new BehaviorVariableScopeManager(game));
 
-            // try to override the ai after resetting it
             var aiActors = game.Combat.AllActors.Where(unit => unit.team is AITeam);
             foreach (var unit in aiActors)
             {
@@ -38,7 +37,17 @@ namespace EnhancedAI.Features
             }
 
             if (AIPause.IsPaused)
+            {
+                // potentially reset current unit
+                if (Main.TeamToAIOverride.ContainsKey(AIPause.CurrentAITeam))
+                {
+                    var teamAIOverride = Main.TeamToAIOverride[AIPause.CurrentAITeam];
+                    if (teamAIOverride.TurnOrderFactorWeights.Count != 0)
+                        AIPause.CurrentAITeam.TurnActorProcessActivation();
+                }
+
                 AIPause.Reset();
+            }
         }
     }
 }

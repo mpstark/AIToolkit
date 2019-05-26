@@ -39,6 +39,10 @@ namespace EnhancedAI.Features.Overrides
             // calculate weighted/normalized factor values for each unit
             foreach (var factorName in teamAIOverride.TurnOrderFactorWeights.Keys)
             {
+                var weight = teamAIOverride.TurnOrderFactorWeights[factorName];
+                if (weight == 0f)
+                    continue;
+
                 if (!AvailableFactors.ContainsKey(factorName))
                 {
                     var type = TypeUtil.GetTypeByName(factorName, typeof(ITurnOrderFactor));
@@ -90,12 +94,12 @@ namespace EnhancedAI.Features.Overrides
                     var raw = unitToFactors[unit][factorName];
                     var norm = (raw - min) / (max - min);
 
-                    if (min > 0)
-                        norm = raw / max;
-                    else if (max < 0)
-                        norm = max / raw;
+                    //if (min > 0)
+                    //    norm = raw / max;
+                    //else if (max < 0)
+                    //    norm = max / raw;
 
-                    var weighted = norm * teamAIOverride.TurnOrderFactorWeights[factorName];
+                    var weighted = norm * weight;
                     unitToFactors[unit][factorName] = weighted;
                     unitToTotal[unit] += weighted;
                 }

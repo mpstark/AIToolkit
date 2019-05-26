@@ -68,9 +68,9 @@ namespace EnhancedAI.Features.Overrides
             var trav = Traverse.Create(evaluator);
             var unit = trav.Field("unit").GetValue<AbstractActor>();
 
-            var useDifferentFactorNormalization = false;
-            if (Main.UnitToAIOverride.ContainsKey(unit))
-                useDifferentFactorNormalization = Main.UnitToAIOverride[unit].UseDifferentFactorNormalization;
+            //var useDifferentFactorNormalization = false;
+            //if (Main.UnitToAIOverride.ContainsKey(unit))
+            //    useDifferentFactorNormalization = Main.UnitToAIOverride[unit].UseDifferentFactorNormalization;
 
             // clear all accumulators
             for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
@@ -212,13 +212,13 @@ namespace EnhancedAI.Features.Overrides
                     var raw = evaluator.WorkspaceEvaluationEntries[i].FactorValue;
                     var norm = (raw - min) / (max - min);
 
-                    if (useDifferentFactorNormalization)
-                    {
-                        if (min > 0)
-                            norm = raw / max;
-                        else if (max < 0)
-                            norm = max / raw;
-                    }
+                    //if (useDifferentFactorNormalization)
+                    //{
+                    //    if (min > 0)
+                    //        norm = raw / max;
+                    //    else if (max < 0)
+                    //        norm = max / raw;
+                    //}
 
                     var regularValue = norm * regularMoveWeight;
                     var sprintValue = norm * sprintMoveWeight;

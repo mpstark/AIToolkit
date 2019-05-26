@@ -42,8 +42,9 @@
     <Reference Include="UnityEngine.UI" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TurnOrderFactors\DistanceToEnemy.cs" />
-    <Compile Include="TurnOrderFactors\DistanceToVulnerableEnemy.cs" />
+    <Compile Include="TurnOrderFactors\DistanceToClosestEnemyDesc.cs" />
+    <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />
+    <Compile Include="TurnOrderFactors\DistanceToClosestVulnerableEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceAlongPatrolRoute.cs" />
     <Compile Include="TurnOrderFactors\ITurnOrderFactor.cs" />
     <Compile Include="TurnOrderFactors\IsUnstable.cs" />
