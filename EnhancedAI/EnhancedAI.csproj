@@ -71,7 +71,7 @@
     <Compile Include="Resources\TeamAIOverrideDef.cs" />
     <Compile Include="Resources\UnitAIOverrideDef.cs" />
     <Compile Include="Selectors\Team\TeamNameTeamSelector.cs" />
-    <Compile Include="Selectors\Unit\CustomUnitSelector.cs" />
+    <Compile Include="Selectors\CustomSelector.cs" />
     <Compile Include="Selectors\ISelector.cs" />
     <Compile Include="Selectors\SelectorValue.cs" />
     <Compile Include="Selectors\Unit\TreeIDUnitSelector.cs" />

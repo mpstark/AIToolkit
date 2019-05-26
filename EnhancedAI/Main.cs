@@ -39,6 +39,7 @@ namespace EnhancedAI
             = new Dictionary<string, ISelector<AITeam>>
             {
                 { "TeamName", new TeamNameTeamSelector()},
+                { "Custom", new CustomSelector<AITeam>()}
             };
 
         private static readonly Dictionary<string, ISelector<AbstractActor>> UnitSelectors
@@ -46,8 +47,8 @@ namespace EnhancedAI
             {
                 { "TeamName", new TeamNameUnitSelector()},
                 { "Role", new RoleUnitSelector() },
-                { "Custom", new CustomUnitSelector()},
-                { "Tree", new TreeIDUnitSelector() }
+                { "Tree", new TreeIDUnitSelector() },
+                { "Custom", new CustomSelector<AbstractActor>()}
             };
 
 

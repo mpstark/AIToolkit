@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
-using BattleTech;
 using Harmony;
 
-namespace EnhancedAI.Selectors.Unit
+namespace EnhancedAI.Selectors
 {
-    public class CustomUnitSelector : ISelector<AbstractActor>
+    public class CustomSelector<T> : ISelector<T>
     {
         private readonly Dictionary<string, MethodInfo> _methodCache = new Dictionary<string, MethodInfo>();
 
-        public bool Select(string selectString, AbstractActor unit)
+        public bool Select(string selectString, T obj)
         {
             if (string.IsNullOrEmpty(selectString))
                 return false;
 
             // find static method at the entry point in selector, cache it when found
-            // method must return bool and takes (AbstractActor)
+            // method must return bool and takes (T)
             if (!_methodCache.ContainsKey(selectString))
             {
                 var pos = selectString.LastIndexOf('.');
@@ -29,7 +28,7 @@ namespace EnhancedAI.Selectors.Unit
                 if (type == null)
                     return false;
 
-                var method = AccessTools.Method(type, methodName, new[] { typeof(AbstractActor) });
+                var method = AccessTools.Method(type, methodName, new[] { typeof(T) });
                 if (method == null)
                     return false;
 
@@ -42,7 +41,7 @@ namespace EnhancedAI.Selectors.Unit
                 _methodCache.Add(selectString, method);
             }
 
-            var returnValue = _methodCache[selectString].Invoke(null, new object[] {unit});
+            var returnValue = _methodCache[selectString].Invoke(null, new object[] {obj});
             if (returnValue == null)
                 return false;
 
