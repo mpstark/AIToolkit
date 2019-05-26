@@ -68,6 +68,10 @@ namespace EnhancedAI.Features.Overrides
             var trav = Traverse.Create(evaluator);
             var unit = trav.Field("unit").GetValue<AbstractActor>();
 
+            var useDifferentFactorNormalization = false;
+            if (Main.UnitToAIOverride.ContainsKey(unit))
+                useDifferentFactorNormalization = Main.UnitToAIOverride[unit].UseDifferentFactorNormalization;
+
             // clear all accumulators
             for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
             {
@@ -132,8 +136,8 @@ namespace EnhancedAI.Features.Overrides
                 if (Math.Abs(regularMoveWeight) < 0.001 && Math.Abs(sprintMoveWeight) < 0.001)
                     continue;
 
-                var minValue = float.MaxValue;
-                var maxValue = float.MinValue;
+                var min = float.MaxValue;
+                var max = float.MinValue;
                 factor.InitEvaluationForPhaseForUnit(unit);
                 trav.Method("ProfileBegin", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();
 
@@ -189,15 +193,15 @@ namespace EnhancedAI.Features.Overrides
                             break;
                     }
 
-                    minValue = Mathf.Min(minValue, evalEntry.FactorValue);
-                    maxValue = Mathf.Max(maxValue, evalEntry.FactorValue);
+                    min = Mathf.Min(min, evalEntry.FactorValue);
+                    max = Mathf.Max(max, evalEntry.FactorValue);
 
                     // potential next frame every 16 entries
                     if (i % 16 == 0)
                         yield return null;
                 }
 
-                if (minValue >= maxValue)
+                if (min >= max)
                 {
                     trav.Method("ProfileEnd", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();
                     continue;
@@ -205,15 +209,24 @@ namespace EnhancedAI.Features.Overrides
 
                 for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
                 {
-                    var rawValue = evaluator.WorkspaceEvaluationEntries[i].FactorValue;
-                    var normValue = (rawValue - minValue) / (maxValue - minValue);
-                    var regularValue = normValue * regularMoveWeight;
-                    var sprintValue = normValue * sprintMoveWeight;
+                    var raw = evaluator.WorkspaceEvaluationEntries[i].FactorValue;
+                    var norm = (raw - min) / (max - min);
+
+                    if (useDifferentFactorNormalization)
+                    {
+                        if (min > 0)
+                            norm = raw / max;
+                        else if (max < 0)
+                            norm = max / raw;
+                    }
+
+                    var regularValue = norm * regularMoveWeight;
+                    var sprintValue = norm * sprintMoveWeight;
 
                     evaluator.WorkspaceEvaluationEntries[i].RegularMoveAccumulator += regularValue;
                     evaluator.WorkspaceEvaluationEntries[i].SprintMoveAccumulator += sprintValue;
                     evaluator.WorkspaceEvaluationEntries[i].ValuesByFactorName[factor.GetType().Name]
-                        = new EvaluationDebugLogRecord(rawValue, normValue, regularValue, regularMoveWeight, sprintValue, sprintMoveWeight);
+                        = new EvaluationDebugLogRecord(raw, norm, regularValue, regularMoveWeight, sprintValue, sprintMoveWeight);
                 }
 
                 trav.Method("ProfileEnd", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();

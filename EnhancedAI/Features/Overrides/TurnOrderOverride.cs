@@ -58,8 +58,8 @@ namespace EnhancedAI.Features.Overrides
                     AvailableFactors.Add(factorName, factor);
                 }
 
-                var maxValue = float.MinValue;
-                var minValue = float.MaxValue;
+                var max = float.MinValue;
+                var min = float.MaxValue;
 
                 // evaluate factor for all units
                 foreach (var unit in units)
@@ -74,11 +74,11 @@ namespace EnhancedAI.Features.Overrides
                     }
 
                     unitToFactors[unit][factorName] = factorValue;
-                    maxValue = Mathf.Max(maxValue, factorValue);
-                    minValue = Mathf.Min(minValue, factorValue);
+                    max = Mathf.Max(max, factorValue);
+                    min = Mathf.Min(min, factorValue);
                 }
 
-                if (minValue >= maxValue)
+                if (min >= max)
                     continue;
 
                 // normalize based on minValue/maxValue and weight
@@ -88,8 +88,14 @@ namespace EnhancedAI.Features.Overrides
                         continue;
 
                     var raw = unitToFactors[unit][factorName];
-                    var normalized = (raw - minValue) / (maxValue - minValue);
-                    var weighted = normalized * teamAIOverride.TurnOrderFactorWeights[factorName];
+                    var norm = (raw - min) / (max - min);
+
+                    if (min > 0)
+                        norm = raw / max;
+                    else if (max < 0)
+                        norm = max / raw;
+
+                    var weighted = norm * teamAIOverride.TurnOrderFactorWeights[factorName];
                     unitToFactors[unit][factorName] = weighted;
                     unitToTotal[unit] += weighted;
                 }

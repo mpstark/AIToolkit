@@ -15,7 +15,7 @@ namespace EnhancedAI.TurnOrderFactors
             var minDistance = hostiles.Min(hostile =>
                 Vector3.Distance(unit.CurrentPosition, hostile.CurrentPosition));
 
-            return -1 * minDistance;
+            return 1f / minDistance;
         }
     }
 }

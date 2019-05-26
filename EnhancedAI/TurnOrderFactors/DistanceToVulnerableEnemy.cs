@@ -24,7 +24,7 @@ namespace EnhancedAI.TurnOrderFactors
             if (minDistance == float.MaxValue)
                 return float.MinValue;
 
-            return -1 * minDistance;
+            return 1f / minDistance;
         }
     }
 }
