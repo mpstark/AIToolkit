@@ -67,7 +67,6 @@ namespace EnhancedAI.Features.Overrides
             // this is largely rewritten from HBS code, and not subject to license
             var trav = Traverse.Create(evaluator);
             var unit = trav.Field("unit").GetValue<AbstractActor>();
-            var treeTrav = Traverse.Create(unit.BehaviorTree);
 
             // clear all accumulators
             for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
