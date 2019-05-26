@@ -17,7 +17,6 @@ namespace EnhancedAI.Util
 
         public static void ReplaceRoot(this BehaviorTree tree, BehaviorNode newRoot)
         {
-            Main.HBSLog?.Log($"Replacing root on behavior tree {tree.GetIDString()} on unit: {tree.unit.UnitName}");
             Traverse.Create(tree).Property("RootNode").SetValue(newRoot);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using BattleTech;
+using EnhancedAI.Util;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global
@@ -11,8 +12,8 @@ namespace EnhancedAI.Patches
     {
         public static bool Prefix(BehaviorVariableScopeManager __instance, string id)
         {
-            if (BehaviorVariableScopeManagerWrapper.IgnoreScopeLoadedCalls ||
-                BehaviorVariableScopeManagerWrapper.IgnoreScopeLoadedCallsFrom
+            if (BVScopeManagerWrapper.IgnoreScopeLoadedCalls ||
+                BVScopeManagerWrapper.IgnoreScopeLoadedCallsFrom
                     .Contains(__instance))
             {
                 return false;

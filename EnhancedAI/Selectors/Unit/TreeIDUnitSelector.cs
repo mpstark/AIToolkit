@@ -2,9 +2,9 @@
 using BattleTech;
 using EnhancedAI.Util;
 
-namespace EnhancedAI.UnitSelectors
+namespace EnhancedAI.Selectors.Unit
 {
-    public class TreeUnitSelector : IUnitSelector
+    public class TreeIDUnitSelector : ISelector<AbstractActor>
     {
         public bool Select(string selectString, AbstractActor unit)
         {

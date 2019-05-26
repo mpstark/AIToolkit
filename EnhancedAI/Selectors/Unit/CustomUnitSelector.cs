@@ -3,9 +3,9 @@ using System.Reflection;
 using BattleTech;
 using Harmony;
 
-namespace EnhancedAI.UnitSelectors
+namespace EnhancedAI.Selectors.Unit
 {
-    public class CustomUnitSelector : IUnitSelector
+    public class CustomUnitSelector : ISelector<AbstractActor>
     {
         private readonly Dictionary<string, MethodInfo> _methodCache = new Dictionary<string, MethodInfo>();
 

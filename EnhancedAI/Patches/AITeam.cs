@@ -30,8 +30,9 @@ namespace EnhancedAI.Patches
         // ReSharper disable once RedundantAssignment
         public static bool Prefix(AITeam __instance, ref AbstractActor __result)
         {
+            Main.TryOverrideTeamAI(__instance);
             __result = TurnOrderOverride.GetHighestPriorityUnitFrom(__instance.GetUnusedUnitsForCurrentPhase());
-            Main.TryOverrideAI(__result);
+            Main.TryOverrideUnitAI(__result);
             return false;
         }
     }

@@ -1,9 +1,9 @@
 ﻿using System;
 using BattleTech;
 
-namespace EnhancedAI.UnitSelectors
+namespace EnhancedAI.Selectors.Unit
 {
-    public class RoleUnitSelector : IUnitSelector
+    public class RoleUnitSelector : ISelector<AbstractActor>
     {
         public bool Select(string selectString, AbstractActor unit)
         {

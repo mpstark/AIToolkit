@@ -26,8 +26,15 @@ namespace EnhancedAI.Features
             var aiActors = game.Combat.AllActors.Where(unit => unit.team is AITeam);
             foreach (var unit in aiActors)
             {
-                Main.ResetAI(unit);
-                Main.TryOverrideAI(unit);
+                Main.ResetUnitAI(unit);
+                Main.TryOverrideUnitAI(unit);
+            }
+
+            var aiTeams = game.Combat.Teams.Where(team => team is AITeam).Cast<AITeam>();
+            foreach (var team in aiTeams)
+            {
+                Main.ResetTeamAI(team);
+                Main.TryOverrideTeamAI(team);
             }
 
             if (AIPause.IsPaused)

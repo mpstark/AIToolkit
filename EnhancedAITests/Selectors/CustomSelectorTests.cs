@@ -1,5 +1,5 @@
 ﻿using BattleTech;
-using EnhancedAI.UnitSelectors;
+using EnhancedAI.Selectors.Unit;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EnhancedAITests.Selectors

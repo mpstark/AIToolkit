@@ -9,7 +9,7 @@ namespace EnhancedAI.Features.Overrides
 {
     public static class InfluenceFactorOverride
     {
-        public static void TryOverrideInfluenceFactors(BehaviorTree tree, UnitAIOverride o)
+        public static void TryOverrideInfluenceFactors(BehaviorTree tree, UnitAIOverrideDef o)
         {
             // why o? line length getting too long!
             if (o.NewAllyInfluenceFactors.Count + o.NewHostileInfluenceFactors.Count

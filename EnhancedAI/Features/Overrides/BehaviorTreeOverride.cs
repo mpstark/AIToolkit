@@ -5,12 +5,12 @@ namespace EnhancedAI.Features.Overrides
 {
     public static class BehaviorTreeOverride
     {
-        public static void TryReplaceTree(BehaviorTree tree, UnitAIOverride aiOverride)
+        public static void TryOverrideTree(BehaviorTree tree, UnitAIOverrideDef aiOverride)
         {
             if (aiOverride.NewBehaviorTreeRoot == null)
                 return;
 
-            Main.HBSLog?.Log($"TreeReplace from AIOverrideDef {aiOverride.Name}");
+            Main.HBSLog?.Log($"Override Behavior Tree with ID {tree.GetIDString()} from UnitAIOverrideDef {aiOverride.Name} on unit {tree.unit.UnitName}");
             tree.ReplaceRoot(aiOverride.NewBehaviorTreeRoot.ToNode(tree, tree.unit));
         }
     }

@@ -1,8 +1,8 @@
 ﻿using BattleTech;
 
-namespace EnhancedAI.UnitSelectors
+namespace EnhancedAI.Selectors.Unit
 {
-    public class TeamNameUnitSelector : IUnitSelector
+    public class TeamNameUnitSelector : ISelector<AbstractActor>
     {
         public bool Select(string selectString, AbstractActor unit)
         {
