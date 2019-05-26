@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BattleTech;
+using EnhancedAI.Util;
 using GraphCoroutines;
 using Harmony;
 using UnityEngine;
@@ -82,8 +83,7 @@ namespace EnhancedAI.Features.Overrides
             factors.AddRange(trav.Field("positionalFactors").GetValue<InfluenceMapPositionFactor[]>());
 
             // ally setup
-            var allyCount = treeTrav.Method("GetBehaviorVariableValue", BehaviorVariableName.Int_AllyInfluenceCount)
-                .GetValue<BehaviorVariableValue>().IntVal;
+            var allyCount = unit.BehaviorTree.GetBVValue(BehaviorVariableName.Int_AllyInfluenceCount).IntVal;
             var allAllies = unit.BehaviorTree.GetAllyUnits().ConvertAll<ICombatant>(x => x);
             var allies = trav.Method("getNClosestCombatants", allAllies, allyCount).GetValue<List<ICombatant>>();
 
@@ -92,8 +92,7 @@ namespace EnhancedAI.Features.Overrides
             foreach (var combatant in unit.BehaviorTree.enemyUnits)
                 (combatant as AbstractActor)?.EvaluateExpectedArmor();
 
-            var hostileCount = treeTrav.Method("GetBehaviorVariableValue", BehaviorVariableName.Int_HostileInfluenceCount)
-                .GetValue<BehaviorVariableValue>().IntVal;
+            var hostileCount = unit.BehaviorTree.GetBVValue(BehaviorVariableName.Int_HostileInfluenceCount).IntVal;
             var hostiles = trav.Method("getNClosestCombatants", unit.BehaviorTree.enemyUnits, hostileCount).GetValue<List<ICombatant>>();
 
             // potential next frame
@@ -111,8 +110,7 @@ namespace EnhancedAI.Features.Overrides
                 var sprintMoveWeight = 0f;
                 if (regularMoveWeightName != BehaviorVariableName.INVALID_UNSET)
                 {
-                    regularMoveWeight = treeTrav.Method("GetBehaviorVariableValue", regularMoveWeightName)
-                        .GetValue<BehaviorVariableValue>().FloatVal;
+                    regularMoveWeight = unit.BehaviorTree.GetBVValue(regularMoveWeightName).FloatVal;
                 }
                 else if (Main.UnitToAIOverride.ContainsKey(unit))
                 {
@@ -123,8 +121,7 @@ namespace EnhancedAI.Features.Overrides
 
                 if (sprintMoveWeightName != BehaviorVariableName.INVALID_UNSET)
                 {
-                    sprintMoveWeight = treeTrav.Method("GetBehaviorVariableValue", sprintMoveWeightName)
-                        .GetValue<BehaviorVariableValue>().FloatVal;
+                    sprintMoveWeight = unit.BehaviorTree.GetBVValue(sprintMoveWeightName).FloatVal;
                 }
                 else if (Main.UnitToAIOverride.ContainsKey(unit))
                 {

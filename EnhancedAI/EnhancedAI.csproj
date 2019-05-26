@@ -42,6 +42,12 @@
     <Reference Include="UnityEngine.UI" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TurnOrderFactors\DistanceToEnemy.cs" />
+    <Compile Include="TurnOrderFactors\DistanceToVulnerableEnemy.cs" />
+    <Compile Include="TurnOrderFactors\DistanceAlongPatrolRoute.cs" />
+    <Compile Include="TurnOrderFactors\ITurnOrderFactor.cs" />
+    <Compile Include="TurnOrderFactors\IsUnstable.cs" />
+    <Compile Include="TurnOrderFactors\IsVulnerable.cs" />
     <Compile Include="Util\BVScopeManagerWrapper.cs" />
     <Compile Include="Features\UI\AIPausePopup.cs" />
     <Compile Include="Features\Overrides\BehaviorVariableOverride.cs" />

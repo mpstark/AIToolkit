@@ -15,6 +15,11 @@ namespace EnhancedAI.Util
             return Enum.GetName(typeof(BehaviorTreeIDEnum), tree.GetID());
         }
 
+        public static BehaviorVariableValue GetBVValue(this BehaviorTree tree, BehaviorVariableName name)
+        {
+            return Traverse.Create(tree).Method("GetBehaviorVariableValue", name).GetValue<BehaviorVariableValue>();
+        }
+
         public static void ReplaceRoot(this BehaviorTree tree, BehaviorNode newRoot)
         {
             Traverse.Create(tree).Property("RootNode").SetValue(newRoot);

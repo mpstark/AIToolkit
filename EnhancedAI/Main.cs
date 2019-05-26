@@ -117,26 +117,28 @@ namespace EnhancedAI
         }
 
 
-        internal static void TryOverrideUnitAI(AbstractActor unit)
+        internal static UnitAIOverrideDef TryOverrideUnitAI(AbstractActor unit)
         {
             var aiOverride = UnitAIOverrideDef.SelectOverride(unit, UnitAIOverrides.Cast<AIOverrideDef<AbstractActor>>(), UnitSelectors);
 
             if (aiOverride == null)
-                return;
+                return null;
 
             // unit has already been overriden and has the same override then we just got
             if (UnitToAIOverride.ContainsKey(unit) && UnitToAIOverride[unit] == aiOverride)
-                return;
+                return UnitToAIOverride[unit];
 
             // unit has already been overridden but has a different override
             if (UnitToAIOverride.ContainsKey(unit) && UnitToAIOverride[unit] != aiOverride)
                 ResetUnitAI(unit);
 
             HBSLog?.Log($"Overriding AI on unit {unit.UnitName} with {aiOverride.Name}");
-
             UnitToAIOverride[unit] = (UnitAIOverrideDef) aiOverride;
+
             BehaviorTreeOverride.TryOverrideTree(unit.BehaviorTree, UnitToAIOverride[unit]);
             InfluenceFactorOverride.TryOverrideInfluenceFactors(unit.BehaviorTree, UnitToAIOverride[unit]);
+
+            return UnitToAIOverride[unit];
         }
 
         internal static void ResetUnitAI(AbstractActor unit)
@@ -149,16 +151,16 @@ namespace EnhancedAI
         }
 
 
-        internal static void TryOverrideTeamAI(AITeam team)
+        internal static TeamAIOverrideDef TryOverrideTeamAI(AITeam team)
         {
             var aiOverride = TeamAIOverrideDef.SelectOverride(team, TeamAIOverrides.Cast<AIOverrideDef<AITeam>>(), TeamSelectors);
 
             if (aiOverride == null)
-                return;
+                return null;
 
             // team already overriden and has same override that we just got
             if (TeamToAIOverride.ContainsKey(team) && TeamToAIOverride[team] == aiOverride)
-                return;
+                return TeamToAIOverride[team];
 
             // unit has been already overriden but has a different override
             if (TeamToAIOverride.ContainsKey(team) && TeamToAIOverride[team] != aiOverride)
@@ -166,6 +168,7 @@ namespace EnhancedAI
 
             HBSLog?.Log($"Overriding AI on team {team.Name} with {aiOverride.Name}");
             TeamToAIOverride[team] = (TeamAIOverrideDef) aiOverride;
+            return TeamToAIOverride[team];
         }
 
         internal static void ResetTeamAI(AITeam team)
