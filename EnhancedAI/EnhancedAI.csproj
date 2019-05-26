@@ -81,7 +81,7 @@
     <Compile Include="Util\BehaviorNodeFactory.cs" />
     <Compile Include="Util\BehaviorTreeExtensions.cs" />
     <Compile Include="Util\NodeUtil.cs" />
-    <Compile Include="Util\SerializerHelper.cs" />
+    <Compile Include="Util\SerializeUtil.cs" />
     <Compile Include="Util\TypeUtil.cs" />
   </ItemGroup>
   <ItemGroup>

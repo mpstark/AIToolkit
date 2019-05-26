@@ -88,7 +88,7 @@ namespace EnhancedAI
             UnitAIOverrides.Clear();
             foreach (var path in UnitAIOverridePaths)
             {
-                var unitOverride = SerializerHelper.FromPath<UnitAIOverrideDef>(path);
+                var unitOverride = SerializeUtil.FromPath<UnitAIOverrideDef>(path);
                 if (unitOverride == null)
                 {
                     HBSLog?.LogError($"UnitAIOverrideDef Resource did not parse at {path}");
@@ -103,7 +103,7 @@ namespace EnhancedAI
             TeamAIOverrides.Clear();
             foreach (var path in TeamAIOverridePaths)
             {
-                var teamOverride = SerializerHelper.FromPath<TeamAIOverrideDef>(path);
+                var teamOverride = SerializeUtil.FromPath<TeamAIOverrideDef>(path);
                 if (teamOverride == null)
                 {
                     HBSLog?.LogError($"TeamAIOverrideDef Resource did not parse at {path}");

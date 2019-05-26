@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace EnhancedAI.Util
 {
-    public static class SerializerHelper
+    public static class SerializeUtil
     {
         public static T FromJSON<T>(string json)
         {
