@@ -1,27 +1,18 @@
 ﻿using System.Collections.Generic;
-using BattleTech;
 
 namespace EnhancedAI.Selectors
 {
-    public class SelectorValue
+    public class SelectorValue<T>
     {
-        private static readonly Dictionary<string, ISelector> AvailableSelectors = new Dictionary<string, ISelector>
-        {
-            { "Custom", new CustomSelector() },
-            { "TeamName", new TeamNameSelector() },
-            { "Role", new RoleSelector() },
-            { "Tree", new TreeSelector() }
-        };
-
         public string TypeName;
         public string SelectString;
 
-        public bool MatchesUnit(AbstractActor unit)
+        public bool Matches(T obj, Dictionary<string, ISelector<T>> selectors)
         {
-            if (!AvailableSelectors.ContainsKey(TypeName))
+            if (!selectors.ContainsKey(TypeName))
                 return false;
 
-            return AvailableSelectors[TypeName].Select(SelectString, unit);
+            return selectors[TypeName].Select(SelectString, obj);
         }
     }
 }

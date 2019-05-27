@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using BattleTech;
+using EnhancedAI.Util;
 using GraphCoroutines;
 using Harmony;
 using UnityEngine;
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.Overrides
 {
-    public static class InfluenceMapModdedEvaluator
+    public static class InfluenceMapEvaluatorOverride
     {
         public static bool RunEvaluationForSeconds(InfluenceMapEvaluator evaluator, float seconds)
         {
@@ -66,7 +67,10 @@ namespace EnhancedAI.Features
             // this is largely rewritten from HBS code, and not subject to license
             var trav = Traverse.Create(evaluator);
             var unit = trav.Field("unit").GetValue<AbstractActor>();
-            var treeTrav = Traverse.Create(unit.BehaviorTree);
+
+            //var useDifferentFactorNormalization = false;
+            //if (Main.UnitToAIOverride.ContainsKey(unit))
+            //    useDifferentFactorNormalization = Main.UnitToAIOverride[unit].UseDifferentFactorNormalization;
 
             // clear all accumulators
             for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
@@ -82,8 +86,7 @@ namespace EnhancedAI.Features
             factors.AddRange(trav.Field("positionalFactors").GetValue<InfluenceMapPositionFactor[]>());
 
             // ally setup
-            var allyCount = treeTrav.Method("GetBehaviorVariableValue", BehaviorVariableName.Int_AllyInfluenceCount)
-                .GetValue<BehaviorVariableValue>().IntVal;
+            var allyCount = unit.BehaviorTree.GetBVValue(BehaviorVariableName.Int_AllyInfluenceCount).IntVal;
             var allAllies = unit.BehaviorTree.GetAllyUnits().ConvertAll<ICombatant>(x => x);
             var allies = trav.Method("getNClosestCombatants", allAllies, allyCount).GetValue<List<ICombatant>>();
 
@@ -92,8 +95,7 @@ namespace EnhancedAI.Features
             foreach (var combatant in unit.BehaviorTree.enemyUnits)
                 (combatant as AbstractActor)?.EvaluateExpectedArmor();
 
-            var hostileCount = treeTrav.Method("GetBehaviorVariableValue", BehaviorVariableName.Int_HostileInfluenceCount)
-                .GetValue<BehaviorVariableValue>().IntVal;
+            var hostileCount = unit.BehaviorTree.GetBVValue(BehaviorVariableName.Int_HostileInfluenceCount).IntVal;
             var hostiles = trav.Method("getNClosestCombatants", unit.BehaviorTree.enemyUnits, hostileCount).GetValue<List<ICombatant>>();
 
             // potential next frame
@@ -111,8 +113,7 @@ namespace EnhancedAI.Features
                 var sprintMoveWeight = 0f;
                 if (regularMoveWeightName != BehaviorVariableName.INVALID_UNSET)
                 {
-                    regularMoveWeight = treeTrav.Method("GetBehaviorVariableValue", regularMoveWeightName)
-                        .GetValue<BehaviorVariableValue>().FloatVal;
+                    regularMoveWeight = unit.BehaviorTree.GetBVValue(regularMoveWeightName).FloatVal;
                 }
                 else if (Main.UnitToAIOverride.ContainsKey(unit))
                 {
@@ -123,8 +124,7 @@ namespace EnhancedAI.Features
 
                 if (sprintMoveWeightName != BehaviorVariableName.INVALID_UNSET)
                 {
-                    sprintMoveWeight = treeTrav.Method("GetBehaviorVariableValue", sprintMoveWeightName)
-                        .GetValue<BehaviorVariableValue>().FloatVal;
+                    sprintMoveWeight = unit.BehaviorTree.GetBVValue(sprintMoveWeightName).FloatVal;
                 }
                 else if (Main.UnitToAIOverride.ContainsKey(unit))
                 {
@@ -136,8 +136,8 @@ namespace EnhancedAI.Features
                 if (Math.Abs(regularMoveWeight) < 0.001 && Math.Abs(sprintMoveWeight) < 0.001)
                     continue;
 
-                var minValue = float.MaxValue;
-                var maxValue = float.MinValue;
+                var min = float.MaxValue;
+                var max = float.MinValue;
                 factor.InitEvaluationForPhaseForUnit(unit);
                 trav.Method("ProfileBegin", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();
 
@@ -193,15 +193,15 @@ namespace EnhancedAI.Features
                             break;
                     }
 
-                    minValue = Mathf.Min(minValue, evalEntry.FactorValue);
-                    maxValue = Mathf.Max(maxValue, evalEntry.FactorValue);
+                    min = Mathf.Min(min, evalEntry.FactorValue);
+                    max = Mathf.Max(max, evalEntry.FactorValue);
 
                     // potential next frame every 16 entries
                     if (i % 16 == 0)
                         yield return null;
                 }
 
-                if (minValue >= maxValue)
+                if (min >= max)
                 {
                     trav.Method("ProfileEnd", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();
                     continue;
@@ -209,15 +209,24 @@ namespace EnhancedAI.Features
 
                 for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
                 {
-                    var rawValue = evaluator.WorkspaceEvaluationEntries[i].FactorValue;
-                    var normValue = (rawValue - minValue) / (maxValue - minValue);
-                    var regularValue = normValue * regularMoveWeight;
-                    var sprintValue = normValue * sprintMoveWeight;
+                    var raw = evaluator.WorkspaceEvaluationEntries[i].FactorValue;
+                    var norm = (raw - min) / (max - min);
+
+                    //if (useDifferentFactorNormalization)
+                    //{
+                    //    if (min > 0)
+                    //        norm = raw / max;
+                    //    else if (max < 0)
+                    //        norm = max / raw;
+                    //}
+
+                    var regularValue = norm * regularMoveWeight;
+                    var sprintValue = norm * sprintMoveWeight;
 
                     evaluator.WorkspaceEvaluationEntries[i].RegularMoveAccumulator += regularValue;
                     evaluator.WorkspaceEvaluationEntries[i].SprintMoveAccumulator += sprintValue;
                     evaluator.WorkspaceEvaluationEntries[i].ValuesByFactorName[factor.GetType().Name]
-                        = new EvaluationDebugLogRecord(rawValue, normValue, regularValue, regularMoveWeight, sprintValue, sprintMoveWeight);
+                        = new EvaluationDebugLogRecord(raw, norm, regularValue, regularMoveWeight, sprintValue, sprintMoveWeight);
                 }
 
                 trav.Method("ProfileEnd", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();

@@ -1,5 +1,6 @@
 ﻿using BattleTech;
 using EnhancedAI.Features;
+using EnhancedAI.Features.Overrides;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global
@@ -20,14 +21,31 @@ namespace EnhancedAI.Patches
     }
 
     /// <summary>
-    /// Hook to potentially override units ai each time it comes up
+    /// Hook to potentially override units ai each time it comes up, as well as
+    /// override the order in which units are selected
     /// </summary>
     [HarmonyPatch(typeof(AITeam), "selectCurrentUnit")]
     public static class AITeam_selectCurrentUnit_patch
     {
+        // ReSharper disable once RedundantAssignment
+        public static bool Prefix(AITeam __instance, ref AbstractActor __result)
+        {
+            var teamAIOverride = Main.TryOverrideTeamAI(__instance);
+            if (teamAIOverride == null)
+                return true;
+
+            var nextUnit =  TurnOrderOverride.TryOverrideCurrentUnit(__instance.GetUnusedUnitsForCurrentPhase(), teamAIOverride);
+            if (nextUnit == null)
+                return true;
+
+            __result = nextUnit;
+            Main.TryOverrideUnitAI(__result);
+            return false;
+        }
+
         public static void Postfix(AITeam __instance, ref AbstractActor __result)
         {
-            Main.TryOverrideAI(__result);
+            Main.TryOverrideUnitAI(__result);
         }
     }
 

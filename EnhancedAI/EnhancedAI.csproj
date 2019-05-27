@@ -42,18 +42,27 @@
     <Reference Include="UnityEngine.UI" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BehaviorVariableScopeManagerWrapper.cs" />
-    <Compile Include="Features\AIPausePopup.cs" />
-    <Compile Include="Features\BehaviorVariableOverride.cs" />
-    <Compile Include="Features\InfluenceFactorOverride.cs" />
-    <Compile Include="Features\InfluenceMapModdedEvaluator.cs" />
-    <Compile Include="Features\InvocationVisualization.cs" />
+    <Compile Include="TurnOrderFactors\DistanceToClosestEnemyDesc.cs" />
+    <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />
+    <Compile Include="TurnOrderFactors\DistanceToClosestVulnerableEnemy.cs" />
+    <Compile Include="TurnOrderFactors\DistanceAlongPatrolRoute.cs" />
+    <Compile Include="TurnOrderFactors\ITurnOrderFactor.cs" />
+    <Compile Include="TurnOrderFactors\IsUnstable.cs" />
+    <Compile Include="TurnOrderFactors\IsVulnerable.cs" />
+    <Compile Include="Util\BVScopeManagerWrapper.cs" />
+    <Compile Include="Features\UI\AIPausePopup.cs" />
+    <Compile Include="Features\Overrides\BehaviorVariableOverride.cs" />
+    <Compile Include="Features\Overrides\InfluenceFactorOverride.cs" />
+    <Compile Include="Features\Overrides\InfluenceMapEvaluatorOverride.cs" />
+    <Compile Include="Features\UI\InvocationVisualization.cs" />
     <Compile Include="Features\BehaviorTreeDump.cs" />
-    <Compile Include="BehaviorNodeJSONRepresentation.cs" />
+    <Compile Include="Resources\AIOverrideDef.cs" />
+    <Compile Include="Resources\SerializableBehaviorNode.cs" />
     <Compile Include="Features\HotReload.cs" />
     <Compile Include="Features\AIPause.cs" />
-    <Compile Include="Features\InfluenceMapVisualization.cs" />
-    <Compile Include="Features\BehaviorTreeReplace.cs" />
+    <Compile Include="Features\UI\InfluenceMapVisualization.cs" />
+    <Compile Include="Features\Overrides\BehaviorTreeOverride.cs" />
+    <Compile Include="Features\Overrides\TurnOrderOverride.cs" />
     <Compile Include="InfluenceFactors\PreferHigherEvasionPositionFactor.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="ModSettings.cs" />
@@ -66,17 +75,20 @@
     <Compile Include="Patches\SortMoveCandidatesByInfMapNode.cs" />
     <Compile Include="Patches\UnityGameInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\AIOverrideDef.cs" />
+    <Compile Include="Resources\TeamAIOverrideDef.cs" />
+    <Compile Include="Resources\UnitAIOverrideDef.cs" />
+    <Compile Include="Selectors\Team\TeamNameTeamSelector.cs" />
     <Compile Include="Selectors\CustomSelector.cs" />
     <Compile Include="Selectors\ISelector.cs" />
     <Compile Include="Selectors\SelectorValue.cs" />
-    <Compile Include="Selectors\TreeSelector.cs" />
-    <Compile Include="Selectors\RoleSelector.cs" />
-    <Compile Include="Selectors\TeamNameSelector.cs" />
+    <Compile Include="Selectors\Unit\TreeIDUnitSelector.cs" />
+    <Compile Include="Selectors\Unit\RoleUnitSelector.cs" />
+    <Compile Include="Selectors\Unit\TeamNameUnitSelector.cs" />
     <Compile Include="Util\BehaviorNodeExtensions.cs" />
     <Compile Include="Util\BehaviorNodeFactory.cs" />
     <Compile Include="Util\BehaviorTreeExtensions.cs" />
     <Compile Include="Util\NodeUtil.cs" />
+    <Compile Include="Util\SerializeUtil.cs" />
     <Compile Include="Util\TypeUtil.cs" />
   </ItemGroup>
   <ItemGroup>

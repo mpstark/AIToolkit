@@ -1,24 +1,18 @@
 ﻿using System;
 using BattleTech;
+using EnhancedAI.Resources;
+using EnhancedAI.Util;
 using Harmony;
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.Overrides
 {
     public static class BehaviorVariableOverride
     {
-        public static BehaviorVariableValue TryGetValueFromAIOverrides(BehaviorTree tree, BehaviorVariableName name, out string overrideName)
+        public static BehaviorVariableValue TryOverrideValue(BehaviorTree tree, BehaviorVariableName name, UnitAIOverrideDef aiOverride)
         {
-            overrideName = null;
-            if (!Main.UnitToAIOverride.ContainsKey(tree.unit))
-                return null;
-
-            var aiOverride = Main.UnitToAIOverride[tree.unit];
-            overrideName = aiOverride.Name;
-
             // custom scope has value, and takes priority over everything else
             var variableName = Enum.GetName(typeof(BehaviorVariableName), name);
-            if (variableName != null && (aiOverride.BehaviorVariableOverrides != null
-                && aiOverride.BehaviorVariableOverrides.ContainsKey(variableName)))
+            if (variableName != null && aiOverride.BehaviorVariableOverrides.ContainsKey(variableName))
             {
                 return aiOverride.BehaviorVariableOverrides[variableName];
             }
@@ -31,10 +25,10 @@ namespace EnhancedAI.Features
             // but for non scopeManger values, we'll return null to force the value
             // to come from the global scopeManager, so the logs don't say that
             // we overrode them
-
+            // TODO: move this to a place that makes more sense?
             if (aiOverride.ScopeWrapper == null)
             {
-                aiOverride.ScopeWrapper = new BehaviorVariableScopeManagerWrapper(
+                aiOverride.ScopeWrapper = new BVScopeManagerWrapper(
                     tree.battleTechGame, aiOverride.BehaviorScopesDirectory);
             }
 

@@ -1,71 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using BattleTech;
 using EnhancedAI.Selectors;
-using Newtonsoft.Json;
-
-// ReSharper disable CollectionNeverUpdated.Global
 
 namespace EnhancedAI.Resources
 {
-    public class AIOverrideDef
+    public abstract class AIOverrideDef<T>
     {
         public string Name;
-        public List<SelectorValue> Selectors;
-        public int Priority = 0;
-
-        public BehaviorNodeJSONRepresentation NewBehaviorTreeRoot;
-        public string BehaviorScopesDirectory;
-        public Dictionary<string, BehaviorVariableValue> BehaviorVariableOverrides;
-        public List<string> RemoveInfluenceFactors = new List<string>();
-        public List<string> NewAllyInfluenceFactors = new List<string>();
-        public List<string> NewHostileInfluenceFactors = new List<string>();
-        public List<string> NewPositionInfluenceFactors = new List<string>();
+        public List<SelectorValue<T>> Selectors;
+        public int Priority;
 
 
-        [JsonIgnore]
-        public BehaviorVariableScopeManagerWrapper ScopeWrapper;
-
-
-        public bool MatchesUnit(AbstractActor unit)
+        public bool Matches(T obj, Dictionary<string, ISelector<T>> availableSelectors)
         {
             if (Selectors == null || Selectors.Count == 0)
                 return true;
 
-            return Selectors.All(selector => selector.MatchesUnit(unit));
+            return Selectors.All(selector => selector.Matches(obj, availableSelectors));
         }
 
 
-        public static AIOverrideDef FromJSON(string json)
+        public static AIOverrideDef<T> SelectOverride(T obj, IEnumerable<AIOverrideDef<T>> overrides, Dictionary<string, ISelector<T>> availableSelectors)
         {
-            try
-            {
-                return JsonConvert.DeserializeObject<AIOverrideDef>(json);
-            }
-            catch (Exception e)
-            {
-                Main.HBSLog?.LogError("AIOverrideDef.FromJSON tossed exception");
-                Main.HBSLog?.LogException(e);
-                return null;
-            }
-        }
-
-        public static AIOverrideDef FromPath(string path)
-        {
-            if (!File.Exists(path))
-            {
-                Main.HBSLog?.LogWarning($"Could not find file at: {path}");
-                return null;
-            }
-
-            return FromJSON(File.ReadAllText(path));
-        }
-
-        public static AIOverrideDef MatchToUnitFrom(IEnumerable<AIOverrideDef> overrides, AbstractActor unit)
-        {
-            var matching = overrides.Where(o => o.MatchesUnit(unit)).ToArray();
+            var matching = overrides.Where(o => o.Matches(obj, availableSelectors)).ToArray();
 
             if (matching.Length == 0)
                 return null;

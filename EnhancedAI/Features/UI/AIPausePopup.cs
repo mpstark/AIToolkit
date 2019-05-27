@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EnhancedAI.Features
+namespace EnhancedAI.Features.UI
 {
     public static class AIPausePopup
     {

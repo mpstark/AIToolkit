@@ -3,7 +3,12 @@ using System.Linq;
 using System.Reflection;
 using BattleTech;
 using EnhancedAI.Features;
+using EnhancedAI.Features.Overrides;
 using EnhancedAI.Resources;
+using EnhancedAI.Selectors;
+using EnhancedAI.Selectors.Team;
+using EnhancedAI.Selectors.Unit;
+using EnhancedAI.Util;
 using Harmony;
 using HBS.Logging;
 
@@ -17,13 +22,34 @@ namespace EnhancedAI
         internal static ModSettings Settings;
         internal static string Directory;
 
-        internal static readonly List<AIOverrideDef> AIOverrideDefs
-            = new List<AIOverrideDef>();
+        private static readonly List<string> UnitAIOverridePaths = new List<string>();
+        private static readonly List<string> TeamAIOverridePaths = new List<string>();
 
-        internal static readonly Dictionary<AbstractActor, AIOverrideDef> UnitToAIOverride
-            = new Dictionary<AbstractActor, AIOverrideDef>();
+        private static readonly List<UnitAIOverrideDef> UnitAIOverrides
+            = new List<UnitAIOverrideDef>();
+        private static readonly List<TeamAIOverrideDef> TeamAIOverrides
+            = new List<TeamAIOverrideDef>();
 
-        private static readonly List<string> AIOverridePaths = new List<string>();
+        internal static readonly Dictionary<AbstractActor, UnitAIOverrideDef> UnitToAIOverride
+            = new Dictionary<AbstractActor, UnitAIOverrideDef>();
+        internal static readonly Dictionary<AITeam, TeamAIOverrideDef> TeamToAIOverride
+            = new Dictionary<AITeam, TeamAIOverrideDef>();
+
+        private static readonly Dictionary<string, ISelector<AITeam>> TeamSelectors
+            = new Dictionary<string, ISelector<AITeam>>
+            {
+                { "TeamName", new TeamNameTeamSelector()},
+                { "Custom", new CustomSelector<AITeam>()}
+            };
+
+        private static readonly Dictionary<string, ISelector<AbstractActor>> UnitSelectors
+            = new Dictionary<string, ISelector<AbstractActor>>
+            {
+                { "TeamName", new TeamNameUnitSelector()},
+                { "Role", new RoleUnitSelector() },
+                { "Tree", new TreeIDUnitSelector() },
+                { "Custom", new CustomSelector<AbstractActor>()}
+            };
 
 
         public static void Init(string modDir, string settings)
@@ -43,61 +69,111 @@ namespace EnhancedAI
 
         public static void FinishedLoading(Dictionary<string, Dictionary<string, VersionManifestEntry>> customResources)
         {
-            if (!customResources.ContainsKey(nameof(AIOverrideDef)))
-                return;
+            if (customResources.ContainsKey(nameof(UnitAIOverrideDef)))
+            {
+                UnitAIOverridePaths.AddRange(customResources[nameof(UnitAIOverrideDef)]
+                    .Values.Select(entry => entry.FilePath));
+            }
 
-            AIOverridePaths.AddRange(customResources[nameof(AIOverrideDef)].Values.Select(entry => entry.FilePath));
+            if (customResources.ContainsKey(nameof(TeamAIOverrideDef)))
+            {
+                TeamAIOverridePaths.AddRange(customResources[nameof(TeamAIOverrideDef)]
+                    .Values.Select(entry => entry.FilePath));
+            }
         }
 
 
         internal static void ReloadAIOverrides()
         {
             UnitToAIOverride.Clear();
-            AIOverrideDefs.Clear();
-
-            foreach (var path in AIOverridePaths)
+            UnitAIOverrides.Clear();
+            foreach (var path in UnitAIOverridePaths)
             {
-                var overrideDef = AIOverrideDef.FromPath(path);
-                if (overrideDef == null)
+                var unitOverride = SerializeUtil.FromPath<UnitAIOverrideDef>(path);
+                if (unitOverride == null)
                 {
-                    HBSLog?.LogError($"AIOverrideDef Resource did not parse at {path}");
+                    HBSLog?.LogError($"UnitAIOverrideDef Resource did not parse at {path}");
                     break;
                 }
 
-                HBSLog?.Log($"Parsed {overrideDef.Name} at {path}");
-                AIOverrideDefs.Add(overrideDef);
+                HBSLog?.Log($"Parsed UnitAIOverrideDef {unitOverride.Name} at {path}");
+                UnitAIOverrides.Add(unitOverride);
+            }
+
+            TeamToAIOverride.Clear();
+            TeamAIOverrides.Clear();
+            foreach (var path in TeamAIOverridePaths)
+            {
+                var teamOverride = SerializeUtil.FromPath<TeamAIOverrideDef>(path);
+                if (teamOverride == null)
+                {
+                    HBSLog?.LogError($"TeamAIOverrideDef Resource did not parse at {path}");
+                    break;
+                }
+
+                HBSLog?.Log($"Parsed TeamAIOverride {teamOverride.Name} at {path}");
+                TeamAIOverrides.Add(teamOverride);
             }
         }
 
-        internal static void TryOverrideAI(AbstractActor unit)
+
+        internal static UnitAIOverrideDef TryOverrideUnitAI(AbstractActor unit)
         {
-            var aiOverride = AIOverrideDef.MatchToUnitFrom(AIOverrideDefs, unit);
+            var aiOverride = UnitAIOverrideDef.SelectOverride(unit, UnitAIOverrides.Cast<AIOverrideDef<AbstractActor>>(), UnitSelectors);
+
+            if (aiOverride == null)
+                return null;
 
             // unit has already been overriden and has the same override then we just got
             if (UnitToAIOverride.ContainsKey(unit) && UnitToAIOverride[unit] == aiOverride)
-                return;
+                return UnitToAIOverride[unit];
 
             // unit has already been overridden but has a different override
             if (UnitToAIOverride.ContainsKey(unit) && UnitToAIOverride[unit] != aiOverride)
-                ResetAI(unit);
+                ResetUnitAI(unit);
 
-            if (aiOverride == null)
-                return;
+            HBSLog?.Log($"Overriding AI on unit {unit.UnitName} with {aiOverride.Name}");
+            UnitToAIOverride[unit] = (UnitAIOverrideDef) aiOverride;
 
-            HBSLog?.Log($"Overriding AI on {unit.UnitName} with {aiOverride.Name}");
+            BehaviorTreeOverride.TryOverrideTree(unit.BehaviorTree, UnitToAIOverride[unit]);
+            InfluenceFactorOverride.TryOverrideInfluenceFactors(unit.BehaviorTree, UnitToAIOverride[unit]);
 
-            UnitToAIOverride[unit] = aiOverride;
-            BehaviorTreeReplace.TryReplaceTree(unit.BehaviorTree, aiOverride);
-            InfluenceFactorOverride.TryOverrideInfluenceFactors(unit.BehaviorTree, aiOverride);
+            return UnitToAIOverride[unit];
         }
 
-        internal static void ResetAI(AbstractActor unit)
+        internal static void ResetUnitAI(AbstractActor unit)
         {
-            HBSLog?.Log($"Resetting AI for {unit.UnitName}");
+            HBSLog?.Log($"Resetting AI for unit {unit.UnitName}");
 
             Traverse.Create(unit.BehaviorTree).Method("InitRootNode").GetValue();
             unit.BehaviorTree.influenceMapEvaluator = new InfluenceMapEvaluator();
             unit.BehaviorTree.Reset();
+        }
+
+
+        internal static TeamAIOverrideDef TryOverrideTeamAI(AITeam team)
+        {
+            var aiOverride = TeamAIOverrideDef.SelectOverride(team, TeamAIOverrides.Cast<AIOverrideDef<AITeam>>(), TeamSelectors);
+
+            if (aiOverride == null)
+                return null;
+
+            // team already overriden and has same override that we just got
+            if (TeamToAIOverride.ContainsKey(team) && TeamToAIOverride[team] == aiOverride)
+                return TeamToAIOverride[team];
+
+            // unit has been already overriden but has a different override
+            if (TeamToAIOverride.ContainsKey(team) && TeamToAIOverride[team] != aiOverride)
+                ResetTeamAI(team);
+
+            HBSLog?.Log($"Overriding AI on team {team.Name} with {aiOverride.Name}");
+            TeamToAIOverride[team] = (TeamAIOverrideDef) aiOverride;
+            return TeamToAIOverride[team];
+        }
+
+        internal static void ResetTeamAI(AITeam team)
+        {
+            HBSLog?.Log($"Resetting AI for team {team.Name}");
         }
     }
 }

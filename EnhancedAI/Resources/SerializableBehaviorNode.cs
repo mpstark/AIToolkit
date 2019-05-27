@@ -7,9 +7,9 @@ using EnhancedAI.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace EnhancedAI
+namespace EnhancedAI.Resources
 {
-    public class BehaviorNodeJSONRepresentation
+    public class SerializableBehaviorNode
     {
         [JsonRequired]
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace EnhancedAI
         [JsonRequired]
         public string TypeName { get; set; }
 
-        public List<BehaviorNodeJSONRepresentation> Children { get; set; }
+        public List<SerializableBehaviorNode> Children { get; set; }
         public Dictionary<string, object> ExtraParameters { get; set; }
 
 
@@ -68,7 +68,7 @@ namespace EnhancedAI
                     break;
 
                 case DecoratorBehaviorNode decorator:
-                    decorator.ChildNode = Children.FirstOrDefault()?.ToNode(tree, unit);
+                    decorator.ChildNode = Children.Count != 0 ? Children[0].ToNode(tree, unit) : null;
                     break;
             }
 
@@ -110,22 +110,22 @@ namespace EnhancedAI
         }
 
 
-        public static BehaviorNodeJSONRepresentation FromNode(BehaviorNode node)
+        public static SerializableBehaviorNode FromNode(BehaviorNode node)
         {
-            var rep = new BehaviorNodeJSONRepresentation();
+            var rep = new SerializableBehaviorNode();
             rep.Name = node.GetName();
             rep.TypeName = node.GetType().ToString();
 
             switch (node)
             {
                 case CompositeBehaviorNode composite:
-                    rep.Children = new List<BehaviorNodeJSONRepresentation>();
+                    rep.Children = new List<SerializableBehaviorNode>();
                     foreach (var child in composite.Children)
                         rep.Children.Add(FromNode(child));
                     break;
 
                 case DecoratorBehaviorNode decorator:
-                    rep.Children = new List<BehaviorNodeJSONRepresentation> { FromNode(decorator.ChildNode) };
+                    rep.Children = new List<SerializableBehaviorNode> { FromNode(decorator.ChildNode) };
                     break;
 
                 default:
@@ -145,31 +145,6 @@ namespace EnhancedAI
             }
 
             return rep;
-        }
-
-        public static BehaviorNodeJSONRepresentation FromJSON(string json)
-        {
-            try
-            {
-                return JsonConvert.DeserializeObject<BehaviorNodeJSONRepresentation>(json);
-            }
-            catch (Exception e)
-            {
-                Main.HBSLog?.LogError("BehaviorNodeJSONRepresentation.FromJSON tossed exception");
-                Main.HBSLog?.LogException(e);
-                return null;
-            }
-        }
-
-        public static BehaviorNodeJSONRepresentation FromPath(string path)
-        {
-            if (!File.Exists(path))
-            {
-                Main.HBSLog?.LogWarning($"Could not find file at: {path}");
-                return null;
-            }
-
-            return FromJSON(File.ReadAllText(path));
         }
     }
 }

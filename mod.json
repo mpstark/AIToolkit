@@ -3,14 +3,18 @@
     "DLL": "EnhancedAI.dll",
     "Enabled": true,
 
-    "CustomResourceTypes": [ "AIOverrideDef" ],
+    "CustomResourceTypes": [ "UnitAIOverrideDef", "TeamAIOverrideDef" ],
 
     "Settings": {
         "ShouldDump": false,
-        "DumpType": "Both"
+        "DumpType": "Both",
+
+        "ShouldPauseAI": true,
+        "FocusOnPause": true
     },
 
     "Manifest": [
-        { "Path": "AIOverrideDefs", "Type": "AIOverrideDef" }
+        { "Path": "UnitAIOverrideDefs", "Type": "UnitAIOverrideDef" },
+        { "Path": "TeamAIOverrideDefs", "Type": "TeamAIOverrideDef" }
     ]
 }

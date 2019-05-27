@@ -1,9 +1,7 @@
-﻿using BattleTech;
-
-namespace EnhancedAI.Selectors
+﻿namespace EnhancedAI.Selectors
 {
-    public interface ISelector
+    public interface ISelector<T>
     {
-        bool Select(string selector, AbstractActor unit);
+        bool Select(string selectString, T obj);
     }
 }

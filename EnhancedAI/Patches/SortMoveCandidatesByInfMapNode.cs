@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using BattleTech;
-using EnhancedAI.Features;
+using EnhancedAI.Features.UI;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global

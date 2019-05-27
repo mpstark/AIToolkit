@@ -1,4 +1,4 @@
-﻿using EnhancedAI.Features;
+﻿using EnhancedAI.Features.Overrides;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global
@@ -14,12 +14,16 @@ namespace EnhancedAI.Patches
     {
         public static bool Prefix(BehaviorTree __instance, BehaviorVariableName name, ref BehaviorVariableValue __result)
         {
-            var value = BehaviorVariableOverride.TryGetValueFromAIOverrides(__instance, name, out var overrideName);
+            if (!Main.UnitToAIOverride.ContainsKey(__instance.unit))
+                return true;
 
+            var aiOverride = Main.UnitToAIOverride[__instance.unit];
+
+            var value = BehaviorVariableOverride.TryOverrideValue(__instance, name, aiOverride);
             if (value == null)
                 return true;
 
-            Main.HBSLog?.Log($"Using value (from override: {overrideName}) for behavior variable: {name} for {__instance.unit.UnitName}");
+            Main.HBSLog?.Log($"Using value (from override: {aiOverride.Name}) for behavior variable: {name} for {__instance.unit.UnitName}");
             __result = value;
             return false;
         }

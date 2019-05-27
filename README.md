@@ -2,15 +2,15 @@
 
 ## Current Features
 
-Loads `AIOverrideDef` JSONs (a ModTek CustomResourceType) that override behavior trees/variables/influence factors, these can be provided by dropping them into the `EnhancedAI/AIOverrideDefs/` folder or providing them in another mod (with EnhancedAI as a dependancy). As a custom resource type, mods can also merge onto already provided defs.
+Loads `UnitAIOverrideDef` JSONs (a ModTek CustomResourceType) that override behavior trees/variables/influence factors, these can be provided by dropping them into the `EnhancedAI/UnitAIOverrideDefs/` folder or providing them in another mod (with EnhancedAI as a dependancy). As a custom resource type, mods can also merge onto already provided defs.
 
-When `AIOverrideDef` are loaded, they are matched one-to-one to unit's AI by their `Selectors` (each with `TypeName` and `SelectString`). If multiple `AIOverrideDef`s match a single unit, the one with the highest priority is chosen, if there is a tie on priority, then the first loaded wins. 
+When `UnitAIOverrideDef` are loaded, they are matched one-to-one to unit's AI by their `Selectors` (each with `TypeName` and `SelectString`). If multiple `UnitAIOverrideDef`s match a single unit, the one with the highest priority is chosen, if there is a tie on priority, then the first loaded wins. 
 * e.g. `TypeName`: "TeamName" `SelectString`: "Player 2" will override all AI units controlled by the team named "Player 2"
 * Current selector types are `TreeSelector`, `TeamNameSelector`, `RoleSelector`, and `CustomSelector`
   * `Custom` selector allows to call custom function with signature `public static bool MySelectorName(AbstractActor unit)`
     * e.g. `SelectString`: "MyNamespace.MySelectorName"
 
-Each `AIOverrideDef` can change the AI by:
+Each `UnitAIOverrideDef` can change the AI by:
 * Replacing the behavior tree itself
   * a JSON representation of the tree is provided in `NewBehaviorTreeRoot`
 * Overriding BehaviorVariables for the unit
@@ -27,7 +27,7 @@ The mod also provides the following functionality:
 * AI Hot Reload
   * Behavior Variables load from their location on disk (in versionManifest/modtek)
     * Currently cannot be done during AI pause/too close to an AI `think()` call
-  * AIOverrideDefs are reloaded and all referenced files are reloaded
+  * UnitAIOverrideDefs are reloaded and all referenced files are reloaded
   * All overrideDef functionality is re-applied
 * AI Pause (Setting in mod.json)
   * AI will show moves before taking them
@@ -38,7 +38,7 @@ The mod also provides the following functionality:
 
 ## Limitations of Current Implementation
 
-* AIOverrideDefs do not allow for tier'd retrivial behaviorVariables
+* UnitAIOverrideDefs do not allow for tier'd retrivial behaviorVariables
 * Reflection-based BehaviorNode construction searches fields for matching types
   * Thus, BehaviorNode's can only have single of each type and have to have a matching field of that type
 * HotReload only reloads default behavior variable scopes if AI is not paused
@@ -47,7 +47,7 @@ The mod also provides the following functionality:
 
 * Additional `SelectorTypes` based on feedback
 * Additional `WeightedFactor`/`BehaviorNode` based on feedback to provide base mod functionality
-* Base AIOverrideDefs to merge onto for at least CoreBT_AI tree?
+* Base UnitAIOverrideDefs to merge onto for at least CoreBT_AI tree?
 
 ## Potential Features
 

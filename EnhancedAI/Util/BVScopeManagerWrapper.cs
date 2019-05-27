@@ -5,9 +5,10 @@ using BattleTech;
 using Harmony;
 using HBS.Util;
 
-namespace EnhancedAI
+namespace EnhancedAI.Util
 {
-    public class BehaviorVariableScopeManagerWrapper
+    // TODO: this seems really out of place now?
+    public class BVScopeManagerWrapper
     {
         private static readonly HashSet<string> ValidIDs = new HashSet<string>
         {
@@ -31,7 +32,7 @@ namespace EnhancedAI
         public BehaviorVariableScopeManager ScopeManager { get; private set; }
         private string _dirPath;
 
-        public BehaviorVariableScopeManagerWrapper(GameInstance game, string path)
+        public BVScopeManagerWrapper(GameInstance game, string path)
         {
             _dirPath = Path.Combine(Path.Combine(Main.Directory, ".."), path);
             Load(game);

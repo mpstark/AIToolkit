@@ -22,16 +22,46 @@ namespace EnhancedAI.Features
                 Traverse.Create(game).Property("BehaviorVariableScopeManager")
                 .SetValue(new BehaviorVariableScopeManager(game));
 
-            // try to override the ai after resetting it
             var aiActors = game.Combat.AllActors.Where(unit => unit.team is AITeam);
             foreach (var unit in aiActors)
             {
-                Main.ResetAI(unit);
-                Main.TryOverrideAI(unit);
+                Main.ResetUnitAI(unit);
+                Main.TryOverrideUnitAI(unit);
+            }
+
+            var aiTeams = game.Combat.Teams.Where(team => team is AITeam).Cast<AITeam>();
+            foreach (var team in aiTeams)
+            {
+                Main.ResetTeamAI(team);
+                Main.TryOverrideTeamAI(team);
             }
 
             if (AIPause.IsPaused)
+            {
+                // potentially reset current unit
+                if (Main.TeamToAIOverride.ContainsKey(AIPause.CurrentAITeam))
+                {
+                    var teamAIOverride = Main.TeamToAIOverride[AIPause.CurrentAITeam];
+                    if (teamAIOverride.TurnOrderFactorWeights.Count != 0)
+                    {
+                        // can't do simple thing and just reprocess the activation
+                        // because reasons? locks AI after they act after pause
+                        // AIPause.CurrentAITeam.TurnActorProcessActivation();
+
+                        var teamTraverse = Traverse.Create(AIPause.CurrentAITeam);
+                        var currentUnitTraverse = teamTraverse.Field("currentUnit");
+
+                        var newUnit = teamTraverse.Method("selectCurrentUnit").GetValue<AbstractActor>();
+                        currentUnitTraverse.SetValue(newUnit);
+
+                        // side effects of TurnActorProcessActivation
+                        teamTraverse.Method("UpdateAloneStatus", newUnit).GetValue();
+                        AIRoleAssignment.AssignRoleToUnit(newUnit, AIPause.CurrentAITeam.units);
+                    }
+                }
+
                 AIPause.Reset();
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BattleTech;
+using EnhancedAI.Features.UI;
 using Harmony;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace EnhancedAI.Features
     public static class AIPause
     {
         private static InvocationMessage _interceptedInvocationMessage;
+        public static AITeam CurrentAITeam { get; private set; }
 
         public static bool IsPaused { get; private set; }
 
@@ -51,7 +53,7 @@ namespace EnhancedAI.Features
             }
 
             if (!IsPaused)
-                OnPause(team.Combat);
+                OnPause(team);
 
             return true;
         }
@@ -88,11 +90,12 @@ namespace EnhancedAI.Features
         }
 
 
-        private static void OnPause(CombatGameState combat)
+        private static void OnPause(AITeam team)
         {
             Main.HBSLog?.Log("AIDebugPause -- Paused");
 
-            InvocationVisualization.ShowFor(combat, _interceptedInvocationMessage);
+            CurrentAITeam = team;
+            InvocationVisualization.ShowFor(team.Combat, _interceptedInvocationMessage);
             InfluenceMapVisualization.Show();
 
             IsPaused = true;
