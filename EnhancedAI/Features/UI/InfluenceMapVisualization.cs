@@ -4,10 +4,10 @@ using System.Linq;
 using BattleTech;
 using BattleTech.Rendering.UI;
 using BattleTech.UI;
-using BattleTech.UI.Tooltips;
-using HBS;
 using UnityEngine;
 using UnityEngine.Rendering;
+
+// ReSharper disable AccessToStaticMemberViaDerivedType
 
 namespace EnhancedAI.Features.UI
 {
@@ -20,11 +20,20 @@ namespace EnhancedAI.Features.UI
         private Mesh _circleMesh = GenerateCircleMesh(4, 20);
         private Vector3 _groundOffset = 2 * Vector3.up;
 
+        private TextPopup _tooltip;
+        private const string TooltipName = "EnhancedAIInfluenceMapTooltip";
+
 
         public InfluenceMapVisualization(string name)
         {
             ParentObject = new GameObject(name);
             ParentObject.SetActive(false);
+
+            var oldTooltip = GameObject.Find(TooltipName);
+            if (oldTooltip != null)
+                GameObject.Destroy(oldTooltip);
+
+            _tooltip = new TextPopup(TooltipName, true);
         }
 
 
@@ -122,7 +131,9 @@ namespace EnhancedAI.Features.UI
                 collider.height = 1f;
                 collider.isTrigger = true;
 
-                dot.AddComponent<DotTooltip>();
+                var dotTooltip = dot.AddComponent<DotTooltip>();
+                dotTooltip.TooltipPopup = _tooltip;
+
                 dot.AddComponent<UISweep>();
             }
 
@@ -183,20 +194,24 @@ namespace EnhancedAI.Features.UI
     {
         public static HexFactorData CompareAgainst;
         public HexFactorData FactorData;
-        private readonly HBSTooltipStateData _tooltipStateData = new HBSTooltipStateData();
+        //private readonly HBSTooltipStateData _tooltipStateData = new HBSTooltipStateData();
+        public TextPopup TooltipPopup;
 
 
         public void OnMouseEnter()
         {
-            _tooltipStateData.SetString(GetTooltipString());
-            LazySingletonBehavior<TooltipManager>.Instance.SpawnTooltip(
-                _tooltipStateData.GetTooltipObject(), 792402, 792402,
-                0f, _tooltipStateData.GetPrefabOverride(), true);
+            //_tooltipStateData.SetString(GetTooltipString());
+            //LazySingletonBehavior<TooltipManager>.Instance.SpawnTooltip(
+            //    _tooltipStateData.GetTooltipObject(), 792402, 792402,
+            //    0f, _tooltipStateData.GetPrefabOverride(), true);
+
+            TooltipPopup.SetText(GetTooltipString());
         }
 
         public void OnMouseExit()
         {
-            LazySingletonBehavior<TooltipManager>.Instance.ClearTooltip();
+            //LazySingletonBehavior<TooltipManager>.Instance.ClearTooltip();
+            TooltipPopup.Hide();
         }
 
         public void OnMouseDown()
@@ -222,7 +237,7 @@ namespace EnhancedAI.Features.UI
 
                 value -= CompareAgainst.Value;
             }
-            var tooltip = $"\t{value:0.00} [{Enum.GetName(typeof(MoveType), FactorData.MoveType)}]";
+            var tooltip = $"<size=100%><u><b>{value:0.00}</b> [{Enum.GetName(typeof(MoveType), FactorData.MoveType)}]</u><size=80%>";
 
             if (CompareAgainst != null)
                 tooltip += " COMPARISON";
@@ -235,7 +250,7 @@ namespace EnhancedAI.Features.UI
             foreach (var factorName in sortedNames)
             {
                 if (Math.Abs(factors[factorName]) > 0.01)
-                    tooltip += $"\n\t{factors[factorName]:0.00} : {factorName}";
+                    tooltip += $"\n{factors[factorName]:0.00} : {factorName}";
             }
 
             return tooltip;

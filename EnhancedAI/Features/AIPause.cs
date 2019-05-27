@@ -15,7 +15,7 @@ namespace EnhancedAI.Features
         public static bool IsPaused { get; private set; }
 
         public static TextPopup PausePopup =>
-            _pausePopup ?? (_pausePopup = new TextPopup("EnhancedAIPausePopup"));
+            _pausePopup ?? (_pausePopup = new TextPopup("EnhancedAIPausePopup", false));
 
         public static InfluenceMapVisualization InfluenceMapVisual =>
             _influenceMapVisual ?? (_influenceMapVisual = new InfluenceMapVisualization("EnhancedAIPauseInfluenceMapVisual"));
