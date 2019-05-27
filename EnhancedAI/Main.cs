@@ -125,7 +125,8 @@ namespace EnhancedAI
 
         internal static UnitAIOverrideDef TryOverrideUnitAI(AbstractActor unit)
         {
-            var aiOverride = UnitAIOverrideDef.SelectOverride(unit, UnitAIOverrides.Cast<AIOverrideDef<AbstractActor>>(), UnitSelectors);
+            var aiOverride = UnitAIOverrideDef.SelectOverride(unit,
+                UnitAIOverrides.Cast<AIOverrideDef<AbstractActor>>(), UnitSelectors) as UnitAIOverrideDef;
 
             if (aiOverride == null)
                 return null;
@@ -139,7 +140,7 @@ namespace EnhancedAI
                 ResetUnitAI(unit);
 
             HBSLog?.Log($"Overriding AI on unit {unit.UnitName} with {aiOverride.Name}");
-            UnitToAIOverride[unit] = (UnitAIOverrideDef) aiOverride;
+            UnitToAIOverride[unit] = aiOverride;
 
             BehaviorTreeOverride.TryOverrideTree(unit.BehaviorTree, UnitToAIOverride[unit]);
             InfluenceFactorOverride.TryOverrideInfluenceFactors(unit.BehaviorTree, UnitToAIOverride[unit]);
@@ -159,7 +160,8 @@ namespace EnhancedAI
 
         internal static TeamAIOverrideDef TryOverrideTeamAI(AITeam team)
         {
-            var aiOverride = TeamAIOverrideDef.SelectOverride(team, TeamAIOverrides.Cast<AIOverrideDef<AITeam>>(), TeamSelectors);
+            var aiOverride = TeamAIOverrideDef.SelectOverride(team,
+                TeamAIOverrides.Cast<AIOverrideDef<AITeam>>(), TeamSelectors) as TeamAIOverrideDef;
 
             if (aiOverride == null)
                 return null;
@@ -173,7 +175,7 @@ namespace EnhancedAI
                 ResetTeamAI(team);
 
             HBSLog?.Log($"Overriding AI on team {team.Name} with {aiOverride.Name}");
-            TeamToAIOverride[team] = (TeamAIOverrideDef) aiOverride;
+            TeamToAIOverride[team] = aiOverride;
             return TeamToAIOverride[team];
         }
 
