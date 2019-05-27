@@ -11,21 +11,29 @@ using UnityEngine.Rendering;
 
 namespace EnhancedAI.Features.UI
 {
-    public static class InfluenceMapVisualization
+    public class InfluenceMapVisualization
     {
-        private static GameObject _parent = new GameObject("InfluenceMapVisualizationParent");
-        private static List<GameObject> _unusedDotPool = new List<GameObject>();
-        private static List<GameObject> _usedDotPool = new List<GameObject>();
-        private static Mesh _circleMesh = GenerateCircleMesh(4, 20);
-        private static Vector3 _groundOffset = 2 * Vector3.up;
+        public GameObject ParentObject;
+
+        private List<GameObject> _unusedDotPool = new List<GameObject>();
+        private List<GameObject> _usedDotPool = new List<GameObject>();
+        private Mesh _circleMesh = GenerateCircleMesh(4, 20);
+        private Vector3 _groundOffset = 2 * Vector3.up;
 
 
-        public static void Show()
+        public InfluenceMapVisualization(string name)
         {
-            _parent.SetActive(true);
+            ParentObject = new GameObject(name);
+            ParentObject.SetActive(false);
         }
 
-        public static void OnInfluenceMapSort(AbstractActor unit)
+
+        public void Show()
+        {
+            ParentObject.SetActive(true);
+        }
+
+        public void OnInfluenceMapSort(AbstractActor unit)
         {
             Hide();
 
@@ -72,20 +80,19 @@ namespace EnhancedAI.Features.UI
             }
         }
 
-        public static void Hide()
+        public void Hide()
         {
             foreach (var dot in _usedDotPool)
                 dot.SetActive(false);
 
             _unusedDotPool.AddRange(_usedDotPool);
             _usedDotPool.Clear();
-            _parent.SetActive(false);
+            ParentObject.SetActive(false);
 
             DotTooltip.CompareAgainst = null;
         }
 
-
-        private static void ShowDotAt(Vector3 location, Color color, HexFactorData factorData)
+        private void ShowDotAt(Vector3 location, Color color, HexFactorData factorData)
         {
             GameObject dot;
             if (_unusedDotPool.Count > 0)
@@ -98,7 +105,7 @@ namespace EnhancedAI.Features.UI
                 var movementDot = CombatMovementReticle.Instance.movementDotTemplate;
 
                 dot = new GameObject($"dot_{_unusedDotPool.Count + _usedDotPool.Count}");
-                dot.transform.SetParent(_parent.transform);
+                dot.transform.SetParent(ParentObject.transform);
 
                 var meshFilter = dot.AddComponent<MeshFilter>();
                 meshFilter.sharedMesh = _circleMesh;
@@ -131,6 +138,7 @@ namespace EnhancedAI.Features.UI
 
             dot.SetActive(true);
         }
+
 
         private static Mesh GenerateCircleMesh(float size, int numberOfPoints)
         {

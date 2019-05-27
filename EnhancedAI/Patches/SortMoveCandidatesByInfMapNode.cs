@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using BattleTech;
-using EnhancedAI.Features.UI;
+using EnhancedAI.Features;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global
@@ -41,7 +41,7 @@ namespace EnhancedAI.Patches
                 return;
 
             var unit = Traverse.Create(__instance).Field("unit").GetValue<AbstractActor>();
-            InfluenceMapVisualization.OnInfluenceMapSort(unit);
+            AIPause.InfluenceMapVisual.OnInfluenceMapSort(unit);
         }
     }
 }

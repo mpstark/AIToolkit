@@ -11,20 +11,38 @@ namespace EnhancedAI.Features
     public static class AIPause
     {
         public static AITeam CurrentAITeam { get; private set; }
-        public static TextPopup PausePopup { get; private set; }
-
-
-        private static InvocationMessage _interceptedInvocationMessage;
 
         public static bool IsPaused { get; private set; }
 
+        public static TextPopup PausePopup =>
+            _pausePopup ?? (_pausePopup = new TextPopup("EnhancedAIPausePopup"));
 
-        public static void SetupUI()
+        public static InfluenceMapVisualization InfluenceMapVisual =>
+            _influenceMapVisual ?? (_influenceMapVisual = new InfluenceMapVisualization("EnhancedAIPauseInfluenceMapVisual"));
+
+        public static InvocationVisualization InvocationVisual =>
+            _invocationVisual ?? (_invocationVisual = new InvocationVisualization("EnhancedAIPauseInvocationVisual"));
+
+        private static InvocationMessage _interceptedInvocationMessage;
+        private static TextPopup _pausePopup;
+        private static InfluenceMapVisualization _influenceMapVisual;
+        private static InvocationVisualization _invocationVisual;
+
+
+        public static void DestroyUI()
         {
             if (PausePopup != null)
-                GameObject.Destroy(PausePopup.GameObject);
+                GameObject.Destroy(PausePopup.ParentObject);
 
-            PausePopup = new TextPopup("EnhancedAIPausePopup");
+            if (InfluenceMapVisual != null)
+                GameObject.Destroy(InfluenceMapVisual.ParentObject);
+
+            if (InvocationVisual != null)
+                GameObject.Destroy(InvocationVisual.ParentObject);
+
+            _pausePopup = null;
+            _influenceMapVisual = null;
+            _invocationVisual = null;
         }
 
         public static void Reset()
@@ -105,23 +123,21 @@ namespace EnhancedAI.Features
         private static void OnPause(AITeam team)
         {
             Main.HBSLog?.Log("AIDebugPause -- Paused");
+            IsPaused = true;
 
             CurrentAITeam = team;
-            InvocationVisualization.ShowFor(team.Combat, _interceptedInvocationMessage);
-            InfluenceMapVisualization.Show();
 
-            IsPaused = true;
+            InvocationVisual.ShowFor(team.Combat, _interceptedInvocationMessage);
+            InfluenceMapVisual.Show();
         }
 
         private static void OnUnpause()
         {
             Main.HBSLog?.Log("AIDebugPause -- Unpaused");
-
             IsPaused = false;
 
-            InfluenceMapVisualization.Hide();
-            InvocationVisualization.Hide();
-
+            InvocationVisual.Hide();
+            InfluenceMapVisual.Hide();
             PausePopup.Hide();
         }
     }

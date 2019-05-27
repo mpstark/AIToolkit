@@ -10,18 +10,28 @@ using UnityEngine.Rendering;
 
 namespace EnhancedAI.Features.UI
 {
-    public static class InvocationVisualization
+    public class InvocationVisualization
     {
-        private static GameObject _mechMovementVisualization;
-        private static GameObject _veeMovementVisualization;
+        public GameObject ParentObject;
 
-        private static List<LineRenderer> _attackLines = new List<LineRenderer>();
-        private static LineRenderer _movementLine;
+        private GameObject _mechMovementVisualization;
+        private GameObject _veeMovementVisualization;
+
+        private List<LineRenderer> _attackLines = new List<LineRenderer>();
+        private LineRenderer _movementLine;
+
         private static Vector3 _movementLineGroundOffset = Vector3.up;
         private static Vector3 _attackLineOffset = 7.5f * Vector3.up;
 
 
-        public static void ShowFor(CombatGameState combat, InvocationMessage message)
+        public InvocationVisualization(string name)
+        {
+            ParentObject = new GameObject(name);
+            ParentObject.SetActive(false);
+        }
+
+
+        public void ShowFor(CombatGameState combat, InvocationMessage message)
         {
             switch (message)
             {
@@ -92,10 +102,14 @@ namespace EnhancedAI.Features.UI
                     break;
                 }
             }
+
+            ParentObject.SetActive(true);
         }
 
-        public static void Hide()
+        public void Hide()
         {
+            ParentObject.SetActive(false);
+
             foreach (var line in _attackLines)
                 line.gameObject.SetActive(false);
 
@@ -110,58 +124,42 @@ namespace EnhancedAI.Features.UI
         }
 
 
-        private static Vector3[] GetPointsForWaypoints(List<WayPoint> waypoints)
+        private GameObject GetMovementVisualization(AbstractActor unit)
         {
-            if (waypoints == null || waypoints.Count <= 1)
-                return null;
-
-            return waypoints.Select(p => p.Position + _movementLineGroundOffset).ToArray();
-        }
-
-        private static Vector3[] GetPointsForJump(Vector3 from, Vector3 to)
-        {
-            var minArcHeight = Mathf.Max(Mathf.Abs(to.y - from.y) + 16f, 32f);
-            return WeaponRangeIndicators.GetPointsForArc(18, minArcHeight,
-                from + _movementLineGroundOffset, to + _movementLineGroundOffset);
-        }
-
-        private static GameObject GetMovementVisualization(AbstractActor unit)
-        {
-            switch (unit)
+            if (unit is Mech mech)
             {
-                case Mech mech:
-                    {
-                        if (_mechMovementVisualization == null)
-                            _mechMovementVisualization = GameObject.Instantiate(mech.GameRep.BlipObjectIdentified, null, true);
+                if (_mechMovementVisualization == null)
+                    _mechMovementVisualization = GameObject.Instantiate(mech.GameRep.BlipObjectIdentified,
+                        ParentObject.transform, true);
 
-                        return _mechMovementVisualization;
-                    }
-                case Vehicle vee:
-                    {
-                        if (_veeMovementVisualization == null)
-                            _veeMovementVisualization = GameObject.Instantiate(vee.GameRep.BlipObjectIdentified, null, true);
+                return _mechMovementVisualization;
+            }
 
-                        return _veeMovementVisualization;
-                    }
+            if (unit is Vehicle vee)
+            {
+                if (_veeMovementVisualization == null)
+                    _veeMovementVisualization = GameObject.Instantiate(vee.GameRep.BlipObjectIdentified,
+                        ParentObject.transform, true);
+
+                return _veeMovementVisualization;
             }
 
             return null;
         }
 
-
-        private static LineRenderer InitLineObject(string name, float width, Color color)
+        private LineRenderer InitLineObject(string name, float width, Color color)
         {
             var lineGameObject = new GameObject(name);
-            var line = lineGameObject.AddComponent<LineRenderer>();
+            lineGameObject.transform.SetParent(ParentObject.transform);
 
             var existingLineRenderer = CombatMovementReticle.Instance.pathManager.badPathTutorialLine.line;
-            line.sharedMaterial = existingLineRenderer.sharedMaterial;
 
+            var line = lineGameObject.AddComponent<LineRenderer>();
+            line.sharedMaterial = existingLineRenderer.sharedMaterial;
             line.startWidth = width;
             line.endWidth = width;
             line.receiveShadows = false;
             line.shadowCastingMode = ShadowCastingMode.Off;
-
             line.startColor = color;
             line.endColor = color;
 
@@ -170,7 +168,7 @@ namespace EnhancedAI.Features.UI
             return line;
         }
 
-        private static void DrawMovementLine(Vector3[] linePoints)
+        private void DrawMovementLine(Vector3[] linePoints)
         {
             if (linePoints == null || linePoints.Length == 0)
                 return;
@@ -183,7 +181,7 @@ namespace EnhancedAI.Features.UI
             _movementLine.SetPositions(linePoints);
         }
 
-        private static void DrawAttackLine(Vector3 from, Vector3 to, bool isIndirect)
+        private void DrawAttackLine(Vector3 from, Vector3 to, bool isIndirect)
         {
             var line = _attackLines.FirstOrDefault(l => !l.gameObject.activeSelf);
             if (line == null)
@@ -207,7 +205,7 @@ namespace EnhancedAI.Features.UI
         }
 
 
-        private static void VisualizeMovement(AbstractActor unit, Vector3 finalPosition, Quaternion rotation, Vector3[] linePoints)
+        private void VisualizeMovement(AbstractActor unit, Vector3 finalPosition, Quaternion rotation, Vector3[] linePoints)
         {
             // draw end point visualization
             var visualization = GetMovementVisualization(unit);
@@ -221,7 +219,7 @@ namespace EnhancedAI.Features.UI
                 CameraControl.Instance.ForceMovingToGroundPos(finalPosition);
         }
 
-        private static void VisualizeAttack(Vector3 sourcePosition, AbstractActor target, bool isMeleeAttack, bool isIndirect)
+        private void VisualizeAttack(Vector3 sourcePosition, AbstractActor target, bool isMeleeAttack, bool isIndirect)
         {
             var targetPosition = target.CurrentPosition;
             if (!isMeleeAttack)
@@ -232,5 +230,22 @@ namespace EnhancedAI.Features.UI
             if (Main.Settings.FocusOnPause)
                 CameraControl.Instance.ForceMovingToGroundPos(target.CurrentPosition);
         }
+
+
+        private static Vector3[] GetPointsForWaypoints(List<WayPoint> waypoints)
+        {
+            if (waypoints == null || waypoints.Count <= 1)
+                return null;
+
+            return waypoints.Select(p => p.Position + _movementLineGroundOffset).ToArray();
+        }
+
+        private static Vector3[] GetPointsForJump(Vector3 from, Vector3 to)
+        {
+            var minArcHeight = Mathf.Max(Mathf.Abs(to.y - from.y) + 16f, 32f);
+            return WeaponRangeIndicators.GetPointsForArc(18, minArcHeight,
+                from + _movementLineGroundOffset, to + _movementLineGroundOffset);
+        }
+
     }
 }

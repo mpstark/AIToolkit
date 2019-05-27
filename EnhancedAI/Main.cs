@@ -86,7 +86,7 @@ namespace EnhancedAI
         internal static void OnCombatInit()
         {
             ReloadAIOverrides();
-            AIPause.SetupUI();
+            AIPause.DestroyUI();
         }
 
         internal static void ReloadAIOverrides()

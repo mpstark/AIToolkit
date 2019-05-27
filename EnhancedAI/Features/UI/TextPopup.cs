@@ -6,7 +6,7 @@ namespace EnhancedAI.Features.UI
 {
     public class TextPopup
     {
-        public readonly GameObject GameObject;
+        public readonly GameObject ParentObject;
         private readonly TextMeshProUGUI _text;
 
         private float _verticalPosition = -150f;
@@ -16,18 +16,18 @@ namespace EnhancedAI.Features.UI
 
         public TextPopup(string name)
         {
-            GameObject = new GameObject(name);
-            var containerRectTransform = GameObject.AddComponent<RectTransform>();
-            containerRectTransform.SetParent(GameObject.Find("PopupRoot").transform);
-            containerRectTransform.anchorMin = new Vector2(.5f, .5f);
-            containerRectTransform.anchorMax = new Vector2(.5f, .5f);
-            containerRectTransform.anchoredPosition = new Vector2(0f, _verticalPosition);
-            var background = GameObject.AddComponent<Image>();
+            ParentObject = new GameObject(name);
+            var parentRectTransform = ParentObject.AddComponent<RectTransform>();
+            parentRectTransform.SetParent(GameObject.Find("PopupRoot").transform);
+            parentRectTransform.anchorMin = new Vector2(.5f, .5f);
+            parentRectTransform.anchorMax = new Vector2(.5f, .5f);
+            parentRectTransform.anchoredPosition = new Vector2(0f, _verticalPosition);
+            var background = ParentObject.AddComponent<Image>();
             background.color = new Color(0f,0f,0f);
 
             var textGo = new GameObject("Text");
             var textRectTransform = textGo.AddComponent<RectTransform>();
-            textRectTransform.SetParent(containerRectTransform);
+            textRectTransform.SetParent(parentRectTransform);
             textRectTransform.anchorMin = new Vector2(.5f, .5f);
             textRectTransform.anchorMax = new Vector2(.5f, .5f);
             textRectTransform.anchoredPosition = new Vector2(0f, 0f);
@@ -45,7 +45,7 @@ namespace EnhancedAI.Features.UI
         {
             _text.text = text;
 
-            var containerRectTransform = GameObject.GetComponent<RectTransform>();
+            var containerRectTransform = ParentObject.GetComponent<RectTransform>();
             var textRectTransform = _text.gameObject.GetComponent<RectTransform>();
 
             containerRectTransform.sizeDelta = _text.GetPreferredValues() + new Vector2(_margin, _margin);
@@ -64,13 +64,13 @@ namespace EnhancedAI.Features.UI
 
         public void Show()
         {
-            GameObject.SetActive(true);
+            ParentObject.SetActive(true);
         }
 
         public void Hide()
         {
             SetText("");
-            GameObject.SetActive(false);
+            ParentObject.SetActive(false);
         }
     }
 }
