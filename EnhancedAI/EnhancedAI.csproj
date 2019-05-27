@@ -50,7 +50,7 @@
     <Compile Include="TurnOrderFactors\IsUnstable.cs" />
     <Compile Include="TurnOrderFactors\IsVulnerable.cs" />
     <Compile Include="Util\BVScopeManagerWrapper.cs" />
-    <Compile Include="Features\UI\AIPausePopup.cs" />
+    <Compile Include="Features\UI\TextPopup.cs" />
     <Compile Include="Features\Overrides\BehaviorVariableOverride.cs" />
     <Compile Include="Features\Overrides\InfluenceFactorOverride.cs" />
     <Compile Include="Features\Overrides\InfluenceMapEvaluatorOverride.cs" />

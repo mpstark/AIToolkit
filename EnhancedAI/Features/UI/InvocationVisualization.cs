@@ -88,7 +88,7 @@ namespace EnhancedAI.Features.UI
                 // TODO: finish visualization for Reserve/SensorLock/Stand/Startup/"MoraleDefend"
                 default:
                 {
-                    AIPausePopup.AppendText(message.GetType().Name);
+                    AIPause.PausePopup.AppendText(message.GetType().Name);
                     break;
                 }
             }

@@ -1,4 +1,4 @@
-﻿using EnhancedAI.Features.UI;
+﻿using EnhancedAI.Features;
 using EnhancedAI.Util;
 using Harmony;
 
@@ -13,7 +13,7 @@ namespace EnhancedAI.Patches
         public static void Postfix(BehaviorNode __instance, ref BehaviorTreeResults __result)
         {
             if (__instance is LeafBehaviorNode && __result.orderInfo != null)
-                AIPausePopup.SetText(__instance.GetName());
+                AIPause.PausePopup.AppendText(__instance.GetName());
         }
     }
 }

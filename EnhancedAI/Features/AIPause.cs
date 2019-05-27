@@ -10,11 +10,22 @@ namespace EnhancedAI.Features
 {
     public static class AIPause
     {
-        private static InvocationMessage _interceptedInvocationMessage;
         public static AITeam CurrentAITeam { get; private set; }
+        public static TextPopup PausePopup { get; private set; }
+
+
+        private static InvocationMessage _interceptedInvocationMessage;
 
         public static bool IsPaused { get; private set; }
 
+
+        public static void SetupUI()
+        {
+            if (PausePopup != null)
+                GameObject.Destroy(PausePopup.GameObject);
+
+            PausePopup = new TextPopup("EnhancedAIPausePopup");
+        }
 
         public static void Reset()
         {
@@ -24,6 +35,7 @@ namespace EnhancedAI.Features
             _interceptedInvocationMessage = null;
             OnUnpause();
         }
+
 
         public static bool OnAIThink(AITeam team)
         {
@@ -109,7 +121,8 @@ namespace EnhancedAI.Features
 
             InfluenceMapVisualization.Hide();
             InvocationVisualization.Hide();
-            AIPausePopup.Hide();
+
+            PausePopup.Hide();
         }
     }
 }

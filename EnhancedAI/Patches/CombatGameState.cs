@@ -14,7 +14,7 @@ namespace EnhancedAI.Patches
     {
         public static void Postfix()
         {
-            Main.ReloadAIOverrides();
+            Main.OnCombatInit();
         }
     }
 
@@ -26,7 +26,7 @@ namespace EnhancedAI.Patches
     {
         public static void Postfix()
         {
-            Main.ReloadAIOverrides();
+            Main.OnCombatInit();
         }
     }
 }

@@ -13,9 +13,7 @@ namespace EnhancedAI.Features.Overrides
             // custom scope has value, and takes priority over everything else
             var variableName = Enum.GetName(typeof(BehaviorVariableName), name);
             if (variableName != null && aiOverride.BehaviorVariableOverrides.ContainsKey(variableName))
-            {
                 return aiOverride.BehaviorVariableOverrides[variableName];
-            }
 
             if (string.IsNullOrEmpty(aiOverride.BehaviorScopesDirectory))
                 return null;

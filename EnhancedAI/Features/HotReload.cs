@@ -38,6 +38,8 @@ namespace EnhancedAI.Features
 
             if (AIPause.IsPaused)
             {
+                AIPause.Reset();
+
                 // potentially reset current unit
                 if (Main.TeamToAIOverride.ContainsKey(AIPause.CurrentAITeam))
                 {
@@ -59,8 +61,6 @@ namespace EnhancedAI.Features
                         AIRoleAssignment.AssignRoleToUnit(newUnit, AIPause.CurrentAITeam.units);
                     }
                 }
-
-                AIPause.Reset();
             }
         }
     }
