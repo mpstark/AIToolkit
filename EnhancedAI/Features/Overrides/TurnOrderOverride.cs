@@ -126,5 +126,28 @@ namespace EnhancedAI.Features.Overrides
 
             return selectedUnit;
         }
+
+        public static void TryRecalculateCurrentUnit(AITeam team)
+        {
+            if (!Main.TeamToAIOverride.ContainsKey(team))
+                return;
+
+            var teamAIOverride = Main.TeamToAIOverride[team];
+            if (teamAIOverride.TurnOrderFactorWeights.Count == 0)
+                return;
+
+            // can't do simple thing and just reprocess the activation
+            // because reasons? locks AI after they act after pause
+            // AIPause.CurrentAITeam.TurnActorProcessActivation();
+
+            var teamTraverse = Traverse.Create(team);
+
+            var newUnit = teamTraverse.Method("selectCurrentUnit").GetValue<AbstractActor>();
+            teamTraverse.Field("currentUnit").SetValue(newUnit);
+
+            // side effects of TurnActorProcessActivation
+            teamTraverse.Method("UpdateAloneStatus", newUnit).GetValue();
+            AIRoleAssignment.AssignRoleToUnit(newUnit, team.units);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using BattleTech;
+using EnhancedAI.Features.Overrides;
 using Harmony;
 
 namespace EnhancedAI.Features
@@ -39,28 +40,7 @@ namespace EnhancedAI.Features
             if (AIPause.IsPaused)
             {
                 AIPause.Reset();
-
-                // potentially reset current unit
-                if (Main.TeamToAIOverride.ContainsKey(AIPause.CurrentAITeam))
-                {
-                    var teamAIOverride = Main.TeamToAIOverride[AIPause.CurrentAITeam];
-                    if (teamAIOverride.TurnOrderFactorWeights.Count != 0)
-                    {
-                        // can't do simple thing and just reprocess the activation
-                        // because reasons? locks AI after they act after pause
-                        // AIPause.CurrentAITeam.TurnActorProcessActivation();
-
-                        var teamTraverse = Traverse.Create(AIPause.CurrentAITeam);
-                        var currentUnitTraverse = teamTraverse.Field("currentUnit");
-
-                        var newUnit = teamTraverse.Method("selectCurrentUnit").GetValue<AbstractActor>();
-                        currentUnitTraverse.SetValue(newUnit);
-
-                        // side effects of TurnActorProcessActivation
-                        teamTraverse.Method("UpdateAloneStatus", newUnit).GetValue();
-                        AIRoleAssignment.AssignRoleToUnit(newUnit, AIPause.CurrentAITeam.units);
-                    }
-                }
+                TurnOrderOverride.TryRecalculateCurrentUnit(AIPause.CurrentAITeam);
             }
         }
     }
