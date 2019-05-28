@@ -8,16 +8,14 @@ namespace EnhancedAI.TurnOrderFactors
         public float EvaluateUnit(AbstractActor unit)
         {
             var minDistance = float.MaxValue;
-            foreach (var enemyCombatant in unit.BehaviorTree.enemyUnits)
+            foreach (var combatant in unit.BehaviorTree.enemyUnits)
             {
-                if (enemyCombatant.IsDead)
+                var enemy = combatant as AbstractActor;
+                if (enemy == null || enemy.IsDead || !enemy.IsVulnerableToCalledShots())
                     continue;
 
-                if (!(enemyCombatant is Mech mech))
-                    continue;
-
-                if (mech.IsVulnerableToCalledShots())
-                    minDistance = Mathf.Min(minDistance, Vector3.Distance(unit.CurrentPosition, mech.CurrentPosition));
+                var distance = Vector3.Distance(unit.CurrentPosition, enemy.CurrentPosition);
+                minDistance = Mathf.Min(minDistance, distance);
             }
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator

@@ -14,9 +14,16 @@ namespace EnhancedAI.TurnOrderFactors
             var minDistance = float.MaxValue;
             foreach (var hostile in hostiles)
             {
+                if (hostile.IsDead)
+                    continue;
+
                 var distance = Vector3.Distance(unit.CurrentPosition, hostile.CurrentPosition);
                 minDistance = Mathf.Min(minDistance, distance);
             }
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (minDistance == float.MaxValue)
+                return float.MinValue;
 
             return minDistance;
         }
