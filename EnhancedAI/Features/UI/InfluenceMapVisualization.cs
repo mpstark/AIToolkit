@@ -194,23 +194,16 @@ namespace EnhancedAI.Features.UI
     {
         public static HexFactorData CompareAgainst;
         public HexFactorData FactorData;
-        //private readonly HBSTooltipStateData _tooltipStateData = new HBSTooltipStateData();
         public TextPopup TooltipPopup;
 
 
         public void OnMouseEnter()
         {
-            //_tooltipStateData.SetString(GetTooltipString());
-            //LazySingletonBehavior<TooltipManager>.Instance.SpawnTooltip(
-            //    _tooltipStateData.GetTooltipObject(), 792402, 792402,
-            //    0f, _tooltipStateData.GetPrefabOverride(), true);
-
             TooltipPopup.SetText(GetTooltipString());
         }
 
         public void OnMouseExit()
         {
-            //LazySingletonBehavior<TooltipManager>.Instance.ClearTooltip();
             TooltipPopup.Hide();
         }
 
