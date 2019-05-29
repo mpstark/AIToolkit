@@ -55,6 +55,9 @@ namespace EnhancedAI.Features.UI
 
         public void SetText(string text)
         {
+            if (!Main.Settings.ShouldPauseAI)
+                return;
+
             _text.text = text;
 
             var containerRectTransform = ParentObject.GetComponent<RectTransform>();
@@ -68,6 +71,9 @@ namespace EnhancedAI.Features.UI
 
         public void AppendText(string text)
         {
+            if (!Main.Settings.ShouldPauseAI)
+                return;
+
             if (string.IsNullOrEmpty(_text.text))
                 SetText(text);
             else
