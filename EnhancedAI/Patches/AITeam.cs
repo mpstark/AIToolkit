@@ -20,6 +20,21 @@ namespace EnhancedAI.Patches
         }
     }
 
+
+    [HarmonyPatch(typeof(AITeam), "makeInvocationFromOrders")]
+    public static class AITeam_makeInvocationFromOrders_patch
+    {
+        public static bool Prefix(AITeam __instance, AbstractActor unit, OrderInfo order, ref InvocationMessage __result)
+        {
+            var invocation = InvocationFromOrderOverride.TryCreateInvocation(unit, order);
+            if (invocation == null)
+                return true;
+
+            __result = invocation;
+            return false;
+        }
+    }
+
     /// <summary>
     /// Hook to potentially override units ai each time it comes up, as well as
     /// override the order in which units are selected

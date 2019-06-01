@@ -48,6 +48,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveAbility\PilotAbilityInvocation.cs" />
+    <Compile Include="ActiveAbility\PilotAbilityOrderInfo.cs" />
+    <Compile Include="ActiveAbility\PilotHasAbilityNode.cs" />
+    <Compile Include="ActiveAbility\UsePilotAbilityOnSelfNode.cs" />
+    <Compile Include="Features\Overrides\InvocationFromOrderOverride.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemyDesc.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestVulnerableEnemy.cs" />
