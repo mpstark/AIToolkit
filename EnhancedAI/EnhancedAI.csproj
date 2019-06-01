@@ -48,10 +48,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActiveAbility\PilotAbilityInvocation.cs" />
-    <Compile Include="ActiveAbility\PilotAbilityOrderInfo.cs" />
-    <Compile Include="ActiveAbility\PilotHasAbilityNode.cs" />
-    <Compile Include="ActiveAbility\UsePilotAbilityOnSelfNode.cs" />
+    <Compile Include="BehaviorNodes\Orders\PilotAbilityInvocation.cs" />
+    <Compile Include="BehaviorNodes\Orders\PilotAbilityOrderInfo.cs" />
+    <Compile Include="BehaviorNodes\PilotHasAbilityNode.cs" />
+    <Compile Include="BehaviorNodes\UsePilotAbilityOnSelfNode.cs" />
     <Compile Include="Features\Overrides\InvocationFromOrderOverride.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemyDesc.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />
@@ -102,6 +102,8 @@
     <Compile Include="Util\SerializeUtil.cs" />
     <Compile Include="Util\TypeUtil.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ActiveAbility\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,6 @@
 ﻿using BattleTech;
 
-namespace EnhancedAI.ActiveAbility
+namespace EnhancedAI.BehaviorNodes.Orders
 {
     public class PilotAbilityOrderInfo : OrderInfo
     {

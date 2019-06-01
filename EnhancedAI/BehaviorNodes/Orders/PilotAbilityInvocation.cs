@@ -1,7 +1,7 @@
 ﻿using BattleTech;
 using UnityEngine;
 
-namespace EnhancedAI.ActiveAbility
+namespace EnhancedAI.BehaviorNodes.Orders
 {
     public class PilotAbilityInvocation : InvocationMessage
     {

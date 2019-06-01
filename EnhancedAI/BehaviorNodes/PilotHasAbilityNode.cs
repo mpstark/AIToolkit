@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using BattleTech;
 
-namespace EnhancedAI.ActiveAbility
+namespace EnhancedAI.BehaviorNodes
 {
-    public class UsePilotAbilityOnSelfNode : LeafBehaviorNode
+    public class PilotHasAbilityNode : LeafBehaviorNode
     {
         private string _abilityID;
 
-        public UsePilotAbilityOnSelfNode(string name, BehaviorTree tree, AbstractActor unit, string abilityID) : base(name, tree, unit)
+        public PilotHasAbilityNode(string name, BehaviorTree tree, AbstractActor unit, string abilityID) : base(name, tree, unit)
         {
             _abilityID = abilityID;
         }
@@ -19,13 +19,10 @@ namespace EnhancedAI.ActiveAbility
                 return new BehaviorTreeResults(BehaviorNodeState.Failure);
 
             var ability = pilot.ActiveAbilities.LastOrDefault(a => a.Def.Id == _abilityID);
-            if (ability == null || !ability.IsAvailable)
+            if (ability == null)
                 return new BehaviorTreeResults(BehaviorNodeState.Failure);
 
-            return new BehaviorTreeResults(BehaviorNodeState.Success)
-            {
-                orderInfo = new PilotAbilityOrderInfo(unit, unit, _abilityID)
-            };
+            return new BehaviorTreeResults(BehaviorNodeState.Success);
         }
     }
 }
