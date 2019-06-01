@@ -102,8 +102,6 @@
     <Compile Include="Util\SerializeUtil.cs" />
     <Compile Include="Util\TypeUtil.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ActiveAbility\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
