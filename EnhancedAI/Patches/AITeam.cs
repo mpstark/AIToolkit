@@ -20,7 +20,9 @@ namespace EnhancedAI.Patches
         }
     }
 
-
+    /// <summary>
+    /// Try to create an invocation from orders with modded orders
+    /// </summary>
     [HarmonyPatch(typeof(AITeam), "makeInvocationFromOrders")]
     public static class AITeam_makeInvocationFromOrders_patch
     {
@@ -31,6 +33,19 @@ namespace EnhancedAI.Patches
                 return true;
 
             __result = invocation;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Simply skip the designated target for lance
+    /// TODO: override designated target with custom implementation
+    /// </summary>
+    [HarmonyPatch(typeof(AITeam), "ChooseDesignatedTargetForLance")]
+    public static class AITeam_ChooseDesignatedTargetForLance_patch
+    {
+        public static bool Prefix()
+        {
             return false;
         }
     }
