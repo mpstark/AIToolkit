@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BehaviorNodes\GenerateNonSprintMoveCandidatesNode.cs" />
     <Compile Include="BehaviorNodes\Orders\PilotAbilityInvocation.cs" />
     <Compile Include="BehaviorNodes\Orders\PilotAbilityOrderInfo.cs" />
     <Compile Include="BehaviorNodes\PilotHasAbilityNode.cs" />
