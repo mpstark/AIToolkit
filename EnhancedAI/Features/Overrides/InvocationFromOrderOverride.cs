@@ -7,10 +7,10 @@ namespace EnhancedAI.Features.Overrides
     {
         public static InvocationMessage TryCreateInvocation(AbstractActor unit, OrderInfo order)
         {
-            if (order is PilotAbilityOrderInfo abilityOrder)
-                return new PilotAbilityInvocation(abilityOrder.Source, abilityOrder.Target, abilityOrder.AbilityID);
+            if (!(order is IOrderToInvocation modOrder))
+                return null;
 
-            return null;
+            return modOrder.GetInvocation(unit);
         }
     }
 }

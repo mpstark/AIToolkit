@@ -2,7 +2,7 @@
 
 namespace EnhancedAI.BehaviorNodes.Orders
 {
-    public class PilotAbilityOrderInfo : OrderInfo
+    public class PilotAbilityOrderInfo : OrderInfo, IOrderToInvocation
     {
         public AbstractActor Source;
         public ICombatant Target;
@@ -14,6 +14,11 @@ namespace EnhancedAI.BehaviorNodes.Orders
             Source = source;
             Target = target;
             AbilityID = abilityID;
+        }
+
+        public InvocationMessage GetInvocation(AbstractActor unit)
+        {
+            return new PilotAbilityInvocation(Source, Target, AbilityID);
         }
     }
 }

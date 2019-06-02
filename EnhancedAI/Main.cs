@@ -35,6 +35,7 @@ namespace EnhancedAI
         internal static readonly Dictionary<AITeam, TeamAIOverrideDef> TeamToAIOverride
             = new Dictionary<AITeam, TeamAIOverrideDef>();
 
+        // todo: make selectors use reflection maybe to find the type
         private static readonly Dictionary<string, ISelector<AITeam>> TeamSelectors
             = new Dictionary<string, ISelector<AITeam>>
             {
@@ -42,6 +43,7 @@ namespace EnhancedAI
                 { "Custom", new CustomSelector<AITeam>()}
             };
 
+        // todo: make selectors use reflection maybe to find the type
         private static readonly Dictionary<string, ISelector<AbstractActor>> UnitSelectors
             = new Dictionary<string, ISelector<AbstractActor>>
             {
