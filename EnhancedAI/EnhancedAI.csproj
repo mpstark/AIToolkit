@@ -54,6 +54,7 @@
     <Compile Include="BehaviorNodes\Orders\PilotAbilityOrderInfo.cs" />
     <Compile Include="BehaviorNodes\PilotHasAbilityNode.cs" />
     <Compile Include="BehaviorNodes\UsePilotAbilityOnSelfNode.cs" />
+    <Compile Include="Features\Overrides\LanceDesignatedTargetOverride.cs" />
     <Compile Include="Features\Overrides\InvocationFromOrderOverride.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemyDesc.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />

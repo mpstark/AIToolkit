@@ -1,4 +1,5 @@
-﻿using BattleTech;
+﻿using System.Collections.Generic;
+using BattleTech;
 using EnhancedAI.Features;
 using EnhancedAI.Features.Overrides;
 using Harmony;
@@ -44,8 +45,12 @@ namespace EnhancedAI.Patches
     [HarmonyPatch(typeof(AITeam), "ChooseDesignatedTargetForLance")]
     public static class AITeam_ChooseDesignatedTargetForLance_patch
     {
-        public static bool Prefix()
+        public static bool Prefix(AITeam __instance, Lance lance, List<AbstractActor> lanceUnits, List<AbstractActor> hostileUnits)
         {
+            var target = LanceDesignatedTargetOverride.TryGetDesignatedTarget(__instance, lanceUnits, hostileUnits);
+            if (target != null)
+                __instance.DesignatedTargetForLance[lance] = target;
+
             return false;
         }
     }
@@ -57,14 +62,13 @@ namespace EnhancedAI.Patches
     [HarmonyPatch(typeof(AITeam), "selectCurrentUnit")]
     public static class AITeam_selectCurrentUnit_patch
     {
-        // ReSharper disable once RedundantAssignment
         public static bool Prefix(AITeam __instance, ref AbstractActor __result)
         {
             var teamAIOverride = Main.TryOverrideTeamAI(__instance);
             if (teamAIOverride == null)
                 return true;
 
-            var nextUnit =  TurnOrderOverride.TryOverrideCurrentUnit(__instance.GetUnusedUnitsForCurrentPhase(), teamAIOverride);
+            var nextUnit = TurnOrderOverride.TryOverrideCurrentUnit(__instance.GetUnusedUnitsForCurrentPhase(), teamAIOverride);
             if (nextUnit == null)
                 return true;
 
