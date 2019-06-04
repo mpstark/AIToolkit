@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="BehaviorNodes\GenerateNonSprintMoveCandidatesNode.cs" />
     <Compile Include="BehaviorNodes\NewStandUpNode.cs" />
+    <Compile Include="BehaviorNodes\FilterNonLOSOrLOFMovesNode.cs" />
     <Compile Include="BehaviorNodes\Orders\IOrderToInvocation.cs" />
     <Compile Include="BehaviorNodes\Orders\PilotAbilityInvocation.cs" />
     <Compile Include="BehaviorNodes\Orders\PilotAbilityOrderInfo.cs" />
