@@ -3,7 +3,7 @@ using BattleTech;
 
 namespace EnhancedAI.Selectors.Unit
 {
-    public class RoleUnitSelector : ISelector<AbstractActor>
+    public class Role : ISelector<AbstractActor>
     {
         public bool Select(string selectString, AbstractActor unit)
         {
@@ -14,7 +14,7 @@ namespace EnhancedAI.Selectors.Unit
             if (role == UnitRole.Undefined)
                 role = unit.StaticUnitRole;
 
-            return Enum.GetName(typeof(UnitRole), role) == selectString;
+            return Enum.GetName(typeof(Role), role) == selectString;
         }
     }
 }

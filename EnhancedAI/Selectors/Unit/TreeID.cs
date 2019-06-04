@@ -4,7 +4,7 @@ using EnhancedAI.Util;
 
 namespace EnhancedAI.Selectors.Unit
 {
-    public class TreeIDUnitSelector : ISelector<AbstractActor>
+    public class TreeID : ISelector<AbstractActor>
     {
         public bool Select(string selectString, AbstractActor unit)
         {

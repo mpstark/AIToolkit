@@ -2,7 +2,7 @@
 
 namespace EnhancedAI.Selectors.Unit
 {
-    public class TeamNameUnitSelector : ISelector<AbstractActor>
+    public class UnitTeamName : ISelector<AbstractActor>
     {
         public bool Select(string selectString, AbstractActor unit)
         {

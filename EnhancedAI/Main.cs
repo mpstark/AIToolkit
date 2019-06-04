@@ -39,18 +39,19 @@ namespace EnhancedAI
         private static readonly Dictionary<string, ISelector<AITeam>> TeamSelectors
             = new Dictionary<string, ISelector<AITeam>>
             {
-                { "TeamName", new TeamNameTeamSelector()},
-                { "Custom", new CustomSelector<AITeam>()}
+                { "TeamName", new TeamName() },
+                { "IsInterleaved", new IsInterleaved() },
+                { "Custom", new Custom<AITeam>() }
             };
 
         // todo: make selectors use reflection maybe to find the type
         private static readonly Dictionary<string, ISelector<AbstractActor>> UnitSelectors
             = new Dictionary<string, ISelector<AbstractActor>>
             {
-                { "TeamName", new TeamNameUnitSelector()},
-                { "Role", new RoleUnitSelector() },
-                { "Tree", new TreeIDUnitSelector() },
-                { "Custom", new CustomSelector<AbstractActor>()}
+                { "TeamName", new UnitTeamName() },
+                { "Role", new Role() },
+                { "Tree", new TreeID() },
+                { "Custom", new Custom<AbstractActor>() }
             };
 
 

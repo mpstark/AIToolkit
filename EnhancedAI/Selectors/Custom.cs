@@ -4,7 +4,7 @@ using Harmony;
 
 namespace EnhancedAI.Selectors
 {
-    public class CustomSelector<T> : ISelector<T>
+    public class Custom<T> : ISelector<T>
     {
         private readonly Dictionary<string, MethodInfo> _methodCache = new Dictionary<string, MethodInfo>();
 

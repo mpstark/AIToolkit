@@ -25,7 +25,7 @@ namespace EnhancedAITests.Selectors
         [TestMethod]
         public void CustomSelectorAlwaysTrueTest()
         {
-            var selector = new CustomSelector<AbstractActor>();
+            var selector = new Custom<AbstractActor>();
             var value = selector.Select("SelectorTests.AlwaysTrue", null);
 
             Assert.IsTrue(value);
@@ -34,7 +34,7 @@ namespace EnhancedAITests.Selectors
         [TestMethod]
         public void CustomSelectorAlwaysFalseTest()
         {
-            var selector = new CustomSelector<AbstractActor>();
+            var selector = new Custom<AbstractActor>();
             var value = selector.Select("SelectorTests.AlwaysFalse", null);
 
             Assert.IsFalse(value);
@@ -43,7 +43,7 @@ namespace EnhancedAITests.Selectors
         [TestMethod]
         public void CustomSelectorIsUnitNullTest()
         {
-            var selector = new CustomSelector<AbstractActor>();
+            var selector = new Custom<AbstractActor>();
             var value = selector.Select("SelectorTests.IsUnitNull", null);
 
             Assert.IsTrue(value);
@@ -52,7 +52,7 @@ namespace EnhancedAITests.Selectors
         [TestMethod]
         public void CustomSelectorMissingFunctionTest()
         {
-            var selector = new CustomSelector<AbstractActor>();
+            var selector = new Custom<AbstractActor>();
             var value = selector.Select("SelectorTests.FunctionMissing", null);
 
             Assert.IsFalse(value);

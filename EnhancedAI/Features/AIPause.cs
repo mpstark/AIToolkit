@@ -41,6 +41,8 @@ namespace EnhancedAI.Features
             _pausePopup = null;
             _influenceMapVisual = null;
             _invocationVisual = null;
+
+            Reset();
         }
 
         public static void Reset()

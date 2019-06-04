@@ -49,8 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BehaviorNodes\GenerateNonSprintMoveCandidatesNode.cs" />
+    <Compile Include="BehaviorNodes\FilterToAdjacentSlowestMoveNode.cs" />
     <Compile Include="BehaviorNodes\NewStandUpNode.cs" />
     <Compile Include="BehaviorNodes\FilterNonLOSOrLOFMovesNode.cs" />
+    <Compile Include="BehaviorNodes\IsSlowestUnitInLanceNode.cs" />
     <Compile Include="BehaviorNodes\Orders\IOrderToInvocation.cs" />
     <Compile Include="BehaviorNodes\Orders\PilotAbilityInvocation.cs" />
     <Compile Include="BehaviorNodes\Orders\PilotAbilityOrderInfo.cs" />
@@ -59,10 +61,12 @@
     <Compile Include="BehaviorNodes\UsePilotAbilityOnSelfNode.cs" />
     <Compile Include="Features\Overrides\LanceDesignatedTargetOverride.cs" />
     <Compile Include="Features\Overrides\InvocationFromOrderOverride.cs" />
+    <Compile Include="Selectors\Team\IsInterleaved.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemyDesc.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestVulnerableEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceAlongPatrolRoute.cs" />
+    <Compile Include="TurnOrderFactors\WalkSpeed.cs" />
     <Compile Include="TurnOrderFactors\ITurnOrderFactor.cs" />
     <Compile Include="TurnOrderFactors\IsUnstable.cs" />
     <Compile Include="TurnOrderFactors\IsVulnerable.cs" />
@@ -94,13 +98,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\TeamAIOverrideDef.cs" />
     <Compile Include="Resources\UnitAIOverrideDef.cs" />
-    <Compile Include="Selectors\Team\TeamNameTeamSelector.cs" />
-    <Compile Include="Selectors\CustomSelector.cs" />
+    <Compile Include="Selectors\Team\TeamName.cs" />
+    <Compile Include="Selectors\Custom.cs" />
     <Compile Include="Selectors\ISelector.cs" />
     <Compile Include="Selectors\SelectorValue.cs" />
-    <Compile Include="Selectors\Unit\TreeIDUnitSelector.cs" />
-    <Compile Include="Selectors\Unit\RoleUnitSelector.cs" />
-    <Compile Include="Selectors\Unit\TeamNameUnitSelector.cs" />
+    <Compile Include="Selectors\Unit\TreeID.cs" />
+    <Compile Include="Selectors\Unit\Role.cs" />
+    <Compile Include="Selectors\Unit\UnitTeamName.cs" />
     <Compile Include="Util\BehaviorNodeExtensions.cs" />
     <Compile Include="Util\BehaviorNodeFactory.cs" />
     <Compile Include="Util\BehaviorTreeExtensions.cs" />

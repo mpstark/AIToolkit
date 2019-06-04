@@ -1,6 +1,6 @@
 ﻿namespace EnhancedAI.Selectors.Team
 {
-    public class TeamNameTeamSelector : ISelector<AITeam>
+    public class TeamName : ISelector<AITeam>
     {
         public bool Select(string selectString, AITeam team)
         {
