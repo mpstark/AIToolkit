@@ -20,7 +20,7 @@ namespace EnhancedAI.Features.Overrides
         public static AbstractActor TryOverrideCurrentUnit(List<AbstractActor> units,
             TeamAIOverrideDef teamAIOverride)
         {
-            if (units == null || units.Count == 0)
+            if (units == null || units.Count == 0 || teamAIOverride.TurnOrderFactorWeights.Count == 0)
                 return null;
 
             if (units.Count == 1)

@@ -12,18 +12,15 @@ namespace EnhancedAI.Features.Overrides
         public static void TryOverrideInfluenceFactors(BehaviorTree tree, UnitAIOverrideDef o)
         {
             // why o? line length getting too long!
-            if (o.AddInfluenceFactors.Count == 0)
+            if (o.AddInfluenceFactors.Count == 0 && o.RemoveInfluenceFactors.Count == 0)
                 return;
 
-            Main.HBSLog?.Log($"Overriding Influence Factors for {tree.unit.UnitName}");
-
             var trav = Traverse.Create(tree.influenceMapEvaluator);
+            Main.HBSLog?.Log($"Overriding Influence Factors for {tree.unit.UnitName}");
 
             var allyFactors = trav.Field("allyFactors").GetValue<InfluenceMapAllyFactor[]>();
             var hostileFactors = trav.Field("hostileFactors").GetValue<InfluenceMapHostileFactor[]>();
             var positionalFactors = trav.Field("positionalFactors").GetValue<InfluenceMapPositionFactor[]>();
-
-            Main.HBSLog?.Log($"Had this number of factors -- ally: {allyFactors.Length} hostile: {hostileFactors.Length} positional: {positionalFactors.Length}");
 
             var newAllyFactors = new List<InfluenceMapAllyFactor>();
             var newHostileFactors = new List<InfluenceMapHostileFactor>();
@@ -38,9 +35,14 @@ namespace EnhancedAI.Features.Overrides
                 .Where(f => !o.RemoveInfluenceFactors.Contains(f.GetType().Name)));
 
             // add new factors
-            newAllyFactors.AddRange(ConstructNewFactors<InfluenceMapAllyFactor>(o.AddInfluenceFactors));
-            newHostileFactors.AddRange(ConstructNewFactors<InfluenceMapHostileFactor>(o.AddInfluenceFactors));
-            newPositionalFactors.AddRange(ConstructNewFactors<InfluenceMapPositionFactor>(o.AddInfluenceFactors));
+            if (o.AddInfluenceFactors.Count != 0)
+            {
+                newAllyFactors.AddRange(ConstructNewFactors<InfluenceMapAllyFactor>(o.AddInfluenceFactors));
+                newHostileFactors.AddRange(ConstructNewFactors<InfluenceMapHostileFactor>(o.AddInfluenceFactors));
+                newPositionalFactors.AddRange(ConstructNewFactors<InfluenceMapPositionFactor>(o.AddInfluenceFactors));
+            }
+
+            Main.HBSLog?.Log($"Had this number of factors -- ally: {allyFactors.Length} hostile: {hostileFactors.Length} positional: {positionalFactors.Length}");
 
             // set the factors in the influence evaluator
             trav.Field("allyFactors").SetValue(newAllyFactors.ToArray());

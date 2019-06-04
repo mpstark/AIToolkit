@@ -11,7 +11,7 @@ namespace EnhancedAI.BehaviorNodes
         }
 
         // stolen from FiringPreviewManager -- not under license
-        private bool HasLOS(AbstractActor attacker, ICombatant target, Vector3 position, List<AbstractActor> allies)
+        private static bool HasLOS(AbstractActor attacker, ICombatant target, Vector3 position, List<AbstractActor> allies)
         {
             foreach (var ally in allies)
             {
@@ -20,6 +20,27 @@ namespace EnhancedAI.BehaviorNodes
             }
             var visibility = attacker.Combat.LOS.GetVisibilityToTargetWithPositionsAndRotations(attacker, position, target);
             return visibility == VisibilityLevel.LOSFull;
+        }
+
+        private static bool HasAttack(AbstractActor attacker, ICombatant target, Vector3 position)
+        {
+            var lof = attacker.Combat.LOS.GetLineOfFire(attacker, position, target,
+                target.CurrentPosition, target.CurrentRotation, out _);
+
+            // it's hard to get if a MoveDestination has enough turn left
+            // this will be a little "incorrect" because it won't check rotation
+            // but that's better than other options
+
+            var longestIndirect = attacker.GetLongestRangeWeapon(false, true);
+            if (longestIndirect == null && lof <= LineOfFireLevel.LOFBlocked)
+                return false;
+
+            var distance = Vector3.Distance(position, target.CurrentPosition);
+            var maxRange = attacker.GetLongestRangeWeapon(false).MaxRange;
+            if (distance > maxRange)
+                return false;
+
+            return true;
         }
 
         protected override BehaviorTreeResults Tick()
@@ -33,17 +54,10 @@ namespace EnhancedAI.BehaviorNodes
                 var moveHasAttack = false;
                 foreach (var enemy in tree.enemyUnits)
                 {
-                    var canSeeEnemy = HasLOS(unit, enemy, move.PathNode.Position, allies);
-                    if (!canSeeEnemy)
+                    if (!HasLOS(unit, enemy, move.PathNode.Position, allies))
                         break;
 
-                    foreach (var weapon in unit.Weapons)
-                    {
-                        moveHasAttack = weapon.WillFireAtTargetFromPosition(enemy, move.PathNode.Position);
-                        if (moveHasAttack)
-                            break;
-                    }
-
+                    moveHasAttack = HasAttack(unit, enemy, move.PathNode.Position);
                     if (moveHasAttack)
                         break;
                 }
