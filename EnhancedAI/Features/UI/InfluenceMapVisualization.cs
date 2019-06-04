@@ -111,30 +111,7 @@ namespace EnhancedAI.Features.UI
             }
             else
             {
-                var movementDot = CombatMovementReticle.Instance.movementDotTemplate;
-
-                dot = new GameObject($"dot_{_unusedDotPool.Count + _usedDotPool.Count}");
-                dot.transform.SetParent(ParentObject.transform);
-
-                var meshFilter = dot.AddComponent<MeshFilter>();
-                meshFilter.sharedMesh = _circleMesh;
-
-                var meshRenderer = dot.AddComponent<MeshRenderer>();
-                meshRenderer.material = movementDot.GetComponent<MeshRenderer>().sharedMaterial;
-                meshRenderer.material.enableInstancing = false;
-                meshRenderer.receiveShadows = false;
-                meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
-
-                var collider = dot.AddComponent<CapsuleCollider>();
-                collider.center = Vector3.zero;
-                collider.radius = 4f;
-                collider.height = 1f;
-                collider.isTrigger = true;
-
-                var dotTooltip = dot.AddComponent<DotTooltip>();
-                dotTooltip.TooltipPopup = _tooltip;
-
-                dot.AddComponent<UISweep>();
+                dot = GenerateDot($"dot_{_unusedDotPool.Count + _usedDotPool.Count}");
             }
 
             _usedDotPool.Add(dot);
@@ -151,7 +128,36 @@ namespace EnhancedAI.Features.UI
         }
 
 
-        private static Mesh GenerateCircleMesh(float size, int numberOfPoints)
+        private GameObject GenerateDot(string name)
+        {
+            var dot = new GameObject(name);
+            dot.transform.SetParent(ParentObject.transform);
+
+            var meshFilter = dot.AddComponent<MeshFilter>();
+            meshFilter.sharedMesh = _circleMesh;
+
+            var meshRenderer = dot.AddComponent<MeshRenderer>();
+            var movementDot = CombatMovementReticle.Instance.movementDotTemplate;
+            meshRenderer.material = movementDot.GetComponent<MeshRenderer>().sharedMaterial;
+            meshRenderer.material.enableInstancing = false;
+            meshRenderer.receiveShadows = false;
+            meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+
+            var collider = dot.AddComponent<CapsuleCollider>();
+            collider.center = Vector3.zero;
+            collider.radius = 5f;
+            collider.height = .5f;
+            collider.isTrigger = true;
+
+            var dotTooltip = dot.AddComponent<DotTooltip>();
+            dotTooltip.TooltipPopup = _tooltip;
+
+            dot.AddComponent<UISweep>();
+
+            return dot;
+        }
+
+        private static Mesh GenerateCircleMesh(float radius, int numberOfPoints)
         {
             // from https://answers.unity.com/questions/944228/creating-a-smooth-round-flat-circle.html
             // not subject to license
@@ -161,7 +167,7 @@ namespace EnhancedAI.Features.UI
             var quaternion = Quaternion.Euler(0.0f, 0.0f, angleStep);
 
             vertexList.Add(new Vector3(0.0f, 0.0f, 0.0f));
-            vertexList.Add(new Vector3(0.0f, size, 0.0f));
+            vertexList.Add(new Vector3(0.0f, radius, 0.0f));
             vertexList.Add(quaternion * vertexList[1]);
             triangleList.Add(0);
             triangleList.Add(1);
