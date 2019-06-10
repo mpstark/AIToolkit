@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BehaviorNodes\FilterToAdjacentToSlowestLanceMateNode.cs" />
     <Compile Include="BehaviorNodes\GenerateNonSprintMoveCandidatesNode.cs" />
     <Compile Include="BehaviorNodes\FilterToAdjacentSlowestMoveNode.cs" />
     <Compile Include="BehaviorNodes\NewStandUpNode.cs" />
