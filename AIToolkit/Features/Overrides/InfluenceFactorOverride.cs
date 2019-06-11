@@ -42,14 +42,14 @@ namespace AIToolkit.Features.Overrides
                 newPositionalFactors.AddRange(ConstructNewFactors<InfluenceMapPositionFactor>(o.AddInfluenceFactors));
             }
 
-            Main.HBSLog?.Log($"Had this number of factors -- ally: {allyFactors.Length} hostile: {hostileFactors.Length} positional: {positionalFactors.Length}");
+            Main.HBSLog?.Log($"  Had this number of factors -- ally: {allyFactors.Length} hostile: {hostileFactors.Length} positional: {positionalFactors.Length}");
 
             // set the factors in the influence evaluator
             trav.Field("allyFactors").SetValue(newAllyFactors.ToArray());
             trav.Field("hostileFactors").SetValue(newHostileFactors.ToArray());
             trav.Field("positionalFactors").SetValue(newPositionalFactors.ToArray());
 
-            Main.HBSLog?.Log($"Now -- ally: {newAllyFactors.Count} hostile: {newHostileFactors.Count} positional: {newPositionalFactors.Count}");
+            Main.HBSLog?.Log($"  Now -- ally: {newAllyFactors.Count} hostile: {newHostileFactors.Count} positional: {newPositionalFactors.Count}");
         }
 
         private static List<T> ConstructNewFactors<T>(List<string> typeNames)

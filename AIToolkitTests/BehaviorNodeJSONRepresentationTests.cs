@@ -12,10 +12,10 @@ namespace AIToolkitTests
         {
             var root = CoreAI_BT.InitRootNode(null, null, null);
 
-            var repFirst = SerializableBehaviorNode.FromNode(root);
+            var repFirst = BehaviorNodeDef.FromNode(root);
             var jsonFirst = repFirst.ToJSONString();
 
-            var repSecond = SerializeUtil.FromJSON<SerializableBehaviorNode>(jsonFirst);
+            var repSecond = SerializeUtil.FromJSON<BehaviorNodeDef>(jsonFirst);
             var jsonSecond = repSecond.ToJSONString();
 
             Assert.AreEqual(jsonFirst, jsonSecond);
@@ -26,12 +26,12 @@ namespace AIToolkitTests
         {
             var root = CoreAI_BT.InitRootNode(null, null, null);
 
-            var repFirst = SerializableBehaviorNode.FromNode(root);
+            var repFirst = BehaviorNodeDef.FromNode(root);
             var jsonFirst = repFirst.ToJSONString();
 
             var reconstructedRoot = repFirst.ToNode(null, null);
 
-            var repSecond = SerializableBehaviorNode.FromNode(reconstructedRoot);
+            var repSecond = BehaviorNodeDef.FromNode(reconstructedRoot);
             var jsonSecond = repSecond.ToJSONString();
 
             Assert.AreEqual(jsonFirst, jsonSecond);

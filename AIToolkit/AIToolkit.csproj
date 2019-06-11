@@ -79,7 +79,7 @@
     <Compile Include="Features\UI\InvocationVisualization.cs" />
     <Compile Include="Features\BehaviorTreeDump.cs" />
     <Compile Include="Resources\AIOverrideDef.cs" />
-    <Compile Include="Resources\SerializableBehaviorNode.cs" />
+    <Compile Include="Resources\BehaviorNodeDef.cs" />
     <Compile Include="Features\HotReload.cs" />
     <Compile Include="Features\AIPause.cs" />
     <Compile Include="Features\UI\InfluenceMapVisualization.cs" />

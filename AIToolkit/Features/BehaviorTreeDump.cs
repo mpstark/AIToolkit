@@ -18,7 +18,7 @@ namespace AIToolkit.Features
             // dump to json
             if (type == DumpType.JSON || type == DumpType.Both)
             {
-                SerializableBehaviorNode.FromNode(root)
+                BehaviorNodeDef.FromNode(root)
                     .ToJSONFile(Path.Combine(directory, $"{name}.json"));
             }
 
@@ -31,7 +31,7 @@ namespace AIToolkit.Features
 
         public static void DumpTrees(DumpType type)
         {
-            var dirPath = Path.Combine(Main.Directory, "Dump");
+            var dirPath = Path.Combine(Main.Directory, "_Dump");
             if (!Directory.Exists(dirPath))
                 Directory.CreateDirectory(dirPath);
 

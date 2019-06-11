@@ -9,7 +9,7 @@ using Newtonsoft.Json.Converters;
 
 namespace AIToolkit.Resources
 {
-    public class SerializableBehaviorNode
+    public class BehaviorNodeDef
     {
         [JsonRequired]
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace AIToolkit.Resources
         [JsonRequired]
         public string TypeName { get; set; }
 
-        public List<SerializableBehaviorNode> Children { get; set; }
+        public List<BehaviorNodeDef> Children { get; set; }
         public Dictionary<string, object> ExtraParameters { get; set; }
 
 
@@ -110,22 +110,22 @@ namespace AIToolkit.Resources
         }
 
 
-        public static SerializableBehaviorNode FromNode(BehaviorNode node)
+        public static BehaviorNodeDef FromNode(BehaviorNode node)
         {
-            var rep = new SerializableBehaviorNode();
+            var rep = new BehaviorNodeDef();
             rep.Name = node.GetName();
             rep.TypeName = node.GetType().ToString();
 
             switch (node)
             {
                 case CompositeBehaviorNode composite:
-                    rep.Children = new List<SerializableBehaviorNode>();
+                    rep.Children = new List<BehaviorNodeDef>();
                     foreach (var child in composite.Children)
                         rep.Children.Add(FromNode(child));
                     break;
 
                 case DecoratorBehaviorNode decorator:
-                    rep.Children = new List<SerializableBehaviorNode> { FromNode(decorator.ChildNode) };
+                    rep.Children = new List<BehaviorNodeDef> { FromNode(decorator.ChildNode) };
                     break;
 
                 default:

@@ -13,7 +13,7 @@ namespace AIToolkit.Features
 
             // reload all overrides from their path, this has side effect of
             // clearing all ScopeManagerWrappers as well
-            Main.ReloadAIOverrides();
+            Main.ReloadResources();
 
             // reload behavior variables by forcing a new scope manager
             // TODO: THIS CAUSES A GAME FREEZE IF HOT RELOAD DURING AI PAUSE

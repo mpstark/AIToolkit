@@ -17,13 +17,10 @@ namespace AIToolkit.Patches
             if (!Main.UnitToAIOverride.ContainsKey(__instance.unit))
                 return true;
 
-            var aiOverride = Main.UnitToAIOverride[__instance.unit];
-
-            var value = BehaviorVariableOverride.TryOverrideValue(__instance, name, aiOverride);
+            var value = BehaviorVariableOverride.TryOverrideValue(__instance, name);
             if (value == null)
                 return true;
 
-            Main.HBSLog?.Log($"Using value (from override: {aiOverride.Name}) for behavior variable: {name} for {__instance.unit.UnitName}");
             __result = value;
             return false;
         }

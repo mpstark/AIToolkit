@@ -99,8 +99,6 @@ namespace AIToolkit.Features
             if (invocation is InspireActorInvocation)
                 return false;
 
-            Main.HBSLog?.Log($"AIDebugPause: Intercepted an AI invocation: {invocation.InvocationID} ({invocation.MessageType})");
-
             _interceptedInvocationMessage = invocation;
             return true;
         }
@@ -109,9 +107,6 @@ namespace AIToolkit.Features
         {
             if (_interceptedInvocationMessage == null)
                 return null;
-
-            Main.HBSLog?.Log(
-                $"AIDebugPause: Injecting an AI invocation: {_interceptedInvocationMessage.InvocationID} ({_interceptedInvocationMessage.MessageType})");
 
             var message = _interceptedInvocationMessage;
             _interceptedInvocationMessage = null;
@@ -122,7 +117,7 @@ namespace AIToolkit.Features
 
         private static void OnPause(AITeam team)
         {
-            Main.HBSLog?.Log("AIDebugPause -- Paused");
+            Main.HBSLog?.Log($"AIDebugPause -- Paused on {_interceptedInvocationMessage.GetType().Name}");
             IsPaused = true;
 
             CurrentAITeam = team;

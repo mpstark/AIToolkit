@@ -24,11 +24,14 @@ namespace AIToolkit
 
         private static readonly List<string> UnitAIOverridePaths = new List<string>();
         private static readonly List<string> TeamAIOverridePaths = new List<string>();
+        private static readonly List<string> BehaviorNodePaths = new List<string>();
 
         private static readonly List<UnitAIOverrideDef> UnitAIOverrides
             = new List<UnitAIOverrideDef>();
         private static readonly List<TeamAIOverrideDef> TeamAIOverrides
             = new List<TeamAIOverrideDef>();
+        internal static readonly List<BehaviorNodeDef> BehaviorNodeDefs
+            = new List<BehaviorNodeDef>();
 
         internal static readonly Dictionary<AbstractActor, UnitAIOverrideDef> UnitToAIOverride
             = new Dictionary<AbstractActor, UnitAIOverrideDef>();
@@ -82,16 +85,22 @@ namespace AIToolkit
                 TeamAIOverridePaths.AddRange(customResources[nameof(TeamAIOverrideDef)]
                     .Values.Select(entry => entry.FilePath));
             }
+
+            if (customResources.ContainsKey(nameof(BehaviorNodeDef)))
+            {
+                BehaviorNodePaths.AddRange(customResources[nameof(BehaviorNodeDef)]
+                    .Values.Select(entry => entry.FilePath));
+            }
         }
 
 
         internal static void OnCombatInit()
         {
-            ReloadAIOverrides();
+            ReloadResources();
             AIPause.DestroyUI();
         }
 
-        internal static void ReloadAIOverrides()
+        internal static void ReloadResources()
         {
             UnitToAIOverride.Clear();
             UnitAIOverrides.Clear();
@@ -121,6 +130,20 @@ namespace AIToolkit
 
                 HBSLog?.Log($"Parsed TeamAIOverride {teamOverride.Name} at {path}");
                 TeamAIOverrides.Add(teamOverride);
+            }
+
+            BehaviorNodeDefs.Clear();
+            foreach (var path in BehaviorNodePaths)
+            {
+                var behaviorNodeDef = SerializeUtil.FromPath<BehaviorNodeDef>(path);
+                if (behaviorNodeDef == null)
+                {
+                    HBSLog?.LogError($"BehaviorNodeDef Resource did not parse at {path}");
+                    break;
+                }
+
+                HBSLog?.Log($"Parsed BehaviorNodeDef with root name {behaviorNodeDef.Name} at {path}");
+                BehaviorNodeDefs.Add(behaviorNodeDef);
             }
         }
 

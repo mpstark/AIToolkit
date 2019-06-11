@@ -3,7 +3,7 @@
     "DLL": "AIToolkit.dll",
     "Enabled": true,
 
-    "CustomResourceTypes": [ "UnitAIOverrideDef", "TeamAIOverrideDef" ],
+    "CustomResourceTypes": [ "UnitAIOverrideDef", "TeamAIOverrideDef", "BehaviorNodeDef" ],
 
     "Settings": {
         "ShouldDump": false,
@@ -15,6 +15,7 @@
 
     "Manifest": [
         { "Path": "UnitAIOverrideDefs", "Type": "UnitAIOverrideDef" },
-        { "Path": "TeamAIOverrideDefs", "Type": "TeamAIOverrideDef" }
+        { "Path": "TeamAIOverrideDefs", "Type": "TeamAIOverrideDef" },
+        { "Path": "BehaviorNodeDefs", "Type": "BehaviorNodeDef" }
     ]
 }

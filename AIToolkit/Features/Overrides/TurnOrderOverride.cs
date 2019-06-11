@@ -105,20 +105,17 @@ namespace AIToolkit.Features.Overrides
                 }
             }
 
-            Main.HBSLog?.Log("TurnOrderOverride:");
-
             var maxUnitValue = unitToTotal.Max(x => x.Value);
-
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             var selectedUnit = unitToTotal.First(x => x.Value == maxUnitValue).Key;
-            Main.HBSLog?.Log($"Selecting {selectedUnit.UnitName}");
 
+            Main.HBSLog?.Log($"TurnOrderOverride: Selecting {selectedUnit.UnitName}");
             AIPause.PausePopup.AppendText("Turn Order:");
 
             foreach (var unit in units)
             {
                 var selected = unit == selectedUnit ? "*" : "";
-                Main.HBSLog?.Log($"{unit.UnitName}: {unitToTotal[unit]}");
+                Main.HBSLog?.Log($"  {unit.UnitName}: {unitToTotal[unit]}");
                 AIPause.PausePopup.AppendText($"  {unit.UnitName}: {unitToTotal[unit]:0.00}{selected}");
             }
 

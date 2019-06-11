@@ -32,7 +32,7 @@ namespace AIToolkit.Resources
 
             Main.HBSLog?.Log("Had multiple matching AIOverrides, picking one with highest priority:");
             foreach (var overrideDef in matching)
-                Main.HBSLog?.Log($"{overrideDef.Name} Priority: {overrideDef.Priority}");
+                Main.HBSLog?.Log($"  {overrideDef.Name} Priority: {overrideDef.Priority}");
 
             // find the one with the highest priority, and then just choose the first
             // one with that priority
