@@ -1,6 +1,6 @@
 {
-    "Name": "EnhancedAI",
-    "DLL": "EnhancedAI.dll",
+    "Name": "AIToolkit",
+    "DLL": "AIToolkit.dll",
     "Enabled": true,
 
     "CustomResourceTypes": [ "UnitAIOverrideDef", "TeamAIOverrideDef" ],

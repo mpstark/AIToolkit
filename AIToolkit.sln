@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIToolkit", "AIToolkit\AIToolkit.csproj", "{055294CA-61BD-4DE0-B2E2-6BC2A579719B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIToolkitTests", "AIToolkitTests\AIToolkitTests.csproj", "{32273F79-1B1E-44DC-AF6D-258E819844A3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{6EDC3C5D-F109-4A26-8FEB-4DBC10A93632}"
+	ProjectSection(SolutionItems) = preProject
+		mod.json = mod.json
+		notes.md = notes.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{055294CA-61BD-4DE0-B2E2-6BC2A579719B}.Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{055294CA-61BD-4DE0-B2E2-6BC2A579719B}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{055294CA-61BD-4DE0-B2E2-6BC2A579719B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{055294CA-61BD-4DE0-B2E2-6BC2A579719B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32273F79-1B1E-44DC-AF6D-258E819844A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32273F79-1B1E-44DC-AF6D-258E819844A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32273F79-1B1E-44DC-AF6D-258E819844A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32273F79-1B1E-44DC-AF6D-258E819844A3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7418C6F6-AC38-4C6F-825A-5DB4ED6597B8}
+	EndGlobalSection
+EndGlobal

@@ -1,4 +1,4 @@
-# EnhancedAI
+# AIToolkit
 
 Unprecidented moddability of the BattleTech AI.
 
