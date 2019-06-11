@@ -6,7 +6,7 @@ namespace AIToolkit.Util
 {
     public static class TypeUtil
     {
-        private static HashSet<Type> _hasRunCacheFill = new HashSet<Type>();
+        private static readonly HashSet<Type> HasRunCacheFill = new HashSet<Type>();
         private static readonly Dictionary<string, Type> TypeCache = new Dictionary<string, Type>();
 
         private static void TypeCacheFill(Type parentType)
@@ -21,10 +21,10 @@ namespace AIToolkit.Util
 
         public static Type GetTypeByName(string typeName, Type precacheParent = null)
         {
-            if (precacheParent != null && !_hasRunCacheFill.Contains(precacheParent))
+            if (precacheParent != null && !HasRunCacheFill.Contains(precacheParent))
             {
                 TypeCacheFill(precacheParent);
-                _hasRunCacheFill.Add(precacheParent);
+                HasRunCacheFill.Add(precacheParent);
             }
 
             if (TypeCache.ContainsKey(typeName))

@@ -23,8 +23,9 @@ namespace AIToolkit.Features.Overrides
                 var numLof = 0;
                 foreach (var unit in lanceUnits)
                 {
-                    if (unit.HasLOSToTargetUnit(hostile)
-                        && unit.HasLOFToTargetUnit(hostile, unit.GetLongestRangeWeapon(false)))
+                    var weapon = unit.GetLongestRangeWeapon(false);
+                    if (weapon != null && unit.HasLOSToTargetUnit(hostile)
+                        && unit.HasLOFToTargetUnit(hostile, weapon))
                     {
                         numLof++;
                     }
