@@ -26,7 +26,7 @@ namespace AIToolkitTests
         {
             var root = CoreAI_BT.InitRootNode(null, null, null) as CompositeBehaviorNode;
 
-            var foundChild = root.FindChildByName("clearSensorLock0000", out var foundParent);
+            var foundChild = root.FindChildByName("sequence0000", out var foundParent);
 
             var realParentParent = root?.Children.Find(node => node.GetName() == "startup_cleanup") as DecoratorBehaviorNode;
             var realParent = realParentParent?.ChildNode as DecoratorBehaviorNode;
