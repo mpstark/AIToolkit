@@ -39,8 +39,7 @@ namespace AIToolkit.Patches
     }
 
     /// <summary>
-    /// Simply skip the designated target for lance
-    /// TODO: override designated target with custom implementation
+    /// Override or simply skip the designated target (since vanilla doesn't work) for lance
     /// </summary>
     [HarmonyPatch(typeof(AITeam), "ChooseDesignatedTargetForLance")]
     public static class AITeam_ChooseDesignatedTargetForLance_patch
@@ -91,11 +90,11 @@ namespace AIToolkit.Patches
     {
         private static bool _injectedThisCall;
 
-        public static bool Prefix(AITeam __instance, ref InvocationMessage __result)
+        public static bool Prefix(AITeam __instance, ref InvocationMessage __result, ref float ___planningStartTime)
         {
             // if shouldPauseAI is on at all, we should never fail to get invocation because of time
             if (Main.Settings.ShouldPauseAI)
-                Traverse.Create(__instance).Field("planningStartTime").SetValue(__instance.Combat.BattleTechGame.Time);
+                ___planningStartTime = __instance.Combat.BattleTechGame.Time;
 
             var inject = AIPause.TryGetMessageInject();
             if (inject == null)

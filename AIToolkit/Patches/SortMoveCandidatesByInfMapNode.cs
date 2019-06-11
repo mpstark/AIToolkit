@@ -32,16 +32,12 @@ namespace AIToolkit.Patches
             return AccessTools.Method(type, "Tick");
         }
 
-        public static void Postfix(object __instance, ref BehaviorTreeResults __result)
+        public static void Postfix(object __instance, ref BehaviorTreeResults __result, AbstractActor ___unit)
         {
-            if (__result.nodeState != BehaviorNodeState.Success)
+            if (__result.nodeState != BehaviorNodeState.Success || !Main.Settings.ShouldPauseAI)
                 return;
 
-            if (!Main.Settings.ShouldPauseAI)
-                return;
-
-            var unit = Traverse.Create(__instance).Field("unit").GetValue<AbstractActor>();
-            AIPause.InfluenceMapVisual.OnInfluenceMapSort(unit);
+            AIPause.InfluenceMapVisual.OnInfluenceMapSort(___unit);
         }
     }
 }
