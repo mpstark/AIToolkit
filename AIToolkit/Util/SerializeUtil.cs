@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -29,6 +30,26 @@ namespace AIToolkit.Util
             }
 
             return FromJSON<T>(File.ReadAllText(path));
+        }
+
+        public static List<T> FromPaths<T>(IEnumerable<string> paths)
+        {
+            var list = new List<T>();
+
+            foreach (var path in paths)
+            {
+                var resource = FromPath<T>(path);
+                if (resource == null)
+                {
+                    Main.HBSLog?.LogError($"{typeof(T).Name} did not parse at {path}");
+                    break;
+                }
+
+                Main.HBSLog?.Log($"Parsed {typeof(T).Name} at path {path}");
+                list.Add(resource);
+            }
+
+            return list;
         }
     }
 }

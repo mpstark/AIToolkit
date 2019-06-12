@@ -26,12 +26,9 @@ namespace AIToolkit
         private static readonly List<string> TeamAIOverridePaths = new List<string>();
         private static readonly List<string> BehaviorNodePaths = new List<string>();
 
-        private static readonly List<UnitAIOverrideDef> UnitAIOverrides
-            = new List<UnitAIOverrideDef>();
-        private static readonly List<TeamAIOverrideDef> TeamAIOverrides
-            = new List<TeamAIOverrideDef>();
-        internal static readonly List<BehaviorNodeDef> BehaviorNodeDefs
-            = new List<BehaviorNodeDef>();
+        internal static List<UnitAIOverrideDef> UnitAIOverrides = new List<UnitAIOverrideDef>();
+        internal static List<TeamAIOverrideDef> TeamAIOverrides = new List<TeamAIOverrideDef>();
+        internal static List<BehaviorNodeDef> BehaviorNodeDefs = new List<BehaviorNodeDef>();
 
         internal static readonly Dictionary<AbstractActor, UnitAIOverrideDef> UnitToAIOverride
             = new Dictionary<AbstractActor, UnitAIOverrideDef>();
@@ -103,48 +100,11 @@ namespace AIToolkit
         internal static void ReloadResources()
         {
             UnitToAIOverride.Clear();
-            UnitAIOverrides.Clear();
-            foreach (var path in UnitAIOverridePaths)
-            {
-                var unitOverride = SerializeUtil.FromPath<UnitAIOverrideDef>(path);
-                if (unitOverride == null)
-                {
-                    HBSLog?.LogError($"UnitAIOverrideDef Resource did not parse at {path}");
-                    break;
-                }
-
-                HBSLog?.Log($"Parsed UnitAIOverrideDef {unitOverride.Name} at {path}");
-                UnitAIOverrides.Add(unitOverride);
-            }
-
             TeamToAIOverride.Clear();
-            TeamAIOverrides.Clear();
-            foreach (var path in TeamAIOverridePaths)
-            {
-                var teamOverride = SerializeUtil.FromPath<TeamAIOverrideDef>(path);
-                if (teamOverride == null)
-                {
-                    HBSLog?.LogError($"TeamAIOverrideDef Resource did not parse at {path}");
-                    break;
-                }
 
-                HBSLog?.Log($"Parsed TeamAIOverride {teamOverride.Name} at {path}");
-                TeamAIOverrides.Add(teamOverride);
-            }
-
-            BehaviorNodeDefs.Clear();
-            foreach (var path in BehaviorNodePaths)
-            {
-                var behaviorNodeDef = SerializeUtil.FromPath<BehaviorNodeDef>(path);
-                if (behaviorNodeDef == null)
-                {
-                    HBSLog?.LogError($"BehaviorNodeDef Resource did not parse at {path}");
-                    break;
-                }
-
-                HBSLog?.Log($"Parsed BehaviorNodeDef with root name {behaviorNodeDef.Name} at {path}");
-                BehaviorNodeDefs.Add(behaviorNodeDef);
-            }
+            UnitAIOverrides = SerializeUtil.FromPaths<UnitAIOverrideDef>(UnitAIOverridePaths);
+            TeamAIOverrides = SerializeUtil.FromPaths<TeamAIOverrideDef>(TeamAIOverridePaths);
+            BehaviorNodeDefs = SerializeUtil.FromPaths<BehaviorNodeDef>(BehaviorNodePaths);
         }
 
 
