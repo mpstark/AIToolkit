@@ -7,7 +7,7 @@ using Harmony;
 namespace AIToolkit.Patches
 {
     /// <summary>
-    /// Clear AIOverrides if we're starting a new combat
+    /// OnCombatInit
     /// </summary>
     [HarmonyPatch(typeof(CombatGameState), "_Init")]
     public static class CombatGameState_Init_Patch
@@ -19,7 +19,7 @@ namespace AIToolkit.Patches
     }
 
     /// <summary>
-    /// Clear AIOverrides when loading from a save
+    /// OnCombatInit
     /// </summary>
     [HarmonyPatch(typeof(CombatGameState), "_InitFromSave")]
     public static class CombatGameState_InitFromSave_Patch

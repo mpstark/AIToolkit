@@ -14,9 +14,6 @@ namespace AIToolkit.Patches
     {
         public static bool Prefix(BehaviorTree __instance, BehaviorVariableName name, ref BehaviorVariableValue __result)
         {
-            if (!Main.UnitToAIOverride.ContainsKey(__instance.unit))
-                return true;
-
             var value = BehaviorVariableOverride.TryOverrideValue(__instance, name);
             if (value == null)
                 return true;

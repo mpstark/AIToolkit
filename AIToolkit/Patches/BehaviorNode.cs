@@ -7,6 +7,9 @@ using Harmony;
 
 namespace AIToolkit.Patches
 {
+    /// <summary>
+    /// Append leaf behavior nodes that return an order info to the pause popup
+    /// </summary>
     [HarmonyPatch(typeof(BehaviorNode), "Update")]
     public static class BehaviorNode_Update_Patch
     {

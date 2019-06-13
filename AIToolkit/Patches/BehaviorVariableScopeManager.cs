@@ -7,6 +7,9 @@ using Harmony;
 
 namespace AIToolkit.Patches
 {
+    /// <summary>
+    /// Skip ScopeLoaded calls that we want to ignore
+    /// </summary>
     [HarmonyPatch(typeof(BehaviorVariableScopeManager), "OnBehaviorVariableScopeLoaded")]
     public static class BehaviorVariableScopeManager_OnBehaviorVariableScopeLoaded_Patch
     {

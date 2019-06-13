@@ -8,6 +8,9 @@ using Harmony;
 
 namespace AIToolkit.Patches
 {
+    /// <summary>
+    /// Skip non-essential drawDebugLines call
+    /// </summary>
     [HarmonyPatch]
     public static class SortMoveCandidatesByInfMapNode_drawDebugLines_Patch
     {
@@ -23,6 +26,9 @@ namespace AIToolkit.Patches
         }
     }
 
+    /// <summary>
+    /// Generate influence map visualization if we're pausing
+    /// </summary>
     [HarmonyPatch]
     public static class SortMoveCandidatesByInfMapNode_Tick_Patch
     {
