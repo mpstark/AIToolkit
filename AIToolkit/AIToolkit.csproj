@@ -63,7 +63,6 @@
     <Compile Include="Features\Overrides\LanceDesignatedTargetOverride.cs" />
     <Compile Include="Features\Overrides\InvocationFromOrderOverride.cs" />
     <Compile Include="Selectors\Combat\IsInterleaved.cs" />
-    <Compile Include="TurnOrderFactors\DistanceToClosestEnemyDesc.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestVulnerableEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceAlongPatrolRoute.cs" />

@@ -25,7 +25,7 @@ namespace AIToolkit.TurnOrderFactors
             if (minDistance == float.MaxValue)
                 return float.MinValue;
 
-            return 1f / minDistance;
+            return minDistance;
         }
     }
 }

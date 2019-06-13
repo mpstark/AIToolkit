@@ -11,8 +11,6 @@ namespace AIToolkit.Features
         {
             Main.HBSLog?.Log("HotReload!");
 
-            // reload all overrides from their path, this has side effect of
-            // clearing all ScopeManagerWrappers as well
             Main.ReloadResources();
 
             // reload behavior variables by forcing a new scope manager
