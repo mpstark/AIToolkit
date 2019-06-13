@@ -6,7 +6,7 @@ namespace AIToolkit.Selectors
 {
     public abstract class Selector<T>
     {
-        public static readonly Dictionary<string, Selector<T>> Selectors
+        private static readonly Dictionary<string, Selector<T>> Selectors
             = new Dictionary<string, Selector<T>>();
 
 

@@ -76,7 +76,6 @@
     <Compile Include="BehaviorNodeJSONRepresentationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BehaviorTreeExtensionsTests.cs" />
-    <Compile Include="Selectors\CustomSelectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
