@@ -4,9 +4,9 @@ using AIToolkit.Util;
 
 namespace AIToolkit.Selectors.Unit
 {
-    public class TreeID : ISelector<AbstractActor>
+    public class Tree : Selector<AbstractActor>
     {
-        public bool Select(string selectString, AbstractActor unit)
+        public override bool Select(string selectString, AbstractActor unit)
         {
             if (unit?.BehaviorTree == null)
                 return false;

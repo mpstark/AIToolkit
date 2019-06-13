@@ -5,9 +5,6 @@ using BattleTech;
 using AIToolkit.Features;
 using AIToolkit.Features.Overrides;
 using AIToolkit.Resources;
-using AIToolkit.Selectors;
-using AIToolkit.Selectors.Team;
-using AIToolkit.Selectors.Unit;
 using AIToolkit.Util;
 using Harmony;
 using HBS.Logging;
@@ -34,25 +31,6 @@ namespace AIToolkit
             = new Dictionary<AbstractActor, UnitAIOverrideDef>();
         internal static readonly Dictionary<AITeam, TeamAIOverrideDef> TeamToAIOverride
             = new Dictionary<AITeam, TeamAIOverrideDef>();
-
-        // todo: make selectors use reflection maybe to find the type
-        private static readonly Dictionary<string, ISelector<AITeam>> TeamSelectors
-            = new Dictionary<string, ISelector<AITeam>>
-            {
-                { "TeamName", new TeamName() },
-                { "IsInterleaved", new IsInterleaved() },
-                { "Custom", new Custom<AITeam>() }
-            };
-
-        // todo: make selectors use reflection maybe to find the type
-        private static readonly Dictionary<string, ISelector<AbstractActor>> UnitSelectors
-            = new Dictionary<string, ISelector<AbstractActor>>
-            {
-                { "TeamName", new UnitTeamName() },
-                { "Role", new Role() },
-                { "Tree", new TreeID() },
-                { "Custom", new Custom<AbstractActor>() }
-            };
 
 
         public static void Init(string modDir, string settings)
@@ -111,18 +89,18 @@ namespace AIToolkit
         internal static UnitAIOverrideDef TryOverrideUnitAI(AbstractActor unit)
         {
             var aiOverride = UnitAIOverrideDef.SelectOverride(unit,
-                UnitAIOverrides.Cast<AIOverrideDef<AbstractActor>>(), UnitSelectors) as UnitAIOverrideDef;
+                UnitAIOverrides.Cast<AIOverrideDef<AbstractActor>>()) as UnitAIOverrideDef;
 
             if (aiOverride == null)
                 return null;
 
-            // unit has already been overriden and has the same override then we just got
-            if (UnitToAIOverride.ContainsKey(unit) && UnitToAIOverride[unit] == aiOverride)
-                return UnitToAIOverride[unit];
+            if (UnitToAIOverride.ContainsKey(unit))
+            {
+                if (UnitToAIOverride[unit] == aiOverride)
+                    return UnitToAIOverride[unit];
 
-            // unit has already been overridden but has a different override
-            if (UnitToAIOverride.ContainsKey(unit) && UnitToAIOverride[unit] != aiOverride)
                 ResetUnitAI(unit);
+            }
 
             HBSLog?.Log($"Overriding AI on unit {unit.UnitName} with {aiOverride.Name}");
             UnitToAIOverride[unit] = aiOverride;
@@ -146,21 +124,22 @@ namespace AIToolkit
         internal static TeamAIOverrideDef TryOverrideTeamAI(AITeam team)
         {
             var aiOverride = TeamAIOverrideDef.SelectOverride(team,
-                TeamAIOverrides.Cast<AIOverrideDef<AITeam>>(), TeamSelectors) as TeamAIOverrideDef;
+                TeamAIOverrides.Cast<AIOverrideDef<AITeam>>()) as TeamAIOverrideDef;
 
             if (aiOverride == null)
                 return null;
 
-            // team already overriden and has same override that we just got
-            if (TeamToAIOverride.ContainsKey(team) && TeamToAIOverride[team] == aiOverride)
-                return TeamToAIOverride[team];
+            if (TeamToAIOverride.ContainsKey(team))
+            {
+                if (TeamToAIOverride[team] == aiOverride)
+                    return TeamToAIOverride[team];
 
-            // unit has been already overriden but has a different override
-            if (TeamToAIOverride.ContainsKey(team) && TeamToAIOverride[team] != aiOverride)
                 ResetTeamAI(team);
+            }
 
             HBSLog?.Log($"Overriding AI on team {team.Name} with {aiOverride.Name}");
             TeamToAIOverride[team] = aiOverride;
+
             return TeamToAIOverride[team];
         }
 

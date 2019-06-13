@@ -3,9 +3,9 @@ using BattleTech;
 
 namespace AIToolkit.Selectors.Unit
 {
-    public class Role : ISelector<AbstractActor>
+    public class Role : Selector<AbstractActor>
     {
-        public bool Select(string selectString, AbstractActor unit)
+        public override bool Select(string selectString, AbstractActor unit)
         {
             if (unit == null)
                 return false;

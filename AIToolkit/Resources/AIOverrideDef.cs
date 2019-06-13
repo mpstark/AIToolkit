@@ -7,22 +7,22 @@ namespace AIToolkit.Resources
     public abstract class AIOverrideDef<T>
     {
         public string Name;
-        public List<SelectorValue<T>> Selectors;
+        public List<SelectorValue> Selectors;
         public int Priority;
 
 
-        public bool Matches(T obj, Dictionary<string, ISelector<T>> availableSelectors)
+        public bool Matches(T obj)
         {
             if (Selectors == null || Selectors.Count == 0)
                 return true;
 
-            return Selectors.All(selector => selector.Matches(obj, availableSelectors));
+            return Selectors.All(selector => selector.Matches(obj));
         }
 
 
-        public static AIOverrideDef<T> SelectOverride(T obj, IEnumerable<AIOverrideDef<T>> overrides, Dictionary<string, ISelector<T>> availableSelectors)
+        public static AIOverrideDef<T> SelectOverride(T obj, IEnumerable<AIOverrideDef<T>> overrides)
         {
-            var matching = overrides.Where(o => o.Matches(obj, availableSelectors)).ToArray();
+            var matching = overrides.Where(o => o.Matches(obj)).ToArray();
 
             if (matching.Length == 0)
                 return null;

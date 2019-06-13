@@ -1,18 +1,41 @@
-﻿using System.Collections.Generic;
+﻿using BattleTech;
 
 namespace AIToolkit.Selectors
 {
-    public class SelectorValue<T>
+    public class SelectorValue
     {
         public string TypeName;
         public string SelectString;
 
-        public bool Matches(T obj, Dictionary<string, ISelector<T>> selectors)
+        public bool Matches(object obj)
         {
-            if (!selectors.ContainsKey(TypeName))
-                return false;
+            if (obj is AbstractActor unit)
+            {
+                var unitSelector = Selector<AbstractActor>.FindSelector(TypeName);
+                if (unitSelector != null)
+                    return unitSelector.Select(SelectString, unit);
 
-            return selectors[TypeName].Select(SelectString, obj);
+                obj = unit.team;
+            }
+
+            if (obj is AITeam team)
+            {
+                var teamSelector = Selector<AITeam>.FindSelector(TypeName);
+                if (teamSelector != null)
+                    return teamSelector.Select(SelectString, team);
+
+                obj = team.Combat;
+            }
+
+            if (obj is CombatGameState combat)
+            {
+                var combatSelector = Selector<CombatGameState>.FindSelector(TypeName);
+                if (combatSelector != null)
+                    return combatSelector.Select(SelectString, combat);
+            }
+
+            Main.HBSLog?.LogError($"Could not find a selector named {TypeName}, failing check");
+            return false;
         }
     }
 }

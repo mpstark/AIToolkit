@@ -62,7 +62,7 @@
     <Compile Include="BehaviorNodes\UsePilotAbilityOnSelfNode.cs" />
     <Compile Include="Features\Overrides\LanceDesignatedTargetOverride.cs" />
     <Compile Include="Features\Overrides\InvocationFromOrderOverride.cs" />
-    <Compile Include="Selectors\Team\IsInterleaved.cs" />
+    <Compile Include="Selectors\Combat\IsInterleaved.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemyDesc.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestVulnerableEnemy.cs" />
@@ -100,12 +100,10 @@
     <Compile Include="Resources\TeamAIOverrideDef.cs" />
     <Compile Include="Resources\UnitAIOverrideDef.cs" />
     <Compile Include="Selectors\Team\TeamName.cs" />
-    <Compile Include="Selectors\Custom.cs" />
-    <Compile Include="Selectors\ISelector.cs" />
+    <Compile Include="Selectors\Selector.cs" />
     <Compile Include="Selectors\SelectorValue.cs" />
-    <Compile Include="Selectors\Unit\TreeID.cs" />
+    <Compile Include="Selectors\Unit\Tree.cs" />
     <Compile Include="Selectors\Unit\Role.cs" />
-    <Compile Include="Selectors\Unit\UnitTeamName.cs" />
     <Compile Include="Util\BehaviorNodeExtensions.cs" />
     <Compile Include="Util\BehaviorNodeFactory.cs" />
     <Compile Include="Util\BehaviorTreeExtensions.cs" />
