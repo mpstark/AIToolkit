@@ -8,7 +8,20 @@ Functionality is provided via `AIOverride`s that are applied to matching to eith
 
 Matching operations are performed based on provided `Selectors` in the `AIOverride`. Each `Selector` has a `TypeName`, from a list of provided `Selector` types and a `SelectString` that is provided to the type as a parameter. For example, an `AIOverride` with a single selector with `TypeName`: "TeamName" and `SelectString` "Player 2" will match to a unit that is on the team "Player 2" (if it is selecting a unit) or the team itself (if it is selecting a team).
 
-A special selector type is provided named `Custom` that will allow for other mods to provide additional selector functionality. An example might be a mod that provides panic states, where a unit could be selected because the unit is panicking and then it's AI behavior could be completely changed (perhaps it runs away always). Another example would be a mod that provides additional roles for units with custom behavior based on that.
+### Currently Available Selectors
+
+#### Unit Selectors (Only UnitAIOverrides)
+
+* Role *(i.e. Brawler)*
+* Tree *(i.e. CoreAITree)*
+
+#### Team Selectors
+
+* TeamName *(i.e. Player 1)*
+
+#### Combat Selectors
+
+* IsInterleaved *(true/false)*
 
 ### UnitAIOverrideDef
 
@@ -16,7 +29,7 @@ This type of `AIOverride` can affect behavior trees, behavior variables, and mov
 
 #### Behavior Tree
 
-The behavior tree controls all actions that the unit AI takes. The behavior tree of individual units can be replaced by providing a `NewBehaviorTreeRoot` in the `UnitAIOverrideDef` that contains a JSON representation of the tree. An example tree is below. A way to dump existing trees to JSON is provided as well (described later).
+The behavior tree controls all actions that the unit AI takes. The behavior tree of individual units can be replaced by providing a `TreeRootName` in the `UnitAIOverrideDef`  along with a coorisponding `BehaviorNodeDef` that contains a JSON representation of the tree. An example tree is below. A way to dump existing trees to JSON is provided as well (described later).
 
 ```json
 {
@@ -84,10 +97,10 @@ Since behavor variable's generally use the `BehaviorVariableName` that cannot be
 
 Behavior variables act as parameters to both the behavior tree and assorted other AI code. For example, the `Float_FenceRadius` controls how big the unit could get from the mean position of the lance for the influence factor `PreferInsideFenceNegativeLogicPositionalFactor`. `Bool_AllowAttack` is used as parameter to the `IsBVTrueNode` in many places in the tree to control if the unit can attack.
 
-You can provide overrides to the affected unit's behavior variables in two ways:
+You can provide overrides to behavior variables in two ways:
 
-* Provide the path to a folder that contains `BehaviorVariableScope` files (such as `global.json`) in `BehaviorScopesDirectory`
-* Provide simple overrides in `BehaviorVariableOverrides`
+* Provide the path to a folder that contains `BehaviorVariableScope` files (such as `global.json`) in `BehaviorScopesDirectory` in a `TeamAIOverrideDef`
+* Provide simple overrides in `BehaviorVariableOverrides` in a `UnitAIOverrideDef`
 
 An example `BehaviorVariableOverrides` that contains both vanilla variables and variables for a modded influence factor:
 
@@ -113,13 +126,6 @@ An example `BehaviorVariableOverrides` that contains both vanilla variables and 
 }
 ```
 
-#### Current Avalable Selectors
-
-* TeamName *("Player 2")*
-* Tree *("CoreAITree")*
-* Role *("Brawler")*
-* Custom
-
 ### TeamAIOverrideDef
 
 #### Unit Selection / Turn Order
@@ -134,11 +140,6 @@ When `TurnOrderFactorWeights` is provided, the AI unit selection process is repl
 * DistanceToClosestVulnerableEnemy
 * IsUnstable
 * IsVulnerable
-
-#### Current Available Selectors
-
-* TeamName *("Player 2")*
-* Custom
 
 ### Aditional Functionality
 

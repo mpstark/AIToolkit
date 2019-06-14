@@ -11,7 +11,6 @@ namespace AIToolkit.Features
     public static class AIPause
     {
         public static AITeam CurrentAITeam { get; private set; }
-
         public static bool IsPaused { get; private set; }
 
         public static TextPopup PausePopup =>
