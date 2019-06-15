@@ -47,9 +47,6 @@ namespace AIToolkit.Features.Overrides
             evalTrav.Method("ProfileBegin", ProfileSection.AllInfluenceMaps).GetValue();
 
             yield return ControlFlow.Call(evalTrav.Method("Eval_Initialize").GetValue<IEnumerable<Instruction>>());
-            //yield return ControlFlow.Call(evalTrav.Method("Eval_PositionalFactors").GetValue<IEnumerable<Instruction>>());
-            //yield return ControlFlow.Call(evalTrav.Method("Eval_HostileFactors").GetValue<IEnumerable<Instruction>>());
-            //yield return ControlFlow.Call(evalTrav.Method("Eval_AllyFactors").GetValue<IEnumerable<Instruction>>());
             yield return ControlFlow.Call(EvalFactors(evaluator));
             yield return ControlFlow.Call(evalTrav.Method("Apply_SprintScaling").GetValue<IEnumerable<Instruction>>());
 
@@ -67,10 +64,6 @@ namespace AIToolkit.Features.Overrides
             // this is largely rewritten from HBS code, and not subject to license
             var trav = Traverse.Create(evaluator);
             var unit = trav.Field("unit").GetValue<AbstractActor>();
-
-            //var useDifferentFactorNormalization = false;
-            //if (Main.UnitToAIOverride.ContainsKey(unit))
-            //    useDifferentFactorNormalization = Main.UnitToAIOverride[unit].UseDifferentFactorNormalization;
 
             // clear all accumulators
             for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
@@ -217,14 +210,6 @@ namespace AIToolkit.Features.Overrides
                 {
                     var raw = evaluator.WorkspaceEvaluationEntries[i].FactorValue;
                     var norm = (raw - min) / (max - min);
-
-                    //if (useDifferentFactorNormalization)
-                    //{
-                    //    if (min > 0)
-                    //        norm = raw / max;
-                    //    else if (max < 0)
-                    //        norm = max / raw;
-                    //}
 
                     var regularValue = norm * regularMoveWeight;
                     var sprintValue = norm * sprintMoveWeight;
