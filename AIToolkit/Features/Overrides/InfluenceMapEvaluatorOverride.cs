@@ -149,56 +149,58 @@ namespace AIToolkit.Features.Overrides
 
                     evalEntry.FactorValue = 0f;
 
-                    if (Math.Abs(weight) >= 0.01)
+                    switch (factor)
                     {
-                        switch (factor)
-                        {
-                            case InfluenceMapAllyFactor allyFactor:
-                                foreach (var ally in allies)
+                        case InfluenceMapAllyFactor allyFactor:
+                            foreach (var ally in allies)
+                            {
+                                evalEntry.FactorValue += allyFactor.EvaluateInfluenceMapFactorAtPositionWithAlly(unit,
+                                    evalEntry.Position, evalEntry.Angle, ally);
+                            }
+                            break;
+                        case InfluenceMapHostileFactor hostileFactor:
+                            foreach (var hostile in hostiles)
+                            {
+                                evalEntry.FactorValue += hostileFactor.EvaluateInfluenceMapFactorAtPositionWithHostile(unit,
+                                    evalEntry.Position, evalEntry.Angle, moveType, hostile);
+                            }
+                            break;
+                        case InfluenceMapPositionFactor positionFactor:
+                            PathNode node = null;
+                            if (evalEntry.PathNodes.ContainsKey(moveType))
+                            {
+                                node = evalEntry.PathNodes[moveType];
+                            }
+                            else if (moveType == MoveType.Walking && evalEntry.PathNodes.ContainsKey(MoveType.Backward))
+                            {
+                                node = evalEntry.PathNodes[MoveType.Backward];
+                            }
+                            else
+                            {
+                                // this is the weirdest shit from decompiled code
+                                // I could guess what this means, but just use the decompiled version
+                                using (var enumerator = evalEntry.PathNodes.Keys.GetEnumerator())
                                 {
-                                    evalEntry.FactorValue += allyFactor.EvaluateInfluenceMapFactorAtPositionWithAlly(unit,
-                                        evalEntry.Position, evalEntry.Angle, ally);
-                                }
-                                break;
-                            case InfluenceMapHostileFactor hostileFactor:
-                                foreach (var hostile in hostiles)
-                                {
-                                    evalEntry.FactorValue += hostileFactor.EvaluateInfluenceMapFactorAtPositionWithHostile(unit,
-                                        evalEntry.Position, evalEntry.Angle, moveType, hostile);
-                                }
-                                break;
-                            case InfluenceMapPositionFactor positionFactor:
-                                PathNode node = null;
-                                if (evalEntry.PathNodes.ContainsKey(moveType))
-                                {
-                                    node = evalEntry.PathNodes[moveType];
-                                }
-                                else if (moveType == MoveType.Walking && evalEntry.PathNodes.ContainsKey(MoveType.Backward))
-                                {
-                                    node = evalEntry.PathNodes[MoveType.Backward];
-                                }
-                                else
-                                {
-                                    // this is the weirdest shit from decompiled code
-                                    // I could guess what this means, but just use the decompiled version
-                                    using (var enumerator = evalEntry.PathNodes.Keys.GetEnumerator())
+                                    if (enumerator.MoveNext())
                                     {
-                                        if (enumerator.MoveNext())
-                                        {
-                                            var key = enumerator.Current;
-                                            node = evalEntry.PathNodes[key];
-                                        }
+                                        var key = enumerator.Current;
+                                        node = evalEntry.PathNodes[key];
                                     }
                                 }
+                            }
 
-                                evalEntry.FactorValue = positionFactor.EvaluateInfluenceMapFactorAtPosition(unit,
-                                    evalEntry.Position, evalEntry.Angle, moveType, node);
-                                break;
-                        }
+                            evalEntry.FactorValue = positionFactor.EvaluateInfluenceMapFactorAtPosition(unit,
+                                evalEntry.Position, evalEntry.Angle, moveType, node);
+                            break;
                     }
 
-                    min = Mathf.Min(min, evalEntry.FactorValue);
-                    max = Mathf.Max(max, evalEntry.FactorValue);
+                    // only count min/max if the weight is not zero
+                    // if the weight is 0, the factorValue will be multiplied by 0
+                    if (Math.Abs(weight) > 0.01)
+                    {
+                        min = Mathf.Min(min, evalEntry.FactorValue);
+                        max = Mathf.Max(max, evalEntry.FactorValue);
+                    }
 
                     // potential next frame every 16 entries
                     if (i % 16 == 0)
