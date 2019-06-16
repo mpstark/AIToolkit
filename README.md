@@ -4,179 +4,48 @@ Unprecidented moddability of the BattleTech AI.
 
 ## Current Features
 
+* Override nearly all facets of unit AI ([UnitAIOverrideDef](https://github.com/Mpstark/AIToolkit/wiki/Resource:-UnitAIOverrideDef))
+  * [Behavior Trees](https://github.com/Mpstark/AIToolkit/wiki/Unit:-Behavior-Trees): The "brain" of the unit AI, determines what the unit does during its turn
+  * [Behavior Variables](https://github.com/Mpstark/AIToolkit/wiki/Unit:-Behavior-Variables): Variables/parameters for the behavior tree or weights for the influence map
+  * [Influence Map/Factors](https://github.com/Mpstark/AIToolkit/wiki/Unit:-Influence-Map-and-Factors): Where units want to move (if using influence map in tree)
+* Override some of team/lance AI ([TeamAIOverrideDef](https://github.com/Mpstark/AIToolkit/wiki/Resource:-TeamAIOverrideDef))
+  * [Target designation](https://github.com/Mpstark/AIToolkit/wiki/Team:-Designating-Targets)
+  * [Turn order](https://github.com/Mpstark/AIToolkit/wiki/Team:-Turn-Order)
+
 Functionality is provided via `AIOverride`s that are applied to matching to either teams or units. `AIOverride`s are loaded from JSON def files though ModTek's CustomResourceType feature. Each `AIOverride` will be matched one-to-one to a corresponding unit or team. This matching is performed each activation that the AI takes. If multiple overrides match, then the one with the highest priority is chosen, if multiple have the same priority, then the first loaded wins.
 
-Matching operations are performed based on provided `Selectors` in the `AIOverride`. Each `Selector` has a `TypeName`, from a list of provided `Selector` types and a `SelectString` that is provided to the type as a parameter. For example, an `AIOverride` with a single selector with `TypeName`: "TeamName" and `SelectString` "Player 2" will match to a unit that is on the team "Player 2" (if it is selecting a unit) or the team itself (if it is selecting a team).
+Matching operations are performed based on provided `Selectors` in the `AIOverride`. Each `Selector` has a `TypeName`, from a list of provided `Selector` types and a `SelectString` that is provided to the type as a parameter. For example, an `AIOverride` with a single selector with `TypeName`: "TeamName" and `SelectString` "Player 2" will match to a unit that is on the team "Player 2" (if it is selecting a unit) or the team itself (if it is selecting a team). A [more detailed-primer on selectors](https://github.com/Mpstark/AIToolkit/wiki/Selectors) is on the available on the wiki.
 
-### Currently Available Selectors
+## Support Functionality
 
-#### Unit Selectors (Only UnitAIOverrides)
+The mod also provides the following functionality to aid in AI mod development.
 
-* Role *(i.e. Brawler)*
-* Tree *(i.e. CoreAITree)*
-
-#### Team Selectors
-
-* TeamName *(i.e. Player 1)*
-
-#### Combat Selectors
-
-* IsInterleaved *(true/false)*
-
-### UnitAIOverrideDef
-
-This type of `AIOverride` can affect behavior trees, behavior variables, and movement influence factors. 
-
-#### Behavior Tree
-
-The behavior tree controls all actions that the unit AI takes. The behavior tree of individual units can be replaced by providing a `TreeRootName` in the `UnitAIOverrideDef`  along with a coorisponding `BehaviorNodeDef` that contains a JSON representation of the tree. An example tree is below. A way to dump existing trees to JSON is provided as well (described later).
-
-```json
-{
-  "Name": "example_root",
-  "TypeName": "SelectorNode",
-  "Children": [
-    {
-      "Name": "if_shutdown__restart",
-      "TypeName": "SequenceNode",
-      "Children": [
-        {
-          "Name": "isShutdown0000",
-          "TypeName": "IsShutDownNode"
-        },
-        {
-          "Name": "mechStartUp0000",
-          "TypeName": "MechStartUpNode"
-        }
-      ]
-    },
-    {
-      "Name": "if_prone__stand_up",
-      "TypeName": "SequenceNode",
-      "Children": [
-        {
-          "Name": "movementAvailable0000",
-          "TypeName": "IsMovementAvailableForUnitNode"
-        },
-        {
-          "Name": "isProne0000",
-          "TypeName": "IsProneNode"
-        },
-        {
-          "Name": "stand0000",
-          "TypeName": "StandNode"
-        }
-      ]
-    },
-  ]
-}
-```
-
-#### Influence Factors
-
-Movement influence factors are calculated by the behavior tree node `SortMoveCandidatesByInfMapNode` and then an order to move to that node is emitted by the node `MoveTowardsHighestPriorityMoveCandidateNode`.
-
-Influence Factors come in three varieties:
-
-* `InfluenceMapPositionFactor`
-  * basic evaluation given a hex, facing, and move type
-* `InfluenceMapAllyFactor`
-  * evaluates for x closest allies
-    * x = behavior variable `Int_AllyInfluenceCount` value
-* `InfluenceMapEnemyFactor`
-  * evaluates for x closest enemies
-    * x = behavior variable `Int_HostileInfluenceCount` value
-
-Influence factors are calculated for each generated move (which are hex/move type/facing, other nodes in behavior tree generate these moves) and then the calculated value is then normalized from 0 (the lowest evaluated) to 1 (the highest evaluated). Then, each factor's value is multipled by its weight, either a normal weight or a sprint weight, and these weights make up many of the behavior variables. For example, the positional factor `PreferLocationsThatGrantGuardPositionFactor` uses the weights `Float_PreferLocationsThatGrantGuardFactorWeight` and `Float_SprintPreferLocationsThatGrantGuardFactorWeight`.
-
-A `UnitAIOverrideDef` can provide additional factors to evaluate in `AddInfluenceFactors` and remove existing vanilla factors `RemoveInfluenceFactors`. Factors are added/removed based on their C# type name.
-
-Since behavor variable's generally use the `BehaviorVariableName` that cannot be modified at runtime, modded factors are given the weight of 1.0 or can provide their own weights in `BehaviorVariableOverrides` with the (typeName + "Weight") or (typeName + "SprintWeight").
-
-#### Behavior Variables
-
-Behavior variables act as parameters to both the behavior tree and assorted other AI code. For example, the `Float_FenceRadius` controls how big the unit could get from the mean position of the lance for the influence factor `PreferInsideFenceNegativeLogicPositionalFactor`. `Bool_AllowAttack` is used as parameter to the `IsBVTrueNode` in many places in the tree to control if the unit can attack.
-
-You can provide overrides to behavior variables in two ways:
-
-* Provide the path to a folder that contains `BehaviorVariableScope` files (such as `global.json`) in `BehaviorScopesDirectory` in a `TeamAIOverrideDef`
-* Provide simple overrides in `BehaviorVariableOverrides` in a `UnitAIOverrideDef`
-
-An example `BehaviorVariableOverrides` that contains both vanilla variables and variables for a modded influence factor:
-
-```json
-"BehaviorVariableOverrides": {
-    "Bool_AllowAttack": {
-        "type": "Bool",
-        "boolVal": true
-    },
-    "Float_FenceRadius": {
-        "type": "Float",
-        "floatVal": 150
-    },
-
-    "PreferHigherEvasionPositionFactorWeight": {
-        "type": "Float",
-        "floatVal": 1.0
-    },
-    "PreferHigherEvasionPositionFactorSprintWeight": {
-        "type": "Float",
-        "floatVal": 0.0
-    }
-}
-```
-
-### TeamAIOverrideDef
-
-#### Unit Selection / Turn Order
-
-When `TurnOrderFactorWeights` is provided, the AI unit selection process is replaced by a similar system to influence factors (normalized from 0 (lowest value) to 1 (highest value)) and then multiplied by the weight. Each factor is then summed to a total value and the unit with the highest total goes first.
-
-##### Currently Provided TurnOrderFactors
-
-* DistanceAlongPatrolRoute
-* DistanceToClosestEnemy
-* DistanceToClosestEnemyDesc
-* DistanceToClosestVulnerableEnemy
-* IsUnstable
-* IsVulnerable
-
-### Aditional Functionality
-
-The mod also provides the following functionality:
-
-* Behavior Tree Dump
-  * Vanilla Behavior Trees can be dumped as JSON or a text-based format
-    * Text based format does not contain all parameters based to BehaviorNodes
-* AI Hot Reload
-  * Behavior Variables load from their location on disk (in versionManifest/modtek)
-    * Currently cannot be done during AI pause/too close to an AI `think()` call
-  * UnitAIOverrideDefs are reloaded and all referenced files are reloaded
-  * All overrideDef functionality is re-applied
-* AI Pause (Setting in mod.json)
-  * AI will show moves before taking them
-  * Left CTRL + Right Arrow executes current action, advances AI
+* Behavior Tree Dump: vanilla behavior trees can be dumped as JSON or a text-based format
+  * Text based format does not contain all parameters based to `BehaviorNode`s
+* HotReload: reload all overrides defs (along with vanilla AI files) and reapply at runtime
+  * Key-combo: CTRL-SHIFT-A
+* AI Pause: AI will show moves before taking them, along with additional information
+  * Left CTRL + Right Arrow advances and executes current action
   * If an influence map is used, a visualization of that map is shown
-    * This visualization is a drastic simplification (facing/movement types)
-  * If a behaviorTree returns an `OrderInfo`, the debug trace string is shown
+    * This visualization is a simplification (without facing/movement types)
+  * If a leaf behavior node returns an `OrderInfo`, that leaf will be shown
+  * If turn order is overriden, turn order results are shown
 
 ## Limitations of Current Implementation
 
-* UnitAIOverrideDefs do not allow for tier'd retrivial of behaviorVariables
-* Reflection-based BehaviorNode construction searches fields for matching types
-  * Thus, BehaviorNode's can only have single of each type and have to have a matching field of that type
+* Reflection-based `BehaviorNode` construction searches fields for matching types
+  * Thus, `BehaviorNode`'s can only have single of each type and have to have a matching field of that type
 * Reflection-based influence factor construction only supports parameter-less constructors
 * HotReload only reloads default behavior variable scopes if AI is not paused
 
 ## Planned Features
 
-* Additional `SelectorTypes` based on feedback
-* Additional `WeightedFactor`/`BehaviorNode` based on feedback to provide base mod functionality
-* Base UnitAIOverrideDefs to merge onto for at least CoreBT_AI tree?
+* Many, many more `SelectorType`/`WeightedFactor`/`BehaviorNode` based on feedback to provide base functionality
+* Base `UnitAIOverrideDef`/`BehaviorNodeDef` for CoreAI_BT units
+* Base `TeamAIOverrideDef` for non-story missions
 * Modding reservation rules
 
 ## Potential Features
 
 * Adding a "blackboard" for each unit
-* Wild idea: support rewinding AI turns without reloading
 * Wild idea: multiple trees/variables on a unit and visualize results of all
