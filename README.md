@@ -8,9 +8,9 @@ Unprecidented moddability of the BattleTech AI.
   * [Behavior Trees](https://github.com/Mpstark/AIToolkit/wiki/Unit:-Behavior-Trees): The "brain" of the unit AI, determines what the unit does during its turn
   * [Behavior Variables](https://github.com/Mpstark/AIToolkit/wiki/Unit:-Behavior-Variables): Variables/parameters for the behavior tree or weights for the influence map
   * [Influence Map/Factors](https://github.com/Mpstark/AIToolkit/wiki/Unit:-Influence-Map-and-Factors): Where units want to move (if using influence map in tree)
-* Override some of team/lance AI ([TeamAIOverrideDef](https://github.com/Mpstark/AIToolkit/wiki/Resource:-TeamAIOverrideDef))
-  * [Target designation](https://github.com/Mpstark/AIToolkit/wiki/Team:-Designating-Targets)
-  * [Turn order](https://github.com/Mpstark/AIToolkit/wiki/Team:-Turn-Order)
+* Override some of team/lance AI features ([TeamAIOverrideDef](https://github.com/Mpstark/AIToolkit/wiki/Resource:-TeamAIOverrideDef))
+  * [Target designation](https://github.com/Mpstark/AIToolkit/wiki/Team:-Designating-Targets): What unit should the AI prioritize damaging this turn?
+  * [Turn order](https://github.com/Mpstark/AIToolkit/wiki/Team:-Turn-Order): Which unit goes first in a phase?
 
 Functionality is provided via `AIOverride`s that are applied to matching to either teams or units. `AIOverride`s are loaded from JSON def files though ModTek's CustomResourceType feature. Each `AIOverride` will be matched one-to-one to a corresponding unit or team. This matching is performed each activation that the AI takes. If multiple overrides match, then the one with the highest priority is chosen, if multiple have the same priority, then the first loaded wins.
 
@@ -20,11 +20,11 @@ Matching operations are performed based on provided `Selectors` in the `AIOverri
 
 The mod also provides the following functionality to aid in AI mod development.
 
-* Behavior Tree Dump: vanilla behavior trees can be dumped as JSON or a text-based format
+* **Behavior Tree Dump**: vanilla behavior trees can be dumped as JSON or a text-based format
   * Text based format does not contain all parameters based to `BehaviorNode`s
-* HotReload: reload all overrides defs (along with vanilla AI files) and reapply at runtime
+* **HotReload**: reload all overrides defs (along with vanilla AI files) and reapply at runtime
   * Key-combo: CTRL-SHIFT-A
-* AI Pause: AI will show moves before taking them, along with additional information
+* **AI Pause**: AI will show moves before taking them, along with additional information
   * Left CTRL + Right Arrow advances and executes current action
   * If an influence map is used, a visualization of that map is shown
     * This visualization is a simplification (without facing/movement types)
