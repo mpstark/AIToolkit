@@ -2,11 +2,14 @@
 
 namespace AIToolkit.Selectors.Combat
 {
-    public class IsInterleaved : Selector<CombatGameState>
+    public class IsStoryContract : Selector<CombatGameState>
     {
         public override bool Select(string selectString, CombatGameState combat)
         {
-            var isTrue = combat.TurnDirector.IsInterleaved;
+            if (combat.ActiveContract == null)
+                return false;
+
+            var isTrue = combat.ActiveContract.IsPriorityContract;
             switch (selectString)
             {
                 case "true":

@@ -62,7 +62,15 @@
     <Compile Include="BehaviorNodes\UsePilotAbilityOnSelfNode.cs" />
     <Compile Include="Features\Overrides\LanceDesignatedTargetOverride.cs" />
     <Compile Include="Features\Overrides\InvocationFromOrderOverride.cs" />
+    <Compile Include="Selectors\Combat\ContractType.cs" />
+    <Compile Include="Selectors\Combat\PlanetBiome.cs" />
+    <Compile Include="Selectors\Combat\IsStoryContract.cs" />
+    <Compile Include="Selectors\Combat\IsSkirmish.cs" />
     <Compile Include="Selectors\Combat\IsInterleaved.cs" />
+    <Compile Include="Selectors\Team\IsPlayerEnemy.cs" />
+    <Compile Include="Selectors\Team\Faction.cs" />
+    <Compile Include="Selectors\Unit\Tag.cs" />
+    <Compile Include="Selectors\Unit\VariantName.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceToClosestVulnerableEnemy.cs" />
     <Compile Include="TurnOrderFactors\DistanceAlongPatrolRoute.cs" />

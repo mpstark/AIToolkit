@@ -1,12 +1,10 @@
-﻿using BattleTech;
-
-namespace AIToolkit.Selectors.Combat
+﻿namespace AIToolkit.Selectors.Team
 {
-    public class IsInterleaved : Selector<CombatGameState>
+    public class IsPlayerEnemy : Selector<AITeam>
     {
-        public override bool Select(string selectString, CombatGameState combat)
+        public override bool Select(string selectString, AITeam team)
         {
-            var isTrue = combat.TurnDirector.IsInterleaved;
+            var isTrue = team.IsEnemy(team.Combat.LocalPlayerTeam);
             switch (selectString)
             {
                 case "true":

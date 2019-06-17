@@ -2,11 +2,11 @@
 
 namespace AIToolkit.Selectors.Combat
 {
-    public class IsInterleaved : Selector<CombatGameState>
+    public class IsSkirmish : Selector<CombatGameState>
     {
         public override bool Select(string selectString, CombatGameState combat)
         {
-            var isTrue = combat.TurnDirector.IsInterleaved;
+            var isTrue = UnityGameInstance.BattleTechGame.Simulation == null;
             switch (selectString)
             {
                 case "true":
