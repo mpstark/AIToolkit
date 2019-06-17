@@ -8,7 +8,7 @@ namespace AIToolkit.Selectors.Team
         public override bool Select(string selectString, AITeam team)
         {
             var factions = selectString.Split(' ');
-            return factions.Contains(Enum.GetName(typeof(Faction), team.Faction));
+            return factions.Contains(Enum.GetName(typeof(BattleTech.Faction), team.Faction));
         }
     }
 }

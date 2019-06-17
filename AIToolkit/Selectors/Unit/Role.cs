@@ -14,7 +14,7 @@ namespace AIToolkit.Selectors.Unit
             if (role == UnitRole.Undefined)
                 role = unit.StaticUnitRole;
 
-            return Enum.GetName(typeof(Role), role) == selectString;
+            return Enum.GetName(typeof(UnitRole), role) == selectString;
         }
     }
 }
