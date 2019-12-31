@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace AIToolkit.Selectors.Team
 {
@@ -8,7 +7,7 @@ namespace AIToolkit.Selectors.Team
         public override bool Select(string selectString, AITeam team)
         {
             var factions = selectString.Split(' ');
-            return factions.Contains(Enum.GetName(typeof(BattleTech.Faction), team.Faction));
+            return factions.Contains(team.FactionValue.Name);
         }
     }
 }

@@ -194,7 +194,9 @@ namespace AIToolkit.Features.UI
 
             if (isIndirect)
             {
-                var pointsForArc = WeaponRangeIndicators.GetPointsForArc(18, 30f, from, to);
+                var pointsForArc = WeaponRangeIndicators.GetPointsForArcDodgeBuildings(18, 30f, from, to,
+                    UnityGameInstance.BattleTechGame.Combat.MapMetaData, WeaponRangeIndicators.Instance.MechJumpBuffer,
+                    WeaponRangeIndicators.Instance.MechJumpMaxArcHeight, WeaponRangeIndicators.Instance.MechJumpCheckFreq);
                 line.positionCount = 18;
                 line.SetPositions(pointsForArc);
                 return;
@@ -243,8 +245,10 @@ namespace AIToolkit.Features.UI
         private static Vector3[] GetPointsForJump(Vector3 from, Vector3 to)
         {
             var minArcHeight = Mathf.Max(Mathf.Abs(to.y - from.y) + 16f, 32f);
-            return WeaponRangeIndicators.GetPointsForArc(18, minArcHeight,
-                from + _movementLineGroundOffset, to + _movementLineGroundOffset);
+            return WeaponRangeIndicators.GetPointsForArcDodgeBuildings(18, minArcHeight,
+                from + _movementLineGroundOffset, to + _movementLineGroundOffset,
+                UnityGameInstance.BattleTechGame.Combat.MapMetaData, WeaponRangeIndicators.Instance.MechJumpBuffer,
+                WeaponRangeIndicators.Instance.MechJumpMaxArcHeight, WeaponRangeIndicators.Instance.MechJumpCheckFreq);
         }
 
     }

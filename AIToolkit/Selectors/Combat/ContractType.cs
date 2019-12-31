@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using BattleTech;
 
 namespace AIToolkit.Selectors.Combat
@@ -12,7 +11,7 @@ namespace AIToolkit.Selectors.Combat
                 return false;
 
             var contactTypes = selectString.Split(' ');
-            return contactTypes.Contains(Enum.GetName(typeof(BattleTech.Framework.ContractType), combat.ActiveContract.ContractType));
+            return contactTypes.Contains(combat.ActiveContract.GetContractTypeString(combat.BattleTechGame.Simulation));
         }
     }
 }

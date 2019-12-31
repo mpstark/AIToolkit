@@ -89,7 +89,7 @@ namespace AIToolkit
         internal static UnitAIOverrideDef TryOverrideUnitAI(AbstractActor unit)
         {
             var aiOverride = UnitAIOverrideDef.SelectOverride(unit,
-                UnitAIOverrides.Cast<AIOverrideDef<AbstractActor>>()) as UnitAIOverrideDef;
+                UnitAIOverrides) as UnitAIOverrideDef;
 
             if (aiOverride == null)
                 return null;
@@ -124,7 +124,7 @@ namespace AIToolkit
         internal static TeamAIOverrideDef TryOverrideTeamAI(AITeam team)
         {
             var aiOverride = TeamAIOverrideDef.SelectOverride(team,
-                TeamAIOverrides.Cast<AIOverrideDef<AITeam>>()) as TeamAIOverrideDef;
+                TeamAIOverrides) as TeamAIOverrideDef;
 
             if (aiOverride == null)
                 return null;
