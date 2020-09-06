@@ -6,6 +6,7 @@ using AIToolkit.TurnOrderFactors;
 using AIToolkit.Util;
 using Harmony;
 using UnityEngine;
+using static AIToolkit.Patches.FieldRefs;
 
 // ReSharper disable CompareOfFloatsByEqualityOperator
 
@@ -138,9 +139,8 @@ namespace AIToolkit.Features.Overrides
             // AIPause.CurrentAITeam.TurnActorProcessActivation();
 
             var teamTraverse = Traverse.Create(team);
-
             var newUnit = teamTraverse.Method("selectCurrentUnit").GetValue<AbstractActor>();
-            teamTraverse.Field("currentUnit").SetValue(newUnit);
+            CurrentUnitRef(team) = newUnit;
 
             // side effects of TurnActorProcessActivation
             teamTraverse.Method("UpdateAloneStatus", newUnit).GetValue();

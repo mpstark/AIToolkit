@@ -3,6 +3,7 @@ using BattleTech;
 using AIToolkit.Features.UI;
 using Harmony;
 using UnityEngine;
+using static AIToolkit.Patches.FieldRefs;
 
 // ReSharper disable AccessToStaticMemberViaDerivedType
 
@@ -60,13 +61,12 @@ namespace AIToolkit.Features
                 return false;
 
             // don't pause if the current unit has already activated this round
-            var currentUnit = Traverse.Create(team).Field("currentUnit").GetValue<AbstractActor>();
+            var currentUnit = CurrentUnitRef(team);
             if (currentUnit.HasActivatedThisRound)
                 return false;
 
             // don't pause if pending invocations (we want to only pause before new invocation)
-            var pendingInvocations =
-                Traverse.Create(team).Field("pendingInvocations").GetValue<List<InvocationMessage>>();
+            var pendingInvocations = PendingInvocationsRef(team);
             if (pendingInvocations != null && pendingInvocations.Count > 0)
                 return false;
 

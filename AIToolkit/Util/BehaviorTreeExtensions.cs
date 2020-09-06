@@ -1,5 +1,6 @@
 ﻿using System;
 using Harmony;
+using static AIToolkit.Patches.FieldRefs;
 
 namespace AIToolkit.Util
 {
@@ -7,7 +8,7 @@ namespace AIToolkit.Util
     {
         public static BehaviorTreeIDEnum GetID(this BehaviorTree tree)
         {
-            return Traverse.Create(tree).Field("behaviorTreeIDEnum").GetValue<BehaviorTreeIDEnum>();
+            return BehaviorTreeIDEnumRef(tree);
         }
 
         public static string GetIDString(this BehaviorTree tree)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BattleTech;
 using GraphCoroutines;
 using static Harmony.AccessTools;
@@ -23,5 +24,25 @@ namespace AIToolkit.Patches
         
         internal static readonly FieldRef<InfluenceMapEvaluator, InfluenceMapPositionFactor[]> PositionalFactorsRef =
             FieldRefAccess<InfluenceMapEvaluator, InfluenceMapPositionFactor[]>("positionalFactors");
+        
+        internal static readonly FieldRef<BehaviorNode, string> BehaviorNodeNameRef =
+            FieldRefAccess<BehaviorNode, string>("name");
+        
+        internal static readonly FieldRef<BehaviorNode, BehaviorVariableName> BehaviorVariableNameRef =
+            FieldRefAccess<BehaviorNode, BehaviorVariableName>("bvName");
+        
+        internal static readonly FieldRef<Team, BehaviorVariableScope> BehaviorVariableRef =
+            FieldRefAccess<Team, BehaviorVariableScope>("BehaviorVariables");
+        
+        internal static readonly FieldRef<BehaviorTree, BehaviorTreeIDEnum> BehaviorTreeIDEnumRef =
+            FieldRefAccess<BehaviorTree, BehaviorTreeIDEnum>("behaviorTreeIDEnum");
+        
+        internal static readonly FieldRef<AITeam, AbstractActor> CurrentUnitRef =
+            FieldRefAccess<AITeam, AbstractActor>("currentUnit");
+        
+        internal static readonly FieldRef<AITeam, List<InvocationMessage>> PendingInvocationsRef =
+            FieldRefAccess<AITeam, List<InvocationMessage>>("pendingInvocations");
+        
+        
     }
 }

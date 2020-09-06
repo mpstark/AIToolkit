@@ -4,6 +4,7 @@ using BattleTech;
 using AIToolkit.Resources;
 using AIToolkit.Util;
 using Harmony;
+using static AIToolkit.Patches.FieldRefs;
 
 namespace AIToolkit.Features.Overrides
 {
@@ -18,9 +19,9 @@ namespace AIToolkit.Features.Overrides
             var trav = Traverse.Create(tree.influenceMapEvaluator);
             Main.HBSLog?.Log($"Overriding Influence Factors for {tree.unit.UnitName}");
 
-            var allyFactors = trav.Field("allyFactors").GetValue<InfluenceMapAllyFactor[]>();
-            var hostileFactors = trav.Field("hostileFactors").GetValue<InfluenceMapHostileFactor[]>();
-            var positionalFactors = trav.Field("positionalFactors").GetValue<InfluenceMapPositionFactor[]>();
+            var allyFactors = AllyFactorsRef(tree.influenceMapEvaluator);
+            var hostileFactors = HostileFactorsRef(tree.influenceMapEvaluator);
+            var positionalFactors = PositionalFactorsRef(tree.influenceMapEvaluator);
 
             var newAllyFactors = new List<InfluenceMapAllyFactor>();
             var newHostileFactors = new List<InfluenceMapHostileFactor>();
@@ -43,12 +44,6 @@ namespace AIToolkit.Features.Overrides
             }
 
             Main.HBSLog?.Log($"  Had this number of factors -- ally: {allyFactors.Length} hostile: {hostileFactors.Length} positional: {positionalFactors.Length}");
-
-            // set the factors in the influence evaluator
-            trav.Field("allyFactors").SetValue(newAllyFactors.ToArray());
-            trav.Field("hostileFactors").SetValue(newHostileFactors.ToArray());
-            trav.Field("positionalFactors").SetValue(newPositionalFactors.ToArray());
-
             Main.HBSLog?.Log($"  Now -- ally: {newAllyFactors.Count} hostile: {newHostileFactors.Count} positional: {newPositionalFactors.Count}");
         }
 

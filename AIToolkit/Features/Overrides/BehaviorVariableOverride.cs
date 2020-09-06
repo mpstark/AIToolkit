@@ -2,6 +2,7 @@
 using BattleTech;
 using AIToolkit.Util;
 using Harmony;
+using static AIToolkit.Patches.FieldRefs;
 
 namespace AIToolkit.Features.Overrides
 {
@@ -82,8 +83,7 @@ namespace AIToolkit.Features.Overrides
             // team
             if (tree.unit.team != null)
             {
-                value = Traverse.Create(tree.unit.team).Field("BehaviorVariables")
-                    .GetValue<BehaviorVariableScope>().GetVariable(name);
+                value = BehaviorVariableRef(tree.unit.team).GetVariable(name);
 
                 if (value != null)
                     return null;
