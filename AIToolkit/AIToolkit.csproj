@@ -73,7 +73,7 @@
     <Compile Include="BehaviorNodes\UsePilotAbilityOnSelfNode.cs" />
     <Compile Include="Features\Overrides\LanceDesignatedTargetOverride.cs" />
     <Compile Include="Features\Overrides\InvocationFromOrderOverride.cs" />
-    <Compile Include="Patches\FieldRefs.cs" />
+    <Compile Include="FieldRefs.cs" />
     <Compile Include="Selectors\Combat\ContractType.cs" />
     <Compile Include="Selectors\Combat\PlanetBiome.cs" />
     <Compile Include="Selectors\Combat\IsStoryContract.cs" />

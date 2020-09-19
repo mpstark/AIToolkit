@@ -4,7 +4,6 @@ using BattleTech;
 using AIToolkit.Resources;
 using AIToolkit.Util;
 using Harmony;
-using static AIToolkit.Patches.FieldRefs;
 
 namespace AIToolkit.Features.Overrides
 {
@@ -19,9 +18,9 @@ namespace AIToolkit.Features.Overrides
             var trav = Traverse.Create(tree.influenceMapEvaluator);
             Main.HBSLog?.Log($"Overriding Influence Factors for {tree.unit.UnitName}");
 
-            var allyFactors = AllyFactorsRef(tree.influenceMapEvaluator);
-            var hostileFactors = HostileFactorsRef(tree.influenceMapEvaluator);
-            var positionalFactors = PositionalFactorsRef(tree.influenceMapEvaluator);
+            var allyFactors = FieldRefs.AllyFactorsRef(tree.influenceMapEvaluator);
+            var hostileFactors = FieldRefs.HostileFactorsRef(tree.influenceMapEvaluator);
+            var positionalFactors = FieldRefs.PositionalFactorsRef(tree.influenceMapEvaluator);
 
             var newAllyFactors = new List<InfluenceMapAllyFactor>();
             var newHostileFactors = new List<InfluenceMapHostileFactor>();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using Harmony;
-using static AIToolkit.Patches.FieldRefs;
 
 namespace AIToolkit.Util
 {
@@ -9,7 +8,7 @@ namespace AIToolkit.Util
     {
         public static string GetName(this BehaviorNode node)
         {
-            return BehaviorNodeNameRef(node);
+            return FieldRefs.BehaviorNodeNameRef(node);
         }
 
         public static void DumpTree(this BehaviorNode root, string path)
@@ -36,7 +35,8 @@ namespace AIToolkit.Util
 
                     case "IsBVTrueNode":
                     case "RandomPercentageLessThanBVNode":
-                        var bvName = BehaviorVariableNameRef(node);
+                        // unsure how to use FieldRef for internal class... (gnivler)
+                        var bvName = Traverse.Create(node).Field("bvName").GetValue<BehaviorVariableName>();
                         writer.Write($" [{Enum.GetName(typeof(BehaviorVariableName), bvName)}]");
                         break;
                 }

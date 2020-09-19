@@ -5,7 +5,6 @@ using BattleTech;
 using GraphCoroutines;
 using Harmony;
 using UnityEngine;
-using static AIToolkit.Patches.FieldRefs;
 
 namespace AIToolkit.Features.Overrides
 {
@@ -15,23 +14,23 @@ namespace AIToolkit.Features.Overrides
         {
             // this is largely rewritten from HBS code, and not subject to license
             var startTime = Time.realtimeSinceStartup;
-            if (CoroutineRef(evaluator) == null)
+            if (FieldRefs.CoroutineRef(evaluator) == null)
             {
-                CoroutineRef(evaluator) = new GraphCoroutine(IncrementalEvaluate(evaluator));
+                FieldRefs.CoroutineRef(evaluator) = new GraphCoroutine(IncrementalEvaluate(evaluator));
             }
 
             while (Time.realtimeSinceStartup - startTime <= seconds)
             {
-                CoroutineRef(evaluator).Update();
+                FieldRefs.CoroutineRef(evaluator).Update();
 
-                if (EvaluationCompleteRef(evaluator))
+                if (FieldRefs.EvaluationCompleteRef(evaluator))
                 {
-                    CoroutineRef(evaluator) = null;
+                    FieldRefs.CoroutineRef(evaluator) = null;
                     break;
                 }
             }
 
-            return EvaluationCompleteRef(evaluator);
+            return FieldRefs.EvaluationCompleteRef(evaluator);
         }
 
         private static IEnumerable<Instruction> IncrementalEvaluate(InfluenceMapEvaluator evaluator)
@@ -48,7 +47,7 @@ namespace AIToolkit.Features.Overrides
 
             evaluator.expectedDamageFactor.LogEvaluation();
 
-            EvaluationCompleteRef(evaluator) = true;
+            FieldRefs.EvaluationCompleteRef(evaluator) = true;
             evalTrav.Method("ProfileEnd", ProfileSection.AllInfluenceMaps).GetValue();
             evalTrav.Method("ProfileFrameEnd").GetValue();
 
@@ -59,7 +58,7 @@ namespace AIToolkit.Features.Overrides
         {
             // this is largely rewritten from HBS code, and not subject to license
             var trav = Traverse.Create(evaluator);
-            var unit = UnitRef(evaluator);
+            var unit = FieldRefs.UnitRef(evaluator);
 
             // clear all accumulators
             for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
@@ -70,9 +69,9 @@ namespace AIToolkit.Features.Overrides
             }
 
             var factors = new List<WeightedFactor>();
-            factors.AddRange(AllyFactorsRef(evaluator));
-            factors.AddRange(HostileFactorsRef(evaluator));
-            factors.AddRange(PositionalFactorsRef(evaluator));
+            factors.AddRange(FieldRefs.AllyFactorsRef(evaluator));
+            factors.AddRange(FieldRefs.HostileFactorsRef(evaluator));
+            factors.AddRange(FieldRefs.PositionalFactorsRef(evaluator));
 
             // ally setup
             var allyCount = unit.BehaviorTree.GetBVValue(BehaviorVariableName.Int_AllyInfluenceCount).IntVal;
