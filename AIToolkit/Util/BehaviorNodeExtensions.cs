@@ -8,7 +8,7 @@ namespace AIToolkit.Util
     {
         public static string GetName(this BehaviorNode node)
         {
-            return Traverse.Create(node).Field("name").GetValue<string>();
+            return FieldRefs.BehaviorNodeNameRef(node);
         }
 
         public static void DumpTree(this BehaviorNode root, string path)
@@ -35,6 +35,7 @@ namespace AIToolkit.Util
 
                     case "IsBVTrueNode":
                     case "RandomPercentageLessThanBVNode":
+                        // unsure how to use FieldRef for internal class... (gnivler)
                         var bvName = Traverse.Create(node).Field("bvName").GetValue<BehaviorVariableName>();
                         writer.Write($" [{Enum.GetName(typeof(BehaviorVariableName), bvName)}]");
                         break;

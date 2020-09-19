@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using BattleTech;
+﻿using BattleTech;
 using AIToolkit.Features.UI;
-using Harmony;
 using UnityEngine;
 
 // ReSharper disable AccessToStaticMemberViaDerivedType
@@ -24,7 +22,6 @@ namespace AIToolkit.Features
         private static TextPopup _pausePopup;
         private static InfluenceMapVisualization _influenceMapVisual;
         private static InvocationVisualization _invocationVisual;
-
 
         public static void DestroyUI()
         {
@@ -60,13 +57,12 @@ namespace AIToolkit.Features
                 return false;
 
             // don't pause if the current unit has already activated this round
-            var currentUnit = Traverse.Create(team).Field("currentUnit").GetValue<AbstractActor>();
+            var currentUnit = FieldRefs.CurrentUnitRef(team);
             if (currentUnit.HasActivatedThisRound)
                 return false;
 
             // don't pause if pending invocations (we want to only pause before new invocation)
-            var pendingInvocations =
-                Traverse.Create(team).Field("pendingInvocations").GetValue<List<InvocationMessage>>();
+            var pendingInvocations = FieldRefs.PendingInvocationsRef(team);
             if (pendingInvocations != null && pendingInvocations.Count > 0)
                 return false;
 

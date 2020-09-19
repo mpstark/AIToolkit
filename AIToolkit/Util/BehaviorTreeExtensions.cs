@@ -7,7 +7,7 @@ namespace AIToolkit.Util
     {
         public static BehaviorTreeIDEnum GetID(this BehaviorTree tree)
         {
-            return Traverse.Create(tree).Field("behaviorTreeIDEnum").GetValue<BehaviorTreeIDEnum>();
+            return FieldRefs.BehaviorTreeIDEnumRef(tree);
         }
 
         public static string GetIDString(this BehaviorTree tree)
