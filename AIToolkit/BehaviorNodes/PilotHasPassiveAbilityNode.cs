@@ -1,4 +1,5 @@
 // AIToolkit.BehaviorNodes.PilotHasPassiveAbilityNode
+
 using System.Linq;
 using BattleTech;
 
@@ -12,14 +13,14 @@ public class PilotHasPassiveAbilityNode : LeafBehaviorNode
         _abilityID = abilityID;
     }
 
-    protected override BehaviorTreeResults Tick()
+    public override BehaviorTreeResults Tick()
     {
         var pilot = unit.GetPilot();
         if (pilot == null)
         {
             return new BehaviorTreeResults(BehaviorNodeState.Failure);
         }
-        if (pilot.PassiveAbilities.LastOrDefault((Ability a) => a.Def.Id == _abilityID) == null)
+        if (pilot.PassiveAbilities.LastOrDefault(a => a.Def.Id == _abilityID) == null)
         {
             return new BehaviorTreeResults(BehaviorNodeState.Failure);
         }

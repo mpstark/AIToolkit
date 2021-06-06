@@ -60,8 +60,7 @@ namespace AIToolkit.Util
             foreach (var validPath in validPaths)
             {
                 var id = Path.GetFileNameWithoutExtension(validPath);
-                var json = Traverse.Create(typeof(JSONSerializationUtility))
-                    .Method("StripHBSCommentsFromJSON", File.ReadAllText(validPath)).GetValue<string>();
+                var json = JSONSerializationUtility.StripHBSCommentsFromJSON(File.ReadAllText(validPath));
 
                 Main.HBSLog?.Log($"Loading scope with id {id}");
                 ScopeManager.OnBehaviorVariableScopeLoaded(id, json);

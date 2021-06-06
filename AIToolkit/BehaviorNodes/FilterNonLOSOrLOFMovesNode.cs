@@ -43,7 +43,7 @@ namespace AIToolkit.BehaviorNodes
             return true;
         }
 
-        protected override BehaviorTreeResults Tick()
+        public override BehaviorTreeResults Tick()
         {
             // this is mostly taken from decompiled HBS code, not under license
             var allies = unit.Combat.GetAllAlliesOf(unit);

@@ -78,7 +78,7 @@ namespace AIToolkit.BehaviorNodes
             return closestNode?.Position;
         }
 
-        protected override BehaviorTreeResults Tick()
+        public override BehaviorTreeResults Tick()
         {
             // don't have lance
             if (unit.lance == null)

@@ -1,4 +1,5 @@
 // AIToolkit.BehaviorNodes.ProperlyFilterOutNonLOFMovesNode
+
 using System.Collections.Generic;
 using BattleTech;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class ProperlyFilterOutNonLOFMovesNode : LeafBehaviorNode
 	{
 	}
 
-	protected override BehaviorTreeResults Tick()
+	public override BehaviorTreeResults Tick()
 	{
 		var list = new List<MoveDestination>();
 		for (var i = 0; i < tree.movementCandidateLocations.Count; i++)
@@ -26,7 +27,7 @@ public class ProperlyFilterOutNonLOFMovesNode : LeafBehaviorNode
 					Vector3 collisionWorldPos;
 					var lineOfFire = unit.Combat.LOS.GetLineOfFire(unit, moveDestination.PathNode.Position, combatant, combatant.CurrentPosition, combatant.CurrentRotation, out collisionWorldPos);
 					var quaternion = Quaternion.Euler(0f, PathingUtil.FloatAngleFrom8Angle(moveDestination.PathNode.Angle), 0f);
-					if ((weapon.WillFireAtTargetFromPosition(combatant, moveDestination.PathNode.Position, quaternion) && unit.HasLOFToTargetUnitAtTargetPosition(combatant, weapon.MaxRange, moveDestination.PathNode.Position, quaternion, combatant.CurrentPosition, combatant.CurrentRotation, isIndirectFireCapable: false) && lineOfFire > LineOfFireLevel.LOFBlocked) || (weapon.IndirectFireCapable && weapon.WillFireAtTargetFromPosition(combatant, moveDestination.PathNode.Position, quaternion) && unit.HasIndirectLOFToTargetUnit(moveDestination.PathNode.Position, quaternion, combatant, enabledWeaponsOnly: true)))
+					if (weapon.WillFireAtTargetFromPosition(combatant, moveDestination.PathNode.Position, quaternion) && unit.HasLOFToTargetUnitAtTargetPosition(combatant, weapon.MaxRange, moveDestination.PathNode.Position, quaternion, combatant.CurrentPosition, combatant.CurrentRotation, isIndirectFireCapable: false) && lineOfFire > LineOfFireLevel.LOFBlocked || weapon.IndirectFireCapable && weapon.WillFireAtTargetFromPosition(combatant, moveDestination.PathNode.Position, quaternion) && unit.HasIndirectLOFToTargetUnit(moveDestination.PathNode.Position, quaternion, combatant, enabledWeaponsOnly: true))
 					{
 						flag = true;
 						break;

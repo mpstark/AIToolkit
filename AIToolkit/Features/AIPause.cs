@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using BattleTech;
 using AIToolkit.Features.UI;
+using BattleTech;
 using Harmony;
 using UnityEngine;
 
@@ -60,13 +60,12 @@ namespace AIToolkit.Features
                 return false;
 
             // don't pause if the current unit has already activated this round
-            var currentUnit = Traverse.Create(team).Field("currentUnit").GetValue<AbstractActor>();
+            var currentUnit = team.currentUnit;
             if (currentUnit.HasActivatedThisRound)
                 return false;
 
             // don't pause if pending invocations (we want to only pause before new invocation)
-            var pendingInvocations =
-                Traverse.Create(team).Field("pendingInvocations").GetValue<List<InvocationMessage>>();
+            var pendingInvocations = team.pendingInvocations;
             if (pendingInvocations != null && pendingInvocations.Count > 0)
                 return false;
 

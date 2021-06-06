@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using BattleTech;
 using AIToolkit.Features.Overrides;
+using BattleTech;
 using Harmony;
 
 namespace AIToolkit.Features
@@ -18,8 +18,7 @@ namespace AIToolkit.Features
             // this is because of scope manager taking a little bit to get info
             // from dataManager, temp solution is to skip if paused
             if (!AIPause.IsPaused)
-                Traverse.Create(game).Property("BehaviorVariableScopeManager")
-                .SetValue(new BehaviorVariableScopeManager(game));
+                game.BehaviorVariableScopeManager = new BehaviorVariableScopeManager(game);
 
             var aiActors = game.Combat.AllActors.Where(unit => unit.team is AITeam);
             foreach (var unit in aiActors)

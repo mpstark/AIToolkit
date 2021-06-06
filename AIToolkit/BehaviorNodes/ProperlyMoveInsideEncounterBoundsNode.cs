@@ -1,7 +1,6 @@
 // AIToolkit.BehaviorNodes.ProperlyMoveInsideEncounterBoundsNode
-using System.Collections.Generic;
+
 using BattleTech;
-using BattleTech.Designed;
 using UnityEngine;
 
 public class ProperlyMoveInsideEncounterBoundsNode : LeafBehaviorNode
@@ -11,7 +10,7 @@ public class ProperlyMoveInsideEncounterBoundsNode : LeafBehaviorNode
 	{
 	}
 
-	protected override BehaviorTreeResults Tick()
+	public override BehaviorTreeResults Tick()
 	{
 		var encounterBoundaryChunk = unit.Combat.EncounterLayerData.encounterBoundaryChunk;
 		if (encounterBoundaryChunk.IsInEncounterBounds(unit.CurrentPosition))

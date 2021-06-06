@@ -8,7 +8,8 @@ namespace AIToolkit.Util
     {
         public static string GetName(this BehaviorNode node)
         {
-            return Traverse.Create(node).Field("name").GetValue<string>();
+            return node.name;
+            
         }
 
         public static void DumpTree(this BehaviorNode root, string path)

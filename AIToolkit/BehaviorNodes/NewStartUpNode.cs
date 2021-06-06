@@ -8,7 +8,7 @@ namespace AIToolkit.BehaviorNodes
         {
         }
 
-        protected override BehaviorTreeResults Tick()
+        public override BehaviorTreeResults Tick()
         {
             if (!(unit is Mech) || !unit.IsShutDown)
                 return new BehaviorTreeResults(BehaviorNodeState.Failure);

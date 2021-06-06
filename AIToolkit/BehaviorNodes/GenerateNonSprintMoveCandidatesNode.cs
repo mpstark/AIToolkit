@@ -8,7 +8,7 @@ namespace AIToolkit.BehaviorNodes
         {
         }
 
-        protected override BehaviorTreeResults Tick()
+        public override BehaviorTreeResults Tick()
         {
             var moveTypes = new[] { MoveType.Backward, MoveType.Walking };
             foreach (var moveType in moveTypes)

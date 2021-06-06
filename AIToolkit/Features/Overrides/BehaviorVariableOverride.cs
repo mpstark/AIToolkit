@@ -1,6 +1,6 @@
 ﻿using System;
-using BattleTech;
 using AIToolkit.Util;
+using BattleTech;
 using Harmony;
 
 namespace AIToolkit.Features.Overrides
@@ -82,8 +82,7 @@ namespace AIToolkit.Features.Overrides
             // team
             if (tree.unit.team != null)
             {
-                value = Traverse.Create(tree.unit.team).Field("BehaviorVariables")
-                    .GetValue<BehaviorVariableScope>().GetVariable(name);
+                value = tree.unit.team.BehaviorVariables.GetVariable(name);
 
                 if (value != null)
                     return null;

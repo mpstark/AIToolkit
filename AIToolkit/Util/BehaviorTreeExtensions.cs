@@ -1,5 +1,4 @@
 ﻿using System;
-using Harmony;
 
 namespace AIToolkit.Util
 {
@@ -7,7 +6,7 @@ namespace AIToolkit.Util
     {
         public static BehaviorTreeIDEnum GetID(this BehaviorTree tree)
         {
-            return Traverse.Create(tree).Field("behaviorTreeIDEnum").GetValue<BehaviorTreeIDEnum>();
+            return tree.behaviorTreeIDEnum;
         }
 
         public static string GetIDString(this BehaviorTree tree)
@@ -17,12 +16,12 @@ namespace AIToolkit.Util
 
         public static BehaviorVariableValue GetBVValue(this BehaviorTree tree, BehaviorVariableName name)
         {
-            return Traverse.Create(tree).Method("GetBehaviorVariableValue", name).GetValue<BehaviorVariableValue>();
+            return tree.GetBehaviorVariableValue(name);
         }
 
         public static void ReplaceRoot(this BehaviorTree tree, BehaviorNode newRoot)
         {
-            Traverse.Create(tree).Property("RootNode").SetValue(newRoot);
+            tree.RootNode = newRoot;
         }
     }
 }

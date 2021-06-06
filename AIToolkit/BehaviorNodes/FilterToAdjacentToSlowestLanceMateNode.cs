@@ -14,7 +14,7 @@ namespace AIToolkit.BehaviorNodes
             _distance = distance;
         }
 
-        protected override BehaviorTreeResults Tick()
+        public override BehaviorTreeResults Tick()
         {
             // don't have lance
             if (unit.lance == null)

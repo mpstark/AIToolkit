@@ -9,7 +9,7 @@ namespace AIToolkit.BehaviorNodes
 		{
 		}
 
-		protected override BehaviorTreeResults Tick()
+		public override BehaviorTreeResults Tick()
 		{
 			var mech = unit as Mech;
 			if (mech == null || mech.WorkingJumpjets == 0)
@@ -21,7 +21,7 @@ namespace AIToolkit.BehaviorNodes
 				var heatGenerated = mech.Weapons[i].HeatGenerated;
 				var jumpDistance = mech.JumpDistance;
 				float num = mech.CalcJumpHeat(jumpDistance);
-				if ((float)mech.CurrentHeat + heatGenerated + num < AIUtil.GetAcceptableHeatLevelForMech(mech))
+				if (mech.CurrentHeat + heatGenerated + num < AIUtil.GetAcceptableHeatLevelForMech(mech))
 				{
 					return new BehaviorTreeResults(BehaviorNodeState.Success);
 				}

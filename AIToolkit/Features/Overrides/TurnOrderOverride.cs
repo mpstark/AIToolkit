@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BattleTech;
 using AIToolkit.Resources;
 using AIToolkit.TurnOrderFactors;
 using AIToolkit.Util;
+using BattleTech;
 using Harmony;
 using UnityEngine;
 
@@ -137,13 +137,11 @@ namespace AIToolkit.Features.Overrides
             // because reasons? locks AI after they act after pause
             // AIPause.CurrentAITeam.TurnActorProcessActivation();
 
-            var teamTraverse = Traverse.Create(team);
-
-            var newUnit = teamTraverse.Method("selectCurrentUnit").GetValue<AbstractActor>();
-            teamTraverse.Field("currentUnit").SetValue(newUnit);
+            var newUnit = team.selectCurrentUnit();
+            team.currentUnit = newUnit;
 
             // side effects of TurnActorProcessActivation
-            teamTraverse.Method("UpdateAloneStatus", newUnit).GetValue();
+            team.UpdateAloneStatus(newUnit);
             AIRoleAssignment.AssignRoleToUnit(newUnit, team.units);
         }
     }

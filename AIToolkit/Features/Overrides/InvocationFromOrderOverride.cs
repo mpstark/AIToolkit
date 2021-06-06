@@ -1,5 +1,5 @@
-﻿using BattleTech;
-using AIToolkit.BehaviorNodes.Orders;
+﻿using AIToolkit.BehaviorNodes.Orders;
+using BattleTech;
 
 namespace AIToolkit.Features.Overrides
 {

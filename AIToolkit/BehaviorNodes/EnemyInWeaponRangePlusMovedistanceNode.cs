@@ -8,7 +8,7 @@ public class EnemyInWeaponRangePlusMovedistanceNode : LeafBehaviorNode
     {
     }
 
-    protected override BehaviorTreeResults Tick()
+    public override BehaviorTreeResults Tick()
     {
         var maxWalkDistance = unit.MaxWalkDistance;
         var num = 0f;

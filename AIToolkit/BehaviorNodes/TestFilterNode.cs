@@ -1,4 +1,5 @@
 // AIToolkit.BehaviorNodes.TestFilterNode
+
 using System.Collections.Generic;
 using BattleTech;
 using UnityEngine;
@@ -34,7 +35,7 @@ public class TestFilterNode : LeafBehaviorNode
 		return num <= maxRange;
 	}
 
-	protected override BehaviorTreeResults Tick()
+	public override BehaviorTreeResults Tick()
 	{
 		var allAlliesOf = unit.Combat.GetAllAlliesOf(unit);
 		var list = new List<MoveDestination>();

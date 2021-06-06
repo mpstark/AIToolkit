@@ -1,4 +1,5 @@
 // AIToolkit.BehaviorNodes.MeleeWithEnemyNode
+
 using System.Collections.Generic;
 using BattleTech;
 
@@ -24,7 +25,7 @@ public class MeleeWithEnemyNode : LeafBehaviorNode
 		return allMiscCombatants;
 	}
 
-	protected override BehaviorTreeResults Tick()
+	public override BehaviorTreeResults Tick()
 	{
 		var mech = unit as Mech;
 		if (mech == null || tree.enemyUnits.Count == 0)

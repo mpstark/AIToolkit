@@ -23,7 +23,7 @@ public class DFAWithHighestPriorityEnemyNode : LeafBehaviorNode
 		return allMiscCombatants;
 	}
 
-	protected override BehaviorTreeResults Tick()
+	public override BehaviorTreeResults Tick()
 	{
 		var mech = unit as Mech;
 		var num = 0f;

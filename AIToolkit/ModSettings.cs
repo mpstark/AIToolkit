@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using AIToolkit.Features;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace AIToolkit

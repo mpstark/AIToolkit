@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BattleTech;
 using AIToolkit.Resources;
 using AIToolkit.Util;
+using BattleTech;
 using Harmony;
 
 namespace AIToolkit.Features.Overrides
@@ -15,12 +15,11 @@ namespace AIToolkit.Features.Overrides
             if (o.AddInfluenceFactors.Count == 0 && o.RemoveInfluenceFactors.Count == 0)
                 return;
 
-            var trav = Traverse.Create(tree.influenceMapEvaluator);
             Main.HBSLog?.Log($"Overriding Influence Factors for {tree.unit.UnitName}");
 
-            var allyFactors = trav.Field("allyFactors").GetValue<InfluenceMapAllyFactor[]>();
-            var hostileFactors = trav.Field("hostileFactors").GetValue<InfluenceMapHostileFactor[]>();
-            var positionalFactors = trav.Field("positionalFactors").GetValue<InfluenceMapPositionFactor[]>();
+            var allyFactors = tree.influenceMapEvaluator.allyFactors;
+            var hostileFactors = tree.influenceMapEvaluator.hostileFactors;
+            var positionalFactors = tree.influenceMapEvaluator.positionalFactors;
 
             var newAllyFactors = new List<InfluenceMapAllyFactor>();
             var newHostileFactors = new List<InfluenceMapHostileFactor>();
@@ -45,9 +44,9 @@ namespace AIToolkit.Features.Overrides
             Main.HBSLog?.Log($"  Had this number of factors -- ally: {allyFactors.Length} hostile: {hostileFactors.Length} positional: {positionalFactors.Length}");
 
             // set the factors in the influence evaluator
-            trav.Field("allyFactors").SetValue(newAllyFactors.ToArray());
-            trav.Field("hostileFactors").SetValue(newHostileFactors.ToArray());
-            trav.Field("positionalFactors").SetValue(newPositionalFactors.ToArray());
+            tree.influenceMapEvaluator.allyFactors = newAllyFactors.ToArray();
+            tree.influenceMapEvaluator.hostileFactors = newHostileFactors.ToArray();
+            tree.influenceMapEvaluator.positionalFactors = newPositionalFactors.ToArray();
 
             Main.HBSLog?.Log($"  Now -- ally: {newAllyFactors.Count} hostile: {newHostileFactors.Count} positional: {newPositionalFactors.Count}");
         }

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using BattleTech;
 using AIToolkit.BehaviorNodes.Orders;
+using BattleTech;
 
 namespace AIToolkit.BehaviorNodes
 {
@@ -13,7 +13,7 @@ namespace AIToolkit.BehaviorNodes
             _abilityID = abilityID;
         }
 
-        protected override BehaviorTreeResults Tick()
+        public override BehaviorTreeResults Tick()
         {
             var pilot = unit.GetPilot();
             if (pilot == null)

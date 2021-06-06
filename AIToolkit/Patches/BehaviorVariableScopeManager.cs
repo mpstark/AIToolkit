@@ -1,5 +1,5 @@
-﻿using BattleTech;
-using AIToolkit.Util;
+﻿using AIToolkit.Util;
+using BattleTech;
 using Harmony;
 
 // ReSharper disable UnusedMember.Global

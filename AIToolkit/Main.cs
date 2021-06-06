@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using BattleTech;
 using AIToolkit.Features;
 using AIToolkit.Features.Overrides;
 using AIToolkit.Resources;
 using AIToolkit.Util;
+using BattleTech;
 using Harmony;
 using HBS.Logging;
 
@@ -115,7 +115,7 @@ namespace AIToolkit
         {
             HBSLog?.Log($"Resetting AI for unit {unit.UnitName}");
 
-            Traverse.Create(unit.BehaviorTree).Method("InitRootNode").GetValue();
+            unit.BehaviorTree.InitRootNode();
             unit.BehaviorTree.influenceMapEvaluator = new InfluenceMapEvaluator();
             unit.BehaviorTree.Reset();
         }

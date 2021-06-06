@@ -9,7 +9,7 @@ namespace AIToolkit.BehaviorNodes
         {
         }
 
-        protected override BehaviorTreeResults Tick()
+        public override BehaviorTreeResults Tick()
         {
             var mech = unit as Mech;
             if (mech == null || mech.WorkingJumpjets <= 1)

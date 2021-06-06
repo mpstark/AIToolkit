@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using BattleTech;
 using AIToolkit.Util;
+using BattleTech;
 using GraphCoroutines;
 using Harmony;
 using UnityEngine;
@@ -14,47 +14,43 @@ namespace AIToolkit.Features.Overrides
         {
             // this is largely rewritten from HBS code, and not subject to license
             var startTime = Time.realtimeSinceStartup;
-            var coroutineTraverse = Traverse.Create(evaluator).Field("evaluationCoroutine");
-            var completeTraverse = Traverse.Create(evaluator).Field("evaluationComplete");
-            var coroutine = coroutineTraverse.GetValue<GraphCoroutine>();
+            var coroutine = evaluator.evaluationCoroutine;
 
             if (coroutine == null)
             {
                 coroutine = new GraphCoroutine(IncrementalEvaluate(evaluator));
-                coroutineTraverse.SetValue(coroutine);
+                evaluator.evaluationCoroutine = coroutine;
             }
 
             while (Time.realtimeSinceStartup - startTime <= seconds)
             {
                 coroutine.Update();
 
-                if (completeTraverse.GetValue<bool>())
+                if (evaluator.evaluationComplete)
                 {
-                    coroutineTraverse.SetValue(null);
+                    evaluator.evaluationCoroutine = null;
                     break;
                 }
             }
 
-            return completeTraverse.GetValue<bool>();
+            return evaluator.evaluationComplete;
         }
 
         private static IEnumerable<Instruction> IncrementalEvaluate(InfluenceMapEvaluator evaluator)
         {
             // this is largely rewritten from HBS code, and not subject to license
-            var evalTrav = Traverse.Create(evaluator);
+            evaluator.ProfileFrameBegin();
+            evaluator.ProfileBegin(ProfileSection.AllInfluenceMaps);
 
-            evalTrav.Method("ProfileFrameBegin").GetValue();
-            evalTrav.Method("ProfileBegin", ProfileSection.AllInfluenceMaps).GetValue();
-
-            yield return ControlFlow.Call(evalTrav.Method("Eval_Initialize").GetValue<IEnumerable<Instruction>>());
+            yield return ControlFlow.Call(evaluator.Eval_Initialize());
             yield return ControlFlow.Call(EvalFactors(evaluator));
-            yield return ControlFlow.Call(evalTrav.Method("Apply_SprintScaling").GetValue<IEnumerable<Instruction>>());
+            yield return ControlFlow.Call(evaluator.Apply_SprintScaling());
 
             evaluator.expectedDamageFactor.LogEvaluation();
 
-            evalTrav.Field("evaluationComplete").SetValue(true);
-            evalTrav.Method("ProfileEnd", ProfileSection.AllInfluenceMaps).GetValue();
-            evalTrav.Method("ProfileFrameEnd").GetValue();
+            evaluator.evaluationComplete = true;
+            evaluator.ProfileEnd(ProfileSection.AllInfluenceMaps);
+            evaluator.ProfileFrameEnd();
 
             yield return null;
         }
@@ -62,8 +58,7 @@ namespace AIToolkit.Features.Overrides
         private static IEnumerable<Instruction> EvalFactors(InfluenceMapEvaluator evaluator)
         {
             // this is largely rewritten from HBS code, and not subject to license
-            var trav = Traverse.Create(evaluator);
-            var unit = trav.Field("unit").GetValue<AbstractActor>();
+            var unit = evaluator.unit;
 
             // clear all accumulators
             for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
@@ -74,14 +69,14 @@ namespace AIToolkit.Features.Overrides
             }
 
             var factors = new List<WeightedFactor>();
-            factors.AddRange(trav.Field("allyFactors").GetValue<InfluenceMapAllyFactor[]>());
-            factors.AddRange(trav.Field("hostileFactors").GetValue<InfluenceMapHostileFactor[]>());
-            factors.AddRange(trav.Field("positionalFactors").GetValue<InfluenceMapPositionFactor[]>());
+            factors.AddRange(evaluator.allyFactors);
+            factors.AddRange(evaluator.hostileFactors);
+            factors.AddRange(evaluator.positionalFactors);
 
             // ally setup
             var allyCount = unit.BehaviorTree.GetBVValue(BehaviorVariableName.Int_AllyInfluenceCount).IntVal;
             var allAllies = unit.BehaviorTree.GetAllyUnits().ConvertAll<ICombatant>(x => x);
-            var allies = trav.Method("getNClosestCombatants", allAllies, allyCount).GetValue<List<ICombatant>>();
+            var allies = evaluator.getNClosestCombatants(allAllies, allyCount);
 
             // hostile setup
             unit.EvaluateExpectedArmor();
@@ -89,7 +84,7 @@ namespace AIToolkit.Features.Overrides
                 (combatant as AbstractActor)?.EvaluateExpectedArmor();
 
             var hostileCount = unit.BehaviorTree.GetBVValue(BehaviorVariableName.Int_HostileInfluenceCount).IntVal;
-            var hostiles = trav.Method("getNClosestCombatants", unit.BehaviorTree.enemyUnits, hostileCount).GetValue<List<ICombatant>>();
+            var hostiles = evaluator.getNClosestCombatants(unit.BehaviorTree.enemyUnits, hostileCount);
 
             // potential next frame
             yield return null;
@@ -132,12 +127,12 @@ namespace AIToolkit.Features.Overrides
                 var min = float.MaxValue;
                 var max = float.MinValue;
                 factor.InitEvaluationForPhaseForUnit(unit);
-                trav.Method("ProfileBegin", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();
+                evaluator.ProfileBegin(ProfileSection.AllInfluenceMaps, factor.Name);
 
                 for (var i = 0; i < evaluator.firstFreeWorkspaceEvaluationEntryIndex; i++)
                 {
                     var evalEntry = evaluator.WorkspaceEvaluationEntries[i];
-                    var moveType = (!evalEntry.HasSprintMove) ? MoveType.Walking : MoveType.Sprinting;
+                    var moveType = !evalEntry.HasSprintMove ? MoveType.Walking : MoveType.Sprinting;
                     var weight = moveType != MoveType.Sprinting ? regularMoveWeight : sprintMoveWeight;
 
                     evalEntry.FactorValue = 0f;
@@ -150,6 +145,7 @@ namespace AIToolkit.Features.Overrides
                                 evalEntry.FactorValue += allyFactor.EvaluateInfluenceMapFactorAtPositionWithAlly(unit,
                                     evalEntry.Position, evalEntry.Angle, ally);
                             }
+
                             break;
                         case InfluenceMapHostileFactor hostileFactor:
                             foreach (var hostile in hostiles)
@@ -157,6 +153,7 @@ namespace AIToolkit.Features.Overrides
                                 evalEntry.FactorValue += hostileFactor.EvaluateInfluenceMapFactorAtPositionWithHostile(unit,
                                     evalEntry.Position, evalEntry.Angle, moveType, hostile);
                             }
+
                             break;
                         case InfluenceMapPositionFactor positionFactor:
                             PathNode node = null;
@@ -202,7 +199,7 @@ namespace AIToolkit.Features.Overrides
 
                 if (min >= max)
                 {
-                    trav.Method("ProfileEnd", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();
+                    evaluator.ProfileEnd(ProfileSection.AllInfluenceMaps, factor.Name);
                     continue;
                 }
 
@@ -220,7 +217,7 @@ namespace AIToolkit.Features.Overrides
                         = new EvaluationDebugLogRecord(raw, norm, regularValue, regularMoveWeight, sprintValue, sprintMoveWeight);
                 }
 
-                trav.Method("ProfileEnd", ProfileSection.AllInfluenceMaps, factor.Name).GetValue();
+                evaluator.ProfileEnd(ProfileSection.AllInfluenceMaps, factor.Name);
             }
         }
     }

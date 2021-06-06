@@ -1,5 +1,5 @@
-﻿using BattleTech;
-using AIToolkit.Util;
+﻿using AIToolkit.Util;
+using BattleTech;
 
 namespace AIToolkit.TurnOrderFactors
 {
@@ -34,7 +34,7 @@ namespace AIToolkit.TurnOrderFactors
                 num += nextRouteIndex;
             }
 
-            var lastRouteIndex = nextRouteIndex + ((!isForward) ? 1 : -1);
+            var lastRouteIndex = nextRouteIndex + (!isForward ? 1 : -1);
             if (lastRouteIndex < 0)
                 lastRouteIndex = 1;
 
@@ -44,7 +44,7 @@ namespace AIToolkit.TurnOrderFactors
             var magnitude = (route.routePointList[nextRouteIndex].transform.position - unit.CurrentPosition).magnitude;
             var magnitude2 = (route.routePointList[lastRouteIndex].transform.position - unit.CurrentPosition).magnitude;
             var num3 = magnitude + magnitude2;
-            var num4 = (num3 <= 0f) ? 0f : (magnitude2 / num3);
+            var num4 = num3 <= 0f ? 0f : magnitude2 / num3;
             return num + num4;
 
             // This was my untested attempt at it, I gave up and used the game's version

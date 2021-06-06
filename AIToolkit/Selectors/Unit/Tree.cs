@@ -1,6 +1,6 @@
 ﻿using System;
-using BattleTech;
 using AIToolkit.Util;
+using BattleTech;
 
 namespace AIToolkit.Selectors.Unit
 {
